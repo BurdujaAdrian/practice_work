@@ -7,3 +7,18 @@ CHANGELOG.md
 /playground/
 
 *.sum
+
+
+/server-app/face_recognition/model-weights/*
+/server-app/face_recognition/model-weights/20180402-114759/
+/server-app/face_recognition/model-weights/20180408-102900/
+
+*.pb
+
+*.cfg
+
+*.sh
+
+*.prototxt
+
+
