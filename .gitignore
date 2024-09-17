@@ -1,5 +1,9 @@
 CHANGELOG.md
-.exe
-.mod
-playground
-.sum
+
+*.exe
+
+*.mod
+
+/playground/
+
+*.sum
