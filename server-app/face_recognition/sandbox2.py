@@ -1,16 +1,22 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
-from facenet_pytorch import InceptionResnetV1
 import torch
+from facenet_pytorch import MTCNN
+from insightface import model_zoo
 from torchvision.transforms.functional import to_tensor
+from scipy.spatial.distance import euclidean
+import matplotlib.pyplot as plt
 from PIL import Image
-from sklearn.metrics.pairwise import cosine_similarity
 
-# Initialize FaceNet model
-model = InceptionResnetV1(pretrained='vggface2').eval()
+# Initialize MTCNN for face alignment
+mtcnn = MTCNN(keep_all=True)
 
-saved_embedding = np.load('embeddings/person4.npy')
+# Load ArcFace model for embedding extraction
+arcface_model = model_zoo.get_model('arcface_r100_v1')
+arcface_model.prepare(ctx_id=0)
+
+# Load the saved embedding (of the reference face) for comparison
+saved_embedding = np.load('embeddings/person2.npy')
 
 
 # YOLO face detection code remains unchanged
@@ -19,7 +25,7 @@ def load_yolo_model(config_path, weights_path):
     return net
 
 
-def detect_faces_yolo(image, net, confidence_threshold=0.1):
+def detect_faces_yolo(image, net, confidence_threshold=0.7):
     blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416), swapRB=True, crop=False)
     net.setInput(blob)
     layer_names = net.getLayerNames()
@@ -42,30 +48,6 @@ def detect_faces_yolo(image, net, confidence_threshold=0.1):
                 y = int(centerY - (h / 2))
                 boxes.append((x, y, x + w, y + h))
     return filter_largest_box(boxes)
-
-
-# Function to preprocess face images before embedding extraction
-def preprocess_face_image(face_image):
-    face_resized = cv2.resize(face_image, (160, 160))
-    face_gray = cv2.cvtColor(face_resized, cv2.COLOR_BGR2GRAY)
-
-    # Histogram Equalization for contrast improvement
-    face_equalized = cv2.equalizeHist(face_gray)
-
-    # Convert back to 3 channels as required by the model
-    face_bgr = cv2.cvtColor(face_equalized, cv2.COLOR_GRAY2BGR)
-    face_pil = Image.fromarray(cv2.cvtColor(face_bgr, cv2.COLOR_BGR2RGB))
-    face_tensor = to_tensor(face_pil).unsqueeze(0)
-
-    return face_tensor
-
-
-# Extract face embeddings using the preprocessed face image
-def extract_face_embedding(face_image):
-    face_tensor = preprocess_face_image(face_image)
-    with torch.no_grad():
-        embedding = model(face_tensor).numpy()
-    return embedding
 
 
 # Filter overlapping or redundant boxes by keeping only the largest
@@ -114,36 +96,61 @@ def calculate_iou(box1, box2):
     return iou
 
 
-# Function to find the most similar face in the crowd
-def find_most_similar_face(image, net, saved_embedding, similarity_threshold=0.3):
+# Use MTCNN to detect and align faces
+def detect_and_align_faces(image):
+    faces, _ = mtcnn.detect(image)
+    aligned_faces = []
+    if faces is not None:
+        for box in faces:
+            face = image[int(box[1]):int(box[3]), int(box[0]):int(box[2])]
+            aligned_faces.append(face)
+    return aligned_faces
+
+
+# Extract face embeddings using ArcFace
+def extract_arcface_embedding(face_image):
+    face_resized = cv2.resize(face_image, (112, 112))  # Resize to ArcFace input size
+    face_tensor = to_tensor(Image.fromarray(face_resized))
+    face_tensor = face_tensor.unsqueeze(0)  # Add batch dimension
+    embedding = arcface_model.get_embedding(face_tensor).flatten().detach().cpu().numpy()
+    return embedding
+
+
+# Find the best matching face in the crowd
+def find_best_match(image, net, saved_embedding):
     faces = detect_faces_yolo(image, net)
-    best_similarity = -1
+    best_similarity = float('inf')
     best_face = None
 
     for (x1, y1, x2, y2) in faces:
         face_image = image[y1:y2, x1:x2]
-        embedding = extract_face_embedding(face_image)
-        similarity = cosine_similarity(embedding, saved_embedding)[0][0]
+        aligned_faces = detect_and_align_faces(face_image)
 
-        if similarity > best_similarity and similarity > similarity_threshold:
-            best_similarity = similarity
-            best_face = (x1, y1, x2, y2)
+        for aligned_face in aligned_faces:
+            embedding = extract_arcface_embedding(aligned_face)
+            similarity = euclidean(embedding, saved_embedding)
+
+            if similarity < best_similarity:
+                best_similarity = similarity
+                best_face = (x1, y1, x2, y2)
 
     return best_face, best_similarity
 
 
-# Load the crowd image
+# Load the crowd image and YOLO model
 crowd_image = cv2.imread('test_group3.jpg')
 net = load_yolo_model("yolov3-face.cfg", "model-weights/yolov3-wider_16000.weights")
 
-best_face, similarity = find_most_similar_face(crowd_image, net, saved_embedding)
+best_face, similarity = find_best_match(crowd_image, net, saved_embedding)
 
+# Draw the best match on the image
 if best_face is not None:
     (x1, y1, x2, y2) = best_face
     cv2.rectangle(crowd_image, (x1, y1), (x2, y2), (0, 255, 0), 2)
     cv2.putText(crowd_image, f'Similarity: {similarity:.2f}', (x1, y1 - 10),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
+# Save and display the result
 cv2.imwrite("matched_image.jpg", crowd_image)
 plt.imshow(cv2.cvtColor(crowd_image, cv2.COLOR_BGR2RGB))
 plt.axis('off')

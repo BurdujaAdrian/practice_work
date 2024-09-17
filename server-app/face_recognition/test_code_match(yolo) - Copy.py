@@ -7,10 +7,11 @@ from torchvision.transforms.functional import to_tensor
 from PIL import Image
 from sklearn.metrics.pairwise import cosine_similarity
 
+
 # Initialize FaceNet model
 model = InceptionResnetV1(pretrained='vggface2').eval()
 
-saved_embedding = np.load('embeddings/person2.npy')
+saved_embedding = np.load('embeddings/person5.npy')
 
 
 # YOLO face detection code remains unchanged
@@ -101,20 +102,29 @@ def extract_face_embedding(face_image):
 
 
 # Find top 10 most similar faces in the crowd
-def find_top_10_similar_faces(image, net, saved_embedding):
-    faces = detect_faces_yolo(image, net)
-    faces = filter_largest_box(faces)
+def find_top_10_similar_faces(crowd_image, net, saved_embedding):
+    # Process the crowd image using YOLO and extract embeddings from detected faces.
+    detected_faces = detect_faces_yolo(crowd_image, net)
 
     similarities = []
 
-    for (x1, y1, x2, y2) in faces:
-        face_image = image[y1:y2, x1:x2]
-        embedding = extract_face_embedding(face_image)
-        similarity = cosine_similarity(embedding, saved_embedding)[0][0]
-        similarities.append(((x1, y1, x2, y2), similarity))
+    for face in detected_faces:
+        x1, y1, x2, y2 = face
+        face_img = crowd_image[y1:y2, x1:x2]
+        embedding = extract_face_embedding(face_img, facenet_model)
 
-    # Sort by similarity and get the top 10
-    top_10_faces = sorted(similarities, key=lambda item: item[1], reverse=True)[:10]
+        # Reshape embeddings to 2D arrays
+        embedding_reshaped = embedding.reshape(1, -1)
+        saved_embedding_reshaped = saved_embedding.reshape(1, -1)
+
+        # Compute cosine similarity
+        similarity = cosine_similarity(embedding_reshaped, saved_embedding_reshaped)[0][0]
+        similarities.append((face, similarity))
+
+    # Sort by similarity (descending order) and get the top 10
+    similarities.sort(key=lambda x: x[1], reverse=True)
+    top_10_faces = similarities[:10]
+
     return top_10_faces
 
 
