@@ -8,7 +8,7 @@ CHANGELOG.md
 
 *.sum
 
-/server-app/face-recognition/model-weights/
+/server-app/face_recognition/model-weights/
 
 *.pb
 
