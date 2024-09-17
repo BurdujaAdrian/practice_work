@@ -17,3 +17,16 @@ CHANGELOG.md
 *.sh
 
 *.prototxt
+
+*.pth
+
+*.h5
+
+*.weights
+
+*.meta
+
+*.index
+
+
+*.data-00000-of-00001
