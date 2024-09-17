@@ -7,3 +7,13 @@ CHANGELOG.md
 /playground/
 
 *.sum
+
+/model-weights/
+
+*.pb
+
+*.cfg
+
+*.sh
+
+*.prototxt
