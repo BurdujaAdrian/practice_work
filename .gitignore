@@ -12,6 +12,7 @@ CHANGELOG.md
 /server-app/face_recognition/model-weights/*
 /server-app/face_recognition/model-weights/20180402-114759/
 /server-app/face_recognition/model-weights/20180408-102900/
+/server-app/Face-Recognition-From-Crowd-master/
 
 *.pb
 

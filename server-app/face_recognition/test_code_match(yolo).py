@@ -10,7 +10,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 # Initialize FaceNet model
 model = InceptionResnetV1(pretrained='vggface2').eval()
 
-saved_embedding = np.load('embeddings/person4.npy')
+saved_embedding = np.load('embeddings/person1.npy')
 
 
 # YOLO face detection code remains unchanged
@@ -133,7 +133,7 @@ def find_most_similar_face(image, net, saved_embedding, similarity_threshold=0.3
 
 
 # Load the crowd image
-crowd_image = cv2.imread('test_group3.jpg')
+crowd_image = cv2.imread('test_group6.jpg')
 net = load_yolo_model("yolov3-face.cfg", "model-weights/yolov3-wider_16000.weights")
 
 best_face, similarity = find_most_similar_face(crowd_image, net, saved_embedding)
