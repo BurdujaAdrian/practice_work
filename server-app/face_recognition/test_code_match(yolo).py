@@ -10,7 +10,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 # Initialize FaceNet model
 model = InceptionResnetV1(pretrained='vggface2').eval()
 
-saved_embedding = np.load('embeddings/person2.npy')
+saved_embedding = np.load('embeddings/person1.npy')
 
 
 # YOLO face detection code remains unchanged
@@ -19,7 +19,7 @@ def load_yolo_model(config_path, weights_path):
     return net
 
 
-def detect_faces_yolo(image, net, confidence_threshold=0.7):
+def detect_faces_yolo(image, net, confidence_threshold=0.1):
     blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416), swapRB=True, crop=False)
     net.setInput(blob)
     layer_names = net.getLayerNames()
@@ -44,14 +44,27 @@ def detect_faces_yolo(image, net, confidence_threshold=0.7):
     return filter_largest_box(boxes)
 
 
-# Function to extract face embeddings for crowd image
-def extract_face_embedding(face_image):
+# Function to preprocess face images before embedding extraction
+def preprocess_face_image(face_image):
     face_resized = cv2.resize(face_image, (160, 160))
-    face_pil = Image.fromarray(cv2.cvtColor(face_resized, cv2.COLOR_BGR2RGB))
+    face_gray = cv2.cvtColor(face_resized, cv2.COLOR_BGR2GRAY)
+
+    # Histogram Equalization for contrast improvement
+    face_equalized = cv2.equalizeHist(face_gray)
+
+    # Convert back to 3 channels as required by the model
+    face_bgr = cv2.cvtColor(face_equalized, cv2.COLOR_GRAY2BGR)
+    face_pil = Image.fromarray(cv2.cvtColor(face_bgr, cv2.COLOR_BGR2RGB))
     face_tensor = to_tensor(face_pil).unsqueeze(0)
+
+    return face_tensor
+
+
+# Extract face embeddings using the preprocessed face image
+def extract_face_embedding(face_image):
+    face_tensor = preprocess_face_image(face_image)
     with torch.no_grad():
         embedding = model(face_tensor).numpy()
-
     return embedding
 
 
@@ -102,7 +115,7 @@ def calculate_iou(box1, box2):
 
 
 # Function to find the most similar face in the crowd
-def find_most_similar_face(image, net, saved_embedding):
+def find_most_similar_face(image, net, saved_embedding, similarity_threshold=0.3):
     faces = detect_faces_yolo(image, net)
     best_similarity = -1
     best_face = None
@@ -112,7 +125,7 @@ def find_most_similar_face(image, net, saved_embedding):
         embedding = extract_face_embedding(face_image)
         similarity = cosine_similarity(embedding, saved_embedding)[0][0]
 
-        if similarity > best_similarity:
+        if similarity > best_similarity and similarity > similarity_threshold:
             best_similarity = similarity
             best_face = (x1, y1, x2, y2)
 
@@ -120,7 +133,7 @@ def find_most_similar_face(image, net, saved_embedding):
 
 
 # Load the crowd image
-crowd_image = cv2.imread('test_group3.jpg')
+crowd_image = cv2.imread('test_group6.jpg')
 net = load_yolo_model("yolov3-face.cfg", "model-weights/yolov3-wider_16000.weights")
 
 best_face, similarity = find_most_similar_face(crowd_image, net, saved_embedding)

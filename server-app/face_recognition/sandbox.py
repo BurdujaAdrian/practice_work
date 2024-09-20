@@ -1,41 +1,53 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
-from facenet_pytorch import InceptionResnetV1
 import torch
-from torchvision.transforms.functional import to_tensor
 from PIL import Image
+from facenet_pytorch import InceptionResnetV1
+from torchvision.transforms.functional import to_tensor
 from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.preprocessing import normalize
-
+import matplotlib.pyplot as plt
+import time
+i = 0
 # Initialize FaceNet model
 model = InceptionResnetV1(pretrained='vggface2').eval()
 
-# Load multiple saved embeddings
-saved_embeddings = {
-    'person1': normalize(np.load('embeddings/person1.npy')),
-    'person2': normalize(np.load('embeddings/person2.npy')),
-    # Add more saved embeddings as needed
-}
+# Load super-resolution model
+sr = cv2.dnn_superres.DnnSuperResImpl_create()
+sr.readModel("model-weights/ESPCN_x4.pb")
+sr.setModel("espcn", 4)  # Set the model to upscale by a factor of 4
 
 
-# YOLO face detection code remains unchanged
+# Logarithmic filter for contrast enhancement
+def apply_log_filter(image):
+    image_log = np.log1p(np.array(image, dtype="float32"))
+    cv2.normalize(image_log, image_log, 0, 255, cv2.NORM_MINMAX)
+    return np.uint8(image_log)
+
+
+# YOLO face detection
 def load_yolo_model(config_path, weights_path):
     net = cv2.dnn.readNetFromDarknet(config_path, weights_path)
     return net
 
 
-def detect_faces_yolo(image, net, confidence_threshold=0.7):
+def detect_faces_yolo(image, net, confidence_threshold=0.3, nms_threshold=0.0):
     blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416), swapRB=True, crop=False)
     net.setInput(blob)
     layer_names = net.getLayerNames()
-    try:
-        output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
-    except IndexError:
-        output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers()]
+
+    # Handle both cases for getUnconnectedOutLayers()
+    unconnected_layers = net.getUnconnectedOutLayers()
+
+    if isinstance(unconnected_layers, np.ndarray):
+        output_layers = [layer_names[i - 1] for i in unconnected_layers.flatten()]
+    else:
+        output_layers = [layer_names[unconnected_layers - 1]]
+
     layer_outputs = net.forward(output_layers)
     height, width = image.shape[:2]
     boxes = []
+    confidences = []
+
     for output in layer_outputs:
         for detection in output:
             scores = detection[5:]
@@ -46,117 +58,91 @@ def detect_faces_yolo(image, net, confidence_threshold=0.7):
                 (centerX, centerY, w, h) = box.astype("int")
                 x = int(centerX - (w / 2))
                 y = int(centerY - (h / 2))
-                boxes.append((x, y, x + w, y + h))
-    return filter_largest_box(boxes)
+                boxes.append([x, y, int(w), int(h)])
+                confidences.append(float(confidence))
+
+    # Apply non-maximum suppression to remove overlapping boxes
+    indices = cv2.dnn.NMSBoxes(boxes, confidences, confidence_threshold, nms_threshold)
+
+    # Ensure indices are correctly handled
+    final_boxes = []
+    if len(indices) > 0:
+        # Handle both array of arrays and flat list cases
+        if isinstance(indices[0], (list, np.ndarray)):
+            final_boxes = [boxes[i[0]] for i in indices]  # List of lists case
+        else:
+            final_boxes = [boxes[i] for i in indices]  # Flat list case
+
+    return final_boxes
 
 
-def extract_face_embedding(face_image):
-    face_resized = cv2.resize(face_image, (160, 160))
-    face_pil = Image.fromarray(cv2.cvtColor(face_resized, cv2.COLOR_BGR2RGB))
+# Preprocess face before extracting embeddings
+def preprocess_face_image(face_image):
+    global i
+    # Apply super-resolution
+    face_sr = sr.upsample(face_image)
+
+
+    # Apply logarithmic filter
+    face_log = apply_log_filter(face_sr)
+    cv2.imwrite(f"log_faces/faces_log_filter_{i}.jpg", face_log)
+    i = i + 1
+    plt.imshow(face_log)
+    plt.axis('off')
+    plt.show()
+    time.sleep(0.7)
+
+    # Resize to 160x160 for FaceNet input
+    face_resized = cv2.resize(face_log, (160, 160))
+
+    # Convert BGR to RGB for FaceNet
+    face_rgb = cv2.cvtColor(face_resized, cv2.COLOR_BGR2RGB)
+    face_pil = Image.fromarray(face_rgb)
     face_tensor = to_tensor(face_pil).unsqueeze(0)
+    return face_tensor
+
+
+# Extract face embeddings
+def extract_face_embedding(face_image):
+    face_tensor = preprocess_face_image(face_image)
     with torch.no_grad():
         embedding = model(face_tensor).numpy()
-
-    # Normalize the embedding vector for better accuracy in cosine similarity
-    normalized_embedding = normalize(embedding)
-    return normalized_embedding
+    return embedding
 
 
-def filter_largest_box(boxes):
-    if not boxes:
-        return []
-    boxes = sorted(boxes, key=lambda b: (b[2] - b[0]) * (b[3] - b[1]), reverse=True)
-    largest_boxes = []
-    for box in boxes:
-        is_duplicate = False
-        for existing_box in largest_boxes:
-            iou = calculate_iou(box, existing_box)
-            if iou > 0.5:
-                is_duplicate = True
-                break
-        if not is_duplicate:
-            largest_boxes.append(box)
-    return largest_boxes
-
-
-def calculate_iou(box1, box2):
-    x1, y1, x2, y2 = box1
-    x1_, y1_, x2_, y2_ = box2
-    x_left = max(x1, x1_)
-    y_top = max(y1, y1_)
-    x_right = min(x2, x2_)
-    y_bottom = min(y2, y2_)
-    if x_right < x_left or y_bottom < y_top:
-        return 0.0
-    intersection_area = (x_right - x_left) * (y_bottom - y_top)
-    box1_area = (x2 - x1) * (y2 - y1)
-    box2_area = (x2_ - x1_) * (y2_ - y1_)
-    iou = intersection_area / float(box1_area + box2_area - intersection_area)
-    return iou
-
-
-def non_maximum_suppression(boxes, scores, iou_threshold=0.4):
-    idxs = np.argsort(scores)[::-1]  # Sort scores in descending order
-    filtered_boxes = []
-
-    while len(idxs) > 0:
-        i = idxs[0]  # Pick the box with the highest score
-        filtered_boxes.append(boxes[i])
-
-        # Compare IoU of this box with the remaining boxes
-        remaining_idxs = []
-        for j in idxs[1:]:
-            iou = calculate_iou(boxes[i], boxes[j])
-            if iou <= iou_threshold:
-                remaining_idxs.append(j)
-
-        idxs = remaining_idxs  # Update idxs to only keep non-overlapping boxes
-
-    return filtered_boxes
-
-
-# Function to find the most similar faces in the crowd
-def find_similar_faces(image, net, saved_embeddings, threshold=0.4, iou_threshold=0.4):
+# Find the most similar face in the crowd
+def find_most_similar_face(image, net, saved_embedding, similarity_threshold=0.3):
     faces = detect_faces_yolo(image, net)
-    all_matched_faces = []
+    best_similarity = -1
+    best_face = None
 
-    for (x1, y1, x2, y2) in faces:
-        face_image = image[y1:y2, x1:x2]
+    for (x, y, w, h) in faces:
+        face_image = image[y:y + h, x:x + w]
         embedding = extract_face_embedding(face_image)
+        similarity = cosine_similarity(embedding, saved_embedding)[0][0]
 
-        for person, saved_embedding in saved_embeddings.items():
-            similarity = cosine_similarity(embedding, saved_embedding)[0][0]
+        if similarity > best_similarity and similarity > similarity_threshold:
+            best_similarity = similarity
+            best_face = (x, y, w, h)
 
-            if similarity > threshold:
-                all_matched_faces.append((x1, y1, x2, y2, person, similarity))
-
-    # Apply Non-Maximum Suppression to avoid overlapping matches
-    if all_matched_faces:
-        boxes = [(x1, y1, x2, y2) for (x1, y1, x2, y2, _, _) in all_matched_faces]
-        scores = [similarity for (_, _, _, _, _, similarity) in all_matched_faces]
-        final_boxes = non_maximum_suppression(boxes, scores, iou_threshold=iou_threshold)
-
-        matched_faces = [match for match in all_matched_faces if
-                         (match[0], match[1], match[2], match[3]) in final_boxes]
-        return matched_faces
-
-    return []
+    return best_face, best_similarity
 
 
 # Load the crowd image
-crowd_image = cv2.imread('test_group7.jpg')
+crowd_image = cv2.imread('test_group6.jpg')
+saved_embedding = np.load('embeddings/person4_sr_log.npy')
 net = load_yolo_model("yolov3-face.cfg", "model-weights/yolov3-wider_16000.weights")
 
-# Detect and match multiple faces
-matched_faces = find_similar_faces(crowd_image, net, saved_embeddings)
+# Find the best matching face in the crowd
+best_face, similarity = find_most_similar_face(crowd_image, net, saved_embedding)
 
-# Draw rectangles and labels on detected faces
-for (x1, y1, x2, y2, person, similarity) in matched_faces:
-    cv2.rectangle(crowd_image, (x1, y1), (x2, y2), (0, 255, 0), 2)
-    cv2.putText(crowd_image, f'{person} ({similarity:.2f})', (x1, y1 - 10),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+if best_face is not None:
+    (x, y, w, h) = best_face
+    cv2.rectangle(crowd_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    cv2.putText(crowd_image, f'Similarity: {similarity:.2f}', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0),
+                2)
 
-cv2.imwrite("matched_image.jpg", crowd_image)
+cv2.imwrite("matched_image_sr_log.jpg", crowd_image)
 plt.imshow(cv2.cvtColor(crowd_image, cv2.COLOR_BGR2RGB))
 plt.axis('off')
 plt.show()
