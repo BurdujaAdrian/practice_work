@@ -1,21 +1,29 @@
 import cv2
-import numpy as np
 import torch
-from PIL import Image
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
 from facenet_pytorch import InceptionResnetV1
 from torchvision.transforms.functional import to_tensor
-from sklearn.metrics.pairwise import cosine_similarity
+from PIL import Image
 import matplotlib.pyplot as plt
-import time
-i = 0
-# Initialize FaceNet model
-model = InceptionResnetV1(pretrained='vggface2').eval()
 
-# Load super-resolution model
-sr = cv2.dnn_superres.DnnSuperResImpl_create()
-sr.readModel("model-weights/ESPCN_x4.pb")
-sr.setModel("espcn", 4)  # Set the model to upscale by a factor of 4
+# Load YOLOv7-face model
+def load_yolov7_model(model_path):
+    model = torch.load(model_path)
+    model.eval()
+    return model
 
+# Perform inference using YOLOv7-face
+def detect_faces_yolov7(image, model, device):
+    img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    img = torch.from_numpy(img).permute(2, 0, 1).unsqueeze(0).float() / 255.0  # Normalize and prepare image
+    img = img.to(device)
+
+    with torch.no_grad():
+        outputs = model(img)
+
+    boxes = outputs[0][:, :4].cpu().numpy()  # Get bounding boxes
+    return boxes
 
 # Logarithmic filter for contrast enhancement
 def apply_log_filter(image):
@@ -23,126 +31,75 @@ def apply_log_filter(image):
     cv2.normalize(image_log, image_log, 0, 255, cv2.NORM_MINMAX)
     return np.uint8(image_log)
 
-
-# YOLO face detection
-def load_yolo_model(config_path, weights_path):
-    net = cv2.dnn.readNetFromDarknet(config_path, weights_path)
-    return net
-
-
-def detect_faces_yolo(image, net, confidence_threshold=0.3, nms_threshold=0.0):
-    blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416), swapRB=True, crop=False)
-    net.setInput(blob)
-    layer_names = net.getLayerNames()
-
-    # Handle both cases for getUnconnectedOutLayers()
-    unconnected_layers = net.getUnconnectedOutLayers()
-
-    if isinstance(unconnected_layers, np.ndarray):
-        output_layers = [layer_names[i - 1] for i in unconnected_layers.flatten()]
-    else:
-        output_layers = [layer_names[unconnected_layers - 1]]
-
-    layer_outputs = net.forward(output_layers)
-    height, width = image.shape[:2]
-    boxes = []
-    confidences = []
-
-    for output in layer_outputs:
-        for detection in output:
-            scores = detection[5:]
-            class_id = np.argmax(scores)
-            confidence = scores[class_id]
-            if confidence > confidence_threshold:
-                box = detection[0:4] * np.array([width, height, width, height])
-                (centerX, centerY, w, h) = box.astype("int")
-                x = int(centerX - (w / 2))
-                y = int(centerY - (h / 2))
-                boxes.append([x, y, int(w), int(h)])
-                confidences.append(float(confidence))
-
-    # Apply non-maximum suppression to remove overlapping boxes
-    indices = cv2.dnn.NMSBoxes(boxes, confidences, confidence_threshold, nms_threshold)
-
-    # Ensure indices are correctly handled
-    final_boxes = []
-    if len(indices) > 0:
-        # Handle both array of arrays and flat list cases
-        if isinstance(indices[0], (list, np.ndarray)):
-            final_boxes = [boxes[i[0]] for i in indices]  # List of lists case
-        else:
-            final_boxes = [boxes[i] for i in indices]  # Flat list case
-
-    return final_boxes
-
-
 # Preprocess face before extracting embeddings
 def preprocess_face_image(face_image):
-    global i
-    # Apply super-resolution
-    face_sr = sr.upsample(face_image)
-
-
-    # Apply logarithmic filter
-    face_log = apply_log_filter(face_sr)
-    cv2.imwrite(f"log_faces/faces_log_filter_{i}.jpg", face_log)
-    i = i + 1
-    plt.imshow(face_log)
-    plt.axis('off')
-    plt.show()
-    time.sleep(0.7)
-
     # Resize to 160x160 for FaceNet input
-    face_resized = cv2.resize(face_log, (160, 160))
+    face_resized = cv2.resize(face_image, (160, 160))
 
     # Convert BGR to RGB for FaceNet
     face_rgb = cv2.cvtColor(face_resized, cv2.COLOR_BGR2RGB)
     face_pil = Image.fromarray(face_rgb)
-    face_tensor = to_tensor(face_pil).unsqueeze(0)
+    face_tensor = to_tensor(face_pil).unsqueeze(0)  # Convert to tensor
     return face_tensor
 
-
 # Extract face embeddings
-def extract_face_embedding(face_image):
+def extract_face_embedding(face_image, model):
     face_tensor = preprocess_face_image(face_image)
     with torch.no_grad():
         embedding = model(face_tensor).numpy()
     return embedding
 
-
 # Find the most similar face in the crowd
-def find_most_similar_face(image, net, saved_embedding, similarity_threshold=0.3):
-    faces = detect_faces_yolo(image, net)
+def find_most_similar_face(image, yolov7_model, saved_embedding, similarity_threshold=0.5, device=None):
+    faces = detect_faces_yolov7(image, yolov7_model, device)
     best_similarity = -1
     best_face = None
 
-    for (x, y, w, h) in faces:
-        face_image = image[y:y + h, x:x + w]
-        embedding = extract_face_embedding(face_image)
+    facenet_model = InceptionResnetV1(pretrained='vggface2').eval()
+
+    for (x1, y1, x2, y2) in faces:
+        face_image = image[int(y1):int(y2), int(x1):int(x2)]
+
+        # Apply log filter
+        face_log = apply_log_filter(face_image)
+
+        # Extract embeddings
+        embedding = extract_face_embedding(face_log, facenet_model)
+
+        # Compare embeddings
         similarity = cosine_similarity(embedding, saved_embedding)[0][0]
 
         if similarity > best_similarity and similarity > similarity_threshold:
             best_similarity = similarity
-            best_face = (x, y, w, h)
+            best_face = (x1, y1, x2, y2)
 
     return best_face, best_similarity
 
+# Main process
+def main():
+    # Load the saved embeddings
+    saved_embedding = np.load('embeddings/person2_embedding.npy')
 
-# Load the crowd image
-crowd_image = cv2.imread('test_group6.jpg')
-saved_embedding = np.load('embeddings/person4_sr_log.npy')
-net = load_yolo_model("yolov3-face.cfg", "model-weights/yolov3-wider_16000.weights")
+    # Load YOLOv7-face model
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    yolov7_model = load_yolov7_model("model-weights/yolov7-face.pt").to(device)
 
-# Find the best matching face in the crowd
-best_face, similarity = find_most_similar_face(crowd_image, net, saved_embedding)
+    # Load the crowd image
+    crowd_image = cv2.imread('test_group3.jpg')
 
-if best_face is not None:
-    (x, y, w, h) = best_face
-    cv2.rectangle(crowd_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    cv2.putText(crowd_image, f'Similarity: {similarity:.2f}', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0),
-                2)
+    # Find the most similar face
+    best_face, similarity = find_most_similar_face(crowd_image, yolov7_model, saved_embedding, device=device)
 
-cv2.imwrite("matched_image_sr_log.jpg", crowd_image)
-plt.imshow(cv2.cvtColor(crowd_image, cv2.COLOR_BGR2RGB))
-plt.axis('off')
-plt.show()
+    if best_face is not None:
+        x1, y1, x2, y2 = map(int, best_face)
+        cv2.rectangle(crowd_image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        cv2.putText(crowd_image, f'Similarity: {similarity:.2f}', (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+
+    # Save and display the result
+    cv2.imwrite("matched_image_sr_log.jpg", crowd_image)
+    plt.imshow(cv2.cvtColor(crowd_image, cv2.COLOR_BGR2RGB))
+    plt.axis('off')
+    plt.show()
+
+if __name__ == "__main__":
+    main()

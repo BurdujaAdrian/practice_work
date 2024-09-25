@@ -1,82 +1,82 @@
 import cv2
+import torch
 import numpy as np
 from facenet_pytorch import InceptionResnetV1
 from torchvision.transforms.functional import to_tensor
 from PIL import Image
-import torch
+import matplotlib.pyplot as plt
 
-# Initialize FaceNet model
-model = InceptionResnetV1(pretrained='vggface2').eval()
+# Load YOLOv7-face model
+def load_yolov7_model(model_path):
+    model = torch.load(model_path)
+    model.eval()
+    return model
 
-# Initialize OpenCV's super-resolution model
-sr = cv2.dnn_superres.DnnSuperResImpl_create()
+# Perform inference using YOLOv7-face
+def detect_faces_yolov7(image, model, device):
+    img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    img = torch.from_numpy(img).permute(2, 0, 1).unsqueeze(0).float() / 255.0  # Normalize and prepare image
+    img = img.to(device)
 
-# Load pre-trained super-resolution model (e.g., ESPCN)
-sr.readModel("model-weights/ESPCN_x4.pb")  # Download the model and place it in the correct path
-sr.setModel("espcn", 4)  # Set the model to upscale by a factor of 4
+    with torch.no_grad():
+        outputs = model(img)
 
+    boxes = outputs[0][:, :4].cpu().numpy()  # Get bounding boxes
+    return boxes
 
 # Logarithmic filter for contrast enhancement
 def apply_log_filter(image):
-    # Convert to float32 and apply logarithmic transformation
     image_log = np.log1p(np.array(image, dtype="float32"))
-    # Normalize back to range [0, 255]
     cv2.normalize(image_log, image_log, 0, 255, cv2.NORM_MINMAX)
     return np.uint8(image_log)
 
-
-# Function to detect a single face using OpenCV's Haar Cascade
-def detect_single_face(image):
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
-
-    if len(faces) > 0:
-        (x, y, w, h) = faces[0]
-        return image[y:y + h, x:x + w]
-    return None
-
-
-# Function to preprocess the face image before extracting embeddings
+# Preprocess face before extracting embeddings
 def preprocess_face_image(face_image):
-    # Apply super-resolution
-    face_sr = sr.upsample(face_image)
-
-    # Apply logarithmic filter
-    face_log = apply_log_filter(face_sr)
-
     # Resize to 160x160 for FaceNet input
-    face_resized = cv2.resize(face_log, (160, 160))
+    face_resized = cv2.resize(face_image, (160, 160))
 
     # Convert BGR to RGB for FaceNet
     face_rgb = cv2.cvtColor(face_resized, cv2.COLOR_BGR2RGB)
     face_pil = Image.fromarray(face_rgb)
-    face_tensor = to_tensor(face_pil).unsqueeze(0)
+    face_tensor = to_tensor(face_pil).unsqueeze(0)  # Convert to tensor
     return face_tensor
 
-
-# Function to extract face embeddings
-def extract_face_embedding(face_image):
+# Extract face embeddings
+def extract_face_embedding(face_image, model):
     face_tensor = preprocess_face_image(face_image)
     with torch.no_grad():
         embedding = model(face_tensor).numpy()
     return embedding
 
+# Main process
+def main():
+    # Load YOLOv7 model
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    yolov7_model = load_yolov7_model("model-weights/yolov7-face.pt").to(device)
 
-# Load the image of the person (change 'person1.jpg' to your image file)
-image_path = 'Grubii2.png'
-image = cv2.imread(image_path)
+    # Initialize FaceNet model
+    facenet_model = InceptionResnetV1(pretrained='vggface2').eval()
 
-if image is None:
-    print(f"Could not load image at {image_path}.")
-else:
-    # Detect the face
-    face_image = detect_single_face(image)
+    # Load and preprocess the image
+    image = cv2.imread('Artur.jpg')
 
-    if face_image is not None:
-        # Extract and save the face embeddings
-        embedding = extract_face_embedding(face_image)
-        np.save('embeddings/person4_sr_log.npy', embedding)
-        print(f"Embeddings saved to 'embeddings/person1_sr_log.npy'")
-    else:
-        print("No face detected in the image.")
+    # Detect faces using YOLOv7
+    boxes = detect_faces_yolov7(image, yolov7_model, device)
+
+    # Assuming one face is detected; you can loop for multiple faces
+    if len(boxes) > 0:
+        x1, y1, x2, y2 = map(int, boxes[0])  # Take the first detected face
+        face_image = image[y1:y2, x1:x2]
+
+        # Apply logarithmic filter
+        face_log = apply_log_filter(face_image)
+
+        # Extract face embeddings
+        embedding = extract_face_embedding(face_log, facenet_model)
+
+        # Save the embeddings to a file
+        np.save('embeddings/person2_embedding.npy', embedding)
+        print("Embeddings saved successfully.")
+
+if __name__ == "__main__":
+    main()

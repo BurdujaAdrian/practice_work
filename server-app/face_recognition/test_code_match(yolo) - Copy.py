@@ -1,22 +1,35 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
-from facenet_pytorch import InceptionResnetV1
 import torch
-from torchvision.transforms.functional import to_tensor
 from PIL import Image
+from facenet_pytorch import InceptionResnetV1
+from torchvision.transforms.functional import to_tensor
 from sklearn.metrics.pairwise import cosine_similarity
-from concurrent.futures import ThreadPoolExecutor
+import matplotlib.pyplot as plt
+import time
 
+i = 0  # Global variable to track the image index
+
+# Initialize FaceNet model
 model = InceptionResnetV1(pretrained='vggface2').eval()
 
-saved_embedding = np.load('embeddings/person7.npy')
+# Load super-resolution model
+sr = cv2.dnn_superres.DnnSuperResImpl_create()
+sr.readModel("model-weights/ESPCN_x4.pb")
+sr.setModel("espcn", 4)  # Set the model to upscale by a factor of 4
 
+# Logarithmic filter for contrast enhancement
+def apply_log_filter(image):
+    image_log = np.log1p(np.array(image, dtype="float32"))
+    cv2.normalize(image_log, image_log, 0, 255, cv2.NORM_MINMAX)
+    return np.uint8(image_log)
+
+# YOLO face detection
 def load_yolo_model(config_path, weights_path):
     net = cv2.dnn.readNetFromDarknet(config_path, weights_path)
     return net
 
-def detect_faces_yolo(image, net, confidence_threshold=0.3, nms_threshold=0.4):
+def detect_faces_yolo(image, net, confidence_threshold=0.3, nms_threshold=0.0):
     blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416), swapRB=True, crop=False)
     net.setInput(blob)
     layer_names = net.getLayerNames()
@@ -47,76 +60,84 @@ def detect_faces_yolo(image, net, confidence_threshold=0.3, nms_threshold=0.4):
                 boxes.append([x, y, int(w), int(h)])
                 confidences.append(float(confidence))
 
+    # Apply non-maximum suppression to remove overlapping boxes
     indices = cv2.dnn.NMSBoxes(boxes, confidences, confidence_threshold, nms_threshold)
 
+    # Ensure indices are correctly handled
     final_boxes = []
     if len(indices) > 0:
+        # Handle both array of arrays and flat list cases
         if isinstance(indices[0], (list, np.ndarray)):
-            final_boxes = [boxes[i[0]] for i in indices]
+            final_boxes = [boxes[i[0]] for i in indices]  # List of lists case
         else:
-            final_boxes = [boxes[i] for i in indices]
+            final_boxes = [boxes[i] for i in indices]  # Flat list case
 
     return final_boxes
 
+# Preprocess face before extracting embeddings
+def preprocess_face_image(face_image):
+    global i  # Declare i as a global variable to modify it
 
-# Preprocess and batch process faces for embedding extraction
-def preprocess_face_images(image, faces):
-    face_tensors = []
-    for (x, y, w, h) in faces:
-        face_image = image[y:y+h, x:x+w]
-        face_resized = cv2.resize(face_image, (160, 160))
-        face_tensor = to_tensor(Image.fromarray(cv2.cvtColor(face_resized, cv2.COLOR_BGR2RGB))).unsqueeze(0)
-        face_tensors.append(face_tensor)
-    return torch.cat(face_tensors)
+    # Apply super-resolution
+    face_sr = sr.upsample(face_image)
 
-# Extract embeddings for the preprocessed faces
-def extract_face_embeddings(face_tensors):
+    # Apply logarithmic filter
+    face_log = apply_log_filter(face_sr)
+    #cv2.imwrite(f"log_faces/faces_log_filter_{i}.jpg", face_log)
+    #i = i + 1  # Increment global variable i
+    #plt.imshow(face_log)
+    #plt.axis('off')
+    #plt.show()
+    #time.sleep(0.5)
+
+    # Resize to 160x160 for FaceNet input
+    face_resized = cv2.resize(face_log, (160, 160))
+
+    # Convert BGR to RGB for FaceNet
+    face_rgb = cv2.cvtColor(face_resized, cv2.COLOR_BGR2RGB)
+    face_pil = Image.fromarray(face_rgb)
+    face_tensor = to_tensor(face_pil).unsqueeze(0)
+    return face_tensor
+
+# Extract face embeddings
+def extract_face_embedding(face_image):
+    face_tensor = preprocess_face_image(face_image)
     with torch.no_grad():
-        embeddings = model(face_tensors).numpy()
-    return embeddings
+        embedding = model(face_tensor).numpy()
+    return embedding
 
-# Parallel processing for similarity comparison
-def compare_face_embeddings(embedding, saved_embedding):
-    return cosine_similarity(embedding.reshape(1, -1), saved_embedding)[0][0]
-
-# Find the most similar face in the crowd with parallelism
-def find_most_similar_face(image, net, saved_embedding, similarity_threshold=0.1):
+# Find the most similar face in the crowd
+def find_most_similar_face(image, net, saved_embedding, similarity_threshold=0.3):
     faces = detect_faces_yolo(image, net)
-    if not faces:
-        return None, -1  # No face detected
-
-    face_tensors = preprocess_face_images(image, faces)
-    embeddings = extract_face_embeddings(face_tensors)
-
     best_similarity = -1
     best_face = None
 
-    # Parallelize similarity calculations
-    with ThreadPoolExecutor() as executor:
-        similarities = list(executor.map(lambda emb: compare_face_embeddings(emb, saved_embedding), embeddings))
+    for (x, y, w, h) in faces:
+        face_image = image[y:y + h, x:x + w]
+        embedding = extract_face_embedding(face_image)
+        similarity = cosine_similarity(embedding, saved_embedding)[0][0]
 
-    for i, similarity in enumerate(similarities):
         if similarity > best_similarity and similarity > similarity_threshold:
             best_similarity = similarity
-            best_face = faces[i]
+            best_face = (x, y, w, h)
 
     return best_face, best_similarity
 
-# Load the crowd image and detect faces
-crowd_image = cv2.imread('test_group6.jpg')
+# Load the crowd image
+crowd_image = cv2.imread('test_group3.jpg')
+saved_embedding = np.load('embeddings/Denis_sr_log.npy')
 net = load_yolo_model("yolov3-face.cfg", "model-weights/yolov3-wider_16000.weights")
 
+# Find the best matching face in the crowd
 best_face, similarity = find_most_similar_face(crowd_image, net, saved_embedding)
 
-# Draw the best matching face and show similarity score
 if best_face is not None:
     (x, y, w, h) = best_face
     cv2.rectangle(crowd_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    cv2.putText(crowd_image, f'Similarity: {similarity:.2f}', (x, y - 10),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+    cv2.putText(crowd_image, f'Similarity: {similarity:.2f}', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0),
+                2)
 
-# Save and display the resulting image
-cv2.imwrite("matched_image.jpg", crowd_image)
+cv2.imwrite("matched_image_sr_log.jpg", crowd_image)
 plt.imshow(cv2.cvtColor(crowd_image, cv2.COLOR_BGR2RGB))
 plt.axis('off')
 plt.show()
