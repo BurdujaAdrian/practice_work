@@ -25,8 +25,6 @@ scikit_learn==1.5.2
 scipy==1.14.1
 seaborn==0.13.2
 setuptools==70.0.0
-setuptools==69.0.3
-setuptools==65.5.0
 skimage==0.0
 tensorflow==2.17.0
 tensorflow_intel==2.17.0
