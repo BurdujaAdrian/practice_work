@@ -1,101 +1,168 @@
 import cv2
 import numpy as np
+import torch
+from PIL import Image
 import matplotlib.pyplot as plt
+from facenet_pytorch import InceptionResnetV1
+from torchvision.transforms.functional import to_tensor
+from sklearn.metrics.pairwise import cosine_similarity
+import requests
+import json
 
-net = cv2.dnn.readNetFromCaffe('deploy.prototxt', 'res10_300x300_ssd_iter_140000.caffemodel')
+model = InceptionResnetV1(pretrained='vggface2').eval()
 
-image = cv2.imread('test_group3.jpg')
-(h, w) = image.shape[:2]
+sr = cv2.dnn_superres.DnnSuperResImpl_create()
+sr.readModel("model-weights/ESPCN_x4.pb")
+sr.setModel("espcn", 4)
 
-blob = cv2.dnn.blobFromImage(cv2.resize(image, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0))
-net.setInput(blob)
+def apply_log_filter(image):
+    image_log = np.log1p(np.array(image, dtype="float32"))
+    cv2.normalize(image_log, image_log, 0, 255, cv2.NORM_MINMAX)
+    return np.uint8(image_log)
 
-detections = net.forward()
+def preprocess_face_image(face_image):
+    face_sr = sr.upsample(face_image)
+    face_log = apply_log_filter(face_sr)
+    face_resized = cv2.resize(face_log, (160, 160))
+    face_rgb = cv2.cvtColor(face_resized, cv2.COLOR_BGR2RGB)
+    face_pil = Image.fromarray(face_rgb)
+    face_tensor = to_tensor(face_pil).unsqueeze(0)
+    return face_tensor
 
-output_image = image.copy()
+def extract_face_embedding(face_image):
+    face_tensor = preprocess_face_image(face_image)
+    with torch.no_grad():
+        embedding = model(face_tensor).numpy()
+    return embedding
 
-for i in range(detections.shape[2]):
-    confidence = detections[0, 0, i, 2]
-    if confidence > 0.10:
-        box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-        (startX, startY, endX, endY) = box.astype("int")
-        cv2.rectangle(output_image, (startX, startY), (endX, endY), (0, 255, 0), 2)
+def load_yolo_model(config_path, weights_path):
+    net = cv2.dnn.readNetFromDarknet(config_path, weights_path)
+    return net
 
-image_rgb = cv2.cvtColor(output_image, cv2.COLOR_BGR2RGB)
-plt.imshow(image_rgb)
-plt.axis('off')
-plt.show()
+def detect_faces_yolo(image, net, confidence_threshold=0.3, nms_threshold=0.0):
+    blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416), swapRB=True, crop=False)
+    net.setInput(blob)
+    layer_names = net.getLayerNames()
+    unconnected_layers = net.getUnconnectedOutLayers()
+    if isinstance(unconnected_layers, np.ndarray):
+        output_layers = [layer_names[i - 1] for i in unconnected_layers.flatten()]
+    else:
+        output_layers = [layer_names[unconnected_layers - 1]]
+    layer_outputs = net.forward(output_layers)
+    height, width = image.shape[:2]
+    boxes, confidences = [], []
+    for output in layer_outputs:
+        for detection in output:
+            scores = detection[5:]
+            class_id = np.argmax(scores)
+            confidence = scores[class_id]
+            if confidence > confidence_threshold:
+                box = detection[0:4] * np.array([width, height, width, height])
+                (centerX, centerY, w, h) = box.astype("int")
+                x = int(centerX - (w / 2))
+                y = int(centerY - (h / 2))
+                boxes.append([x, y, int(w), int(h)])
+                confidences.append(float(confidence))
+    indices = cv2.dnn.NMSBoxes(boxes, confidences, confidence_threshold, nms_threshold)
+    final_boxes = []
+    if len(indices) > 0:
+        if isinstance(indices[0], (list, np.ndarray)):
+            final_boxes = [boxes[i[0]] for i in indices]
+        else:
+            final_boxes = [boxes[i] for i in indices]
+    return final_boxes
 
-def detect_faces_multiscale(image, net, min_confidence=0.11):
-    (h, w) = image.shape[:2]
-    scale_factors = [1.0, 0.9, 0.8, 0.7]
-    faces = []
+def admin_login(base_url, admin_email, admin_password):
+    url = f"{base_url}/api/admins/auth-with-password"
+    data = {"identity": admin_email, "password": admin_password}
+    response = requests.post(url, json=data)
+    if response.status_code != 200:
+        raise Exception(f"Failed to authenticate admin: {response.text}")
+    return response.json()["token"]
 
-    for scale in scale_factors:
-        resized_img = cv2.resize(image, (int(w * scale), int(h * scale)))
-        blob = cv2.dnn.blobFromImage(cv2.resize(resized_img, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0))
-        net.setInput(blob)
-        detections = net.forward()
+def load_people_from_pocketbase(base_url, collection_name, token):
+    url = f"{base_url}/api/collections/{collection_name}/records"
+    headers = {"Authorization": f"Bearer {token}"}
+    response = requests.get(url, headers=headers)
+    if response.status_code != 200:
+        raise Exception(f"Failed to fetch records: {response.text}")
+    data = response.json()["items"]
+    people = []
+    for person in data:
+        person_id = person['id']
+        person_name = person['Name']
+        embedding = None
+        print(person['Photo'])
+        url2 = f"../../database/pb_data/storage/4i53pyqjukl7lxi/{person_id}/{person['Photo']}"
+        print("Url: ", url2)
+        image = cv2.imread(url2)
+        if 'Embedding' in person and person['Embedding']:
+            embedding = np.array(json.loads(person['Embedding']), dtype=np.float32)
+        people.append({'id': person_id, 'name': person_name, 'Embedding': embedding, 'Photo': image})
+    return people
 
-        for i in range(detections.shape[2]):
-            confidence = detections[0, 0, i, 2]
-            if confidence > min_confidence:
-                box = detections[0, 0, i, 3:7] * np.array([w, h, w, h]) / scale
-                faces.append(box.astype("int"))
-    return faces
+def save_embeddings_to_pocketbase(base_url, collection_name, person_id, embedding, token):
+    url = f"{base_url}/api/collections/{collection_name}/records/{person_id}"
+    embedding_str = json.dumps(embedding.tolist())
+    data = {'embedding': embedding_str}
+    headers = {'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'}
+    response = requests.patch(url, json=data, headers=headers)
+    if response.status_code != 200:
+        raise Exception(f"Failed to save embedding: {response.text}")
 
-faces = detect_faces_multiscale(image, net)
+def generate_and_save_embeddings(base_url, collection_name, people, net, token):
+    for person in people:
+        if person['Embedding'] is None:
 
-pre_nms_image = image.copy()
-for (startX, startY, endX, endY) in faces:
-    cv2.rectangle(pre_nms_image, (startX, startY), (endX, endY), (255, 0, 0), 2)
+            image = person["Photo"]
+            plt.imshow(image)
+            plt.axis('off')
+            plt.show()
+            face_image = detect_faces_yolo(image, net)[0]  # Assuming the first detected face is the person
+            (x, y, w, h) = face_image
+            cropped_face = image[y:y + h, x:x + w]
+            embedding = extract_face_embedding(cropped_face)
+            save_embeddings_to_pocketbase(base_url, collection_name, person['id'], embedding, token)
+            person['embedding'] = embedding
 
-image_rgb_pre_nms = cv2.cvtColor(pre_nms_image, cv2.COLOR_BGR2RGB)
-plt.imshow(image_rgb_pre_nms)
-plt.axis('off')
-plt.show()
+def find_most_similar_face(image, net, people, similarity_threshold=0.3):
+    faces = detect_faces_yolo(image, net)
+    best_matches = []
+    for (x, y, w, h) in faces:
+        face_image = image[y:y + h, x + w]
+        embedding = extract_face_embedding(face_image)
+        best_similarity, best_match = -1, None
+        for person in people:
+            similarity = cosine_similarity(embedding, person['embedding'].reshape(1, -1))[0][0]
+            if similarity > best_similarity and similarity > similarity_threshold:
+                best_similarity = similarity
+                best_match = {'person': person, 'box': (x, y, w, h), 'similarity': similarity}
+        if best_match:
+            best_matches.append(best_match)
+    return best_matches
 
-def non_max_suppression(boxes, overlapThresh=0.1):
-    if len(boxes) == 0:
-        return []
+def match_faces_in_crowd(base_url, collection_name, crowd_image_path, yolo_cfg, yolo_weights, admin_email, admin_password):
+    token = admin_login(base_url, admin_email, admin_password)
+    net = load_yolo_model(yolo_cfg, yolo_weights)
+    people = load_people_from_pocketbase(base_url, collection_name, token)
+    generate_and_save_embeddings(base_url, collection_name, people, net, token)
+    crowd_image = cv2.imread(crowd_image_path)
+    matches = find_most_similar_face(crowd_image, net, people)
+    for match in matches:
+        (x, y, w, h) = match['box']
+        person_name = match['person']['name']
+        similarity = match['similarity']
+        cv2.rectangle(crowd_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.putText(crowd_image, f'{person_name}: {similarity:.2f}', (x, y - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+    cv2.imwrite("matched_image_sr_log_pocketbase.jpg", crowd_image)
 
-    boxes = np.array(boxes)
-    pick = []
+base_url = 'http://127.0.0.1:8090'
+collection_name = 'Students'
+crowd_image_path = 'test_group3.jpg'
+yolo_cfg = 'yolov3-face.cfg'
+yolo_weights = 'model-weights/yolov3-wider_16000.weights'
+admin_email = 'admin@gmail.com'
+admin_password = '1234567890'
 
-    x1 = boxes[:, 0]
-    y1 = boxes[:, 1]
-    x2 = boxes[:, 2]
-    y2 = boxes[:, 3]
-
-    area = (x2 - x1 + 1) * (y2 - y1 + 1)
-    idxs = np.argsort(y2)
-
-    while len(idxs) > 0:
-        last = len(idxs) - 1
-        i = idxs[last]
-        pick.append(i)
-
-        xx1 = np.maximum(x1[i], x1[idxs[:last]])
-        yy1 = np.maximum(y1[i], y1[idxs[:last]])
-
-        xx2 = np.minimum(x2[i], x2[idxs[:last]])
-        yy2 = np.minimum(y2[i], y2[idxs[:last]])
-
-        w = np.maximum(0, xx2 - xx1 + 1)
-        h = np.maximum(0, yy2 - yy1 + 1)
-
-        overlap = (w * h) / area[idxs[:last]]
-        idxs = np.delete(idxs, np.concatenate(([last], np.where(overlap > overlapThresh)[0])))
-
-    return boxes[pick].astype("int")
-
-faces_nms = non_max_suppression(faces)
-
-final_image = image.copy()
-for (startX, startY, endX, endY) in faces_nms:
-    cv2.rectangle(final_image, (startX, startY), (endX, endY), (0, 255, 0), 2)
-
-image_rgb_nms = cv2.cvtColor(final_image, cv2.COLOR_BGR2RGB)
-plt.imshow(image_rgb_nms)
-plt.axis('off')
-plt.show()
+match_faces_in_crowd(base_url, collection_name, crowd_image_path, yolo_cfg, yolo_weights, admin_email, admin_password)
