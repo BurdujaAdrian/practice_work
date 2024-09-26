@@ -90,7 +90,7 @@ def load_people_from_pocketbase(base_url, collection_name, token):
     people = []
     for person in data:
         person_id = person['id']
-        person_name = person['Name']
+        person_name = person['name']
         embedding = None
         print(person['Photo'])
         url2 = f"../../database/pb_data/storage/4i53pyqjukl7lxi/{person_id}/{person['Photo']}"
@@ -140,21 +140,32 @@ def find_most_similar_face_for_person(image, net, people, similarity_threshold=0
     return person_matches
 
 
-def match_faces_in_crowd(base_url, collection_name, crowd_image_path, yolo_cfg, yolo_weights, admin_email, admin_password):
+def match_faces_in_crowd(base_url, collection_name, crowd_image_path, yolo_cfg, yolo_weights, admin_email,
+                         admin_password):
     token = admin_login(base_url, admin_email, admin_password)
     net = load_yolo_model(yolo_cfg, yolo_weights)
     people = load_people_from_pocketbase(base_url, collection_name, token)
     generate_and_save_embeddings(base_url, collection_name, people, net, token)
+
     crowd_image = cv2.imread(crowd_image_path)
     matches = find_most_similar_face_for_person(crowd_image, net, people)
+
+    similarity_dict = {}
+
     for match in matches:
         (x, y, w, h) = match['box']
         person_name = match['person']['name']
-        similarity = match['similarity']
+        similarity = match['similarity'] * 100  # Convert to percentage
+
+        # Add to the dictionary
+        similarity_dict[person_name] = f'{similarity:.2f}%'
+
         # Draw rectangle and similarity score on the image
         cv2.rectangle(crowd_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        cv2.putText(crowd_image, f'{person_name}: {similarity:.2f}', (x, y - 10),
+        cv2.putText(crowd_image, f'{person_name}: {similarity:.2f}%', (x, y - 10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+    # Print the dictionary
+    print(similarity_dict)
     cv2.imwrite("matched_image_sr_log_pocketbase.jpg", crowd_image)
 
 
