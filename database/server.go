@@ -9,7 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	//	"os/exec"
+	"os/exec"
 )
 
 func main() {
@@ -21,9 +21,11 @@ func main() {
 		return nil
 	})
 
+	// post image and group, return list of students and their percentege
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		// Register new "POST /upload" route for uploading a file
-		e.Router.POST("/upload", func(c echo.Context) error {
+		e.Router.POST("/find/:group", func(c echo.Context) error {
+			group := c.QueryParam("group")
 			// Source: Retrieve file from the request
 			file, err := c.FormFile("file")
 			if err != nil {
@@ -49,7 +51,20 @@ func main() {
 				return c.String(http.StatusInternalServerError, "Error saving the file")
 			}
 
-			return c.String(http.StatusOK, "File uploaded successfully")
+			print(file.Filename)
+			cmd := exec.Command(
+				"python",
+				"../server-app/face_recognition/main.py",
+				"./uploads/"+file.Filename,
+				group,
+			)
+
+			output, err := cmd.Output()
+			if err != nil {
+				return err
+			}
+
+			return c.String(http.StatusOK, string(output))
 		}, apis.ActivityLogger(app))
 
 		return nil
