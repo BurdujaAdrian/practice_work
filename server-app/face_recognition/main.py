@@ -40,8 +40,6 @@ def load_yolo_model(config_path, weights_path):
     return net
 
 def detect_faces_yolo(image, net, confidence_threshold=0.3, nms_threshold=0.0):
-    print(image)
-    plt.show(image)
     blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416), swapRB=True, crop=False)
     net.setInput(blob)
     layer_names = net.getLayerNames()
@@ -94,13 +92,13 @@ def load_people_from_pocketbase(base_url, collection_name, token):
         person_id = person['id']
         person_name = person['Name']
         embedding = None
-        image_path = person['Photo']
-        print(f"Loading image: {person['Photo']}")
-        image = cv2.imread(person["Photo"])
-        plt.show(image)
+        print(person['Photo'])
+        url2 = f"../../database/pb_data/storage/4i53pyqjukl7lxi/{person_id}/{person['Photo']}"
+        print("Url: ", url2)
+        image = cv2.imread(url2)
         if 'Embedding' in person and person['Embedding']:
             embedding = np.array(json.loads(person['Embedding']), dtype=np.float32)
-        people.append({'id': person_id, 'name': person_name, 'Embedding': embedding, 'Photo': image_path})
+        people.append({'id': person_id, 'name': person_name, 'Embedding': embedding, 'Photo': image})
     return people
 
 def save_embeddings_to_pocketbase(base_url, collection_name, person_id, embedding, token):
@@ -116,7 +114,10 @@ def generate_and_save_embeddings(base_url, collection_name, people, net, token):
     for person in people:
         if person['Embedding'] is None:
 
-            image = cv2.imread(person["Photo"])
+            image = person["Photo"]
+            plt.imshow(image)
+            plt.axis('off')
+            plt.show()
             face_image = detect_faces_yolo(image, net)[0]  # Assuming the first detected face is the person
             (x, y, w, h) = face_image
             cropped_face = image[y:y + h, x:x + w]
