@@ -24,10 +24,10 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        Dialog.resize(1136, 882)
+        Dialog.resize(1120, 882)
         font = QFont()
         font.setFamilies([u"Myanmar Khyay"])
-        font.setPointSize(20)
+        font.setPointSize(100)
         Dialog.setFont(font)
         Dialog.setStyleSheet(u"background-color:\"#D9D9D9\";\n"
 "font-family: Myanmar Khyay;")
@@ -208,8 +208,8 @@ class Ui_Dialog(object):
 "}\n"
 "\n"
 "")
-        self.verticalLayout_4 = QVBoxLayout(self.widget_3)
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.gridLayout_2 = QGridLayout(self.widget_3)
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.horizontalSpacer_5 = QSpacerItem(28, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
@@ -234,10 +234,8 @@ class Ui_Dialog(object):
         self.horizontalLayout_3.addItem(self.horizontalSpacer_6)
 
 
-        self.verticalLayout_4.addLayout(self.horizontalLayout_3)
+        self.gridLayout_2.addLayout(self.horizontalLayout_3, 0, 0, 1, 1)
 
-        self.verticalLayout_2 = QVBoxLayout()
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.pushButton = QPushButton(self.widget_3)
         self.pushButton.setObjectName(u"pushButton")
         self.pushButton.setMinimumSize(QSize(0, 70))
@@ -245,8 +243,10 @@ class Ui_Dialog(object):
         self.pushButton.setIcon(icon1)
         self.pushButton.setIconSize(QSize(80, 70))
 
-        self.verticalLayout_2.addWidget(self.pushButton)
+        self.gridLayout_2.addWidget(self.pushButton, 1, 0, 1, 1)
 
+        self.verticalLayout_2 = QVBoxLayout()
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalSpacer_6 = QSpacerItem(20, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_2.addItem(self.verticalSpacer_6)
@@ -289,12 +289,28 @@ class Ui_Dialog(object):
 
         self.verticalLayout_2.addWidget(self.setting_2)
 
+        self.verticalSpacer_11 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.verticalLayout_4.addLayout(self.verticalLayout_2)
+        self.verticalLayout_2.addItem(self.verticalSpacer_11)
 
-        self.verticalSpacer_2 = QSpacerItem(28, 425, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self._3 = QPushButton(self.widget_3)
+        self._3.setObjectName(u"_3")
+        self._3.setFont(font1)
+        icon6 = QIcon()
+        icon6.addFile(u"Images/upload.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self._3.setIcon(icon6)
+        self._3.setIconSize(QSize(25, 25))
+        self._3.setCheckable(True)
+        self._3.setAutoExclusive(True)
 
-        self.verticalLayout_4.addItem(self.verticalSpacer_2)
+        self.verticalLayout_2.addWidget(self._3)
+
+
+        self.gridLayout_2.addLayout(self.verticalLayout_2, 2, 0, 1, 1)
+
+        self.verticalSpacer_2 = QSpacerItem(28, 350, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_2.addItem(self.verticalSpacer_2, 3, 0, 1, 1)
 
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
@@ -316,11 +332,11 @@ class Ui_Dialog(object):
         self.horizontalLayout_4.addItem(self.horizontalSpacer_8)
 
 
-        self.verticalLayout_4.addLayout(self.horizontalLayout_4)
+        self.gridLayout_2.addLayout(self.horizontalLayout_4, 4, 0, 1, 1)
 
         self.verticalSpacer_10 = QSpacerItem(15, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.verticalLayout_4.addItem(self.verticalSpacer_10)
+        self.gridLayout_2.addItem(self.verticalSpacer_10, 5, 0, 1, 1)
 
 
         self.gridLayout.addWidget(self.widget_3, 0, 1, 1, 1)
@@ -367,9 +383,9 @@ class Ui_Dialog(object):
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.pushButton_10 = QPushButton(self.widget_4)
         self.pushButton_10.setObjectName(u"pushButton_10")
-        icon6 = QIcon()
-        icon6.addFile(u"Images/menu.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.pushButton_10.setIcon(icon6)
+        icon7 = QIcon()
+        icon7.addFile(u"Images/menu.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_10.setIcon(icon7)
         self.pushButton_10.setCheckable(True)
 
         self.horizontalLayout_6.addWidget(self.pushButton_10)
@@ -494,58 +510,39 @@ class Ui_Dialog(object):
         self.Classe_PSA.setObjectName(u"Classe_PSA")
         self.Students = QWidget(self.Classe_PSA)
         self.Students.setObjectName(u"Students")
-        self.Students.setGeometry(QRect(0, 0, 800, 740))
+        self.Students.setGeometry(QRect(0, 0, 911, 740))
         self.Students.setStyleSheet(u"background:#FFFFFF;")
-        self.widget_8 = QWidget(self.Students)
-        self.widget_8.setObjectName(u"widget_8")
-        self.widget_8.setGeometry(QRect(30, 30, 161, 201))
-        self.widget_8.setStyleSheet(u"background-color: #8DB7F5;\n"
-"border-top-left-radius: 10px;          \n"
-"border-bottom-left-radius: 10px;       \n"
-"border-top-right-radius: 10px;         \n"
-"border-bottom-right-radius: 10px;      \n"
-"\n"
-"   ")
-        self.pushButton_6 = QPushButton(self.widget_8)
-        self.pushButton_6.setObjectName(u"pushButton_6")
-        self.pushButton_6.setGeometry(QRect(10, 120, 141, 50))
-        self.pushButton_6.setMinimumSize(QSize(50, 50))
-        self.pushButton_6.setMaximumSize(QSize(10000, 10000))
-        self.pushButton_6.setFont(font4)
-        self.pushButton_6.setAutoFillBackground(False)
-        self.pushButton_6.setStyleSheet(u"QPushButton {\n"
-"    color: black;\n"
-"    padding: 10px;\n"
-"    font-size: 13px;\n"
-"    text-align: center; /* Center text */\n"
-"}")
-        self.pushButton_3 = QPushButton(self.widget_8)
-        self.pushButton_3.setObjectName(u"pushButton_3")
-        self.pushButton_3.setGeometry(QRect(30, 30, 101, 81))
-        icon7 = QIcon()
-        icon7.addFile(u"Images/user1.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.pushButton_3.setIcon(icon7)
-        self.pushButton_3.setIconSize(QSize(80, 80))
-        self.pushButton_7 = QPushButton(self.widget_8)
-        self.pushButton_7.setObjectName(u"pushButton_7")
-        self.pushButton_7.setGeometry(QRect(40, 160, 75, 24))
-        self.pushButton_7.setStyleSheet(u"QPushButton {\n"
-"    color: black;\n"
-"    border: 1px solid #ff0000;\n"
-"    padding: 5px;\n"
-"    font-size: 13px;\n"
-"    text-align: center; /* Center text */\n"
-"}")
         self.stackedWidget.addWidget(self.Classe_PSA)
+        self.Upload_Page = QWidget()
+        self.Upload_Page.setObjectName(u"Upload_Page")
+        self.widget_7 = QWidget(self.Upload_Page)
+        self.widget_7.setObjectName(u"widget_7")
+        self.widget_7.setGeometry(QRect(0, 0, 901, 751))
+        self.pushButton_3 = QPushButton(self.widget_7)
+        self.pushButton_3.setObjectName(u"pushButton_3")
+        self.pushButton_3.setGeometry(QRect(10, 10, 131, 41))
+        self.pushButton_3.setMaximumSize(QSize(150, 75))
+        font5 = QFont()
+        font5.setFamilies([u"Myanmar Khyay"])
+        font5.setPointSize(10)
+        self.pushButton_3.setFont(font5)
+        self.label_9 = QLabel(self.widget_7)
+        self.label_9.setObjectName(u"label_9")
+        self.label_9.setGeometry(QRect(280, 10, 111, 51))
+        self.label_10 = QLabel(self.widget_7)
+        self.label_10.setObjectName(u"label_10")
+        self.label_10.setGeometry(QRect(90, 140, 450, 400))
+        self.label_10.setMaximumSize(QSize(450, 400))
+        self.stackedWidget.addWidget(self.Upload_Page)
         self.Class_MD = QWidget()
         self.Class_MD.setObjectName(u"Class_MD")
         self.label_2 = QLabel(self.Class_MD)
         self.label_2.setObjectName(u"label_2")
         self.label_2.setGeometry(QRect(10, 20, 391, 101))
-        font5 = QFont()
-        font5.setFamilies([u"Myanmar Khyay"])
-        font5.setPointSize(20)
-        self.label_2.setFont(font5)
+        font6 = QFont()
+        font6.setFamilies([u"Myanmar Khyay"])
+        font6.setPointSize(20)
+        self.label_2.setFont(font6)
         self.stackedWidget.addWidget(self.Class_MD)
         self.Student_Info = QWidget()
         self.Student_Info.setObjectName(u"Student_Info")
@@ -633,10 +630,10 @@ class Ui_Dialog(object):
         self.pushButton_62.setObjectName(u"pushButton_62")
         self.pushButton_62.setEnabled(True)
         self.pushButton_62.setGeometry(QRect(260, 250, 141, 51))
-        font6 = QFont()
-        font6.setFamilies([u"Myanmar Khyay"])
-        font6.setPointSize(12)
-        self.pushButton_62.setFont(font6)
+        font7 = QFont()
+        font7.setFamilies([u"Myanmar Khyay"])
+        font7.setPointSize(12)
+        self.pushButton_62.setFont(font7)
         self.pushButton_62.setStyleSheet(u"background-color: #108476;\n"
 "border-top-left-radius: 20px;          \n"
 "border-bottom-left-radius: 20px;       \n"
@@ -674,7 +671,7 @@ class Ui_Dialog(object):
         self.classes_2.toggled.connect(self.classes_1.setChecked)
         self.setting_2.toggled.connect(self.setting_1.setChecked)
 
-        self.stackedWidget.setCurrentIndex(5)
+        self.stackedWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Dialog)
@@ -693,6 +690,7 @@ class Ui_Dialog(object):
         self.search_2.setText(QCoreApplication.translate("Dialog", u"Search", None))
         self.classes_2.setText(QCoreApplication.translate("Dialog", u"Classes", None))
         self.setting_2.setText(QCoreApplication.translate("Dialog", u"Setting", None))
+        self._3.setText(QCoreApplication.translate("Dialog", u"Upload", None))
         self.label_5.setText("")
         self.label.setText(QCoreApplication.translate("Dialog", u"Welcome Elene Bujor, attendance system is ready to operate.", None))
         self.pushButton_10.setText("")
@@ -702,13 +700,13 @@ class Ui_Dialog(object):
 "Mathematics", None))
         self.pushButton_5.setText(QCoreApplication.translate("Dialog", u"PSA", None))
         self.label_8.setText(QCoreApplication.translate("Dialog", u"Setting", None))
-        self.pushButton_6.setText(QCoreApplication.translate("Dialog", u"Plesca Denis", None))
-        self.pushButton_3.setText("")
-        self.pushButton_7.setText(QCoreApplication.translate("Dialog", u"50%", None))
+        self.pushButton_3.setText(QCoreApplication.translate("Dialog", u"Browse...", None))
+        self.label_9.setText(QCoreApplication.translate("Dialog", u"Your File Name", None))
+        self.label_10.setText(QCoreApplication.translate("Dialog", u"Image", None))
         self.label_2.setText(QCoreApplication.translate("Dialog", u"Class Discrete Mathematics", None))
         self.label_4.setText(QCoreApplication.translate("Dialog", u"Name:", None))
         self.label_13.setText(QCoreApplication.translate("Dialog", u"Age:", None))
-        self.label_14.setText(QCoreApplication.translate("Dialog", u"Group:", None))
+        self.label_14.setText(QCoreApplication.translate("Dialog", u"Year:", None))
         self.label_15.setText(QCoreApplication.translate("Dialog", u"Gender:", None))
         self.label_16.setText(QCoreApplication.translate("Dialog", u"Student ID:", None))
         self.pushButton_57.setText(QCoreApplication.translate("Dialog", u"Plesca Denis", None))
