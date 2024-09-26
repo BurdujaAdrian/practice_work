@@ -6,6 +6,7 @@ CHANGELOG.md
 
 *.sum
 
+*.go
 
 /server-app/face_recognition/model-weights/*
 /server-app/face_recognition/model-weights/20180402-114759/
