@@ -113,33 +113,32 @@ def save_embeddings_to_pocketbase(base_url, collection_name, person_id, embeddin
 def generate_and_save_embeddings(base_url, collection_name, people, net, token):
     for person in people:
         if person['Embedding'] is None:
-
             image = person["Photo"]
-            plt.imshow(image)
-            plt.axis('off')
-            plt.show()
-            face_image = detect_faces_yolo(image, net)[0]  # Assuming the first detected face is the person
+            face_image = detect_faces_yolo(image, net)[0]
             (x, y, w, h) = face_image
             cropped_face = image[y:y + h, x:x + w]
             embedding = extract_face_embedding(cropped_face)
             save_embeddings_to_pocketbase(base_url, collection_name, person['id'], embedding, token)
             person['embedding'] = embedding
 
-def find_most_similar_face(image, net, people, similarity_threshold=0.3):
-    faces = detect_faces_yolo(image, net)
-    best_matches = []
-    for (x, y, w, h) in faces:
-        face_image = image[y:y + h, x + w]
-        embedding = extract_face_embedding(face_image)
+def find_most_similar_face_for_person(image, net, people, similarity_threshold=0.3):
+    faces = detect_faces_yolo(image, net)  # Detect all faces in the image
+    if not faces:
+        return []
+    person_matches = []
+    for person in people:
         best_similarity, best_match = -1, None
-        for person in people:
+        for (x, y, w, h) in faces:
+            face_image = image[y:y + h, x:x + w]
+            embedding = extract_face_embedding(face_image)
             similarity = cosine_similarity(embedding, person['embedding'].reshape(1, -1))[0][0]
             if similarity > best_similarity and similarity > similarity_threshold:
                 best_similarity = similarity
                 best_match = {'person': person, 'box': (x, y, w, h), 'similarity': similarity}
         if best_match:
-            best_matches.append(best_match)
-    return best_matches
+            person_matches.append(best_match)
+    return person_matches
+
 
 def match_faces_in_crowd(base_url, collection_name, crowd_image_path, yolo_cfg, yolo_weights, admin_email, admin_password):
     token = admin_login(base_url, admin_email, admin_password)
@@ -147,19 +146,21 @@ def match_faces_in_crowd(base_url, collection_name, crowd_image_path, yolo_cfg, 
     people = load_people_from_pocketbase(base_url, collection_name, token)
     generate_and_save_embeddings(base_url, collection_name, people, net, token)
     crowd_image = cv2.imread(crowd_image_path)
-    matches = find_most_similar_face(crowd_image, net, people)
+    matches = find_most_similar_face_for_person(crowd_image, net, people)
     for match in matches:
         (x, y, w, h) = match['box']
         person_name = match['person']['name']
         similarity = match['similarity']
+        # Draw rectangle and similarity score on the image
         cv2.rectangle(crowd_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
         cv2.putText(crowd_image, f'{person_name}: {similarity:.2f}', (x, y - 10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
     cv2.imwrite("matched_image_sr_log_pocketbase.jpg", crowd_image)
 
+
 base_url = 'http://127.0.0.1:8090'
 collection_name = 'Students'
-crowd_image_path = 'test_group3.jpg'
+crowd_image_path = 'test_group6.jpg'
 yolo_cfg = 'yolov3-face.cfg'
 yolo_weights = 'model-weights/yolov3-wider_16000.weights'
 admin_email = 'admin@gmail.com'
