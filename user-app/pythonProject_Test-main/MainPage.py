@@ -8,7 +8,7 @@ from PySide6.QtCore import QCoreApplication
 from PySide6.QtWidgets import QDialog, QPushButton, QRadioButton, QLabel, QWidget
 from PySide6.QtCore import QRect
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QPushButton, QWidget
+from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QPushButton, QWidget, QFileDialog
 from PySide6.QtCore import QCoreApplication
 url = ''
 
@@ -35,6 +35,7 @@ class MyMainPage(QDialog, Ui_Dialog):
         # Parse the response
         response_data = response.json()
         self.students = response_data.get("items", [])  # Extract student items from response
+        print(self.students)
 
         # Add student widgets
         index = 0
@@ -86,6 +87,8 @@ class MyMainPage(QDialog, Ui_Dialog):
         self.setting_1.clicked.connect(self.switch_to_setting_Page)
         self.setting_2.clicked.connect(self.switch_to_setting_Page)
         self.pushButton_4.clicked.connect(self.switch_to_class_with_students)
+
+        self.pushButton_3.clicked.connect(self.open_image_dialog)
 
         # Back button
         self.pushButton_64.clicked.connect(self.switch_to_class_with_students)
@@ -150,3 +153,33 @@ class MyMainPage(QDialog, Ui_Dialog):
                 self.update_status_button(student["status"])
         else:
             print("No student selected for status change.")
+
+    def open_image_dialog(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.ReadOnly  # Open the dialog in read-only mode
+
+        file_name, _ = QFileDialog.getOpenFileName(
+            self,  # The parent widget
+            "Select Image",  # Title of the dialog
+            "",  # Default directory (empty means current directory)
+            "Images (*.png *.xpm *.jpg *.jpeg *.bmp);;All Files (*)",  # Filters
+            options=options  # Options for the dialog
+        )
+        if file_name:  # Check if a file was selected
+            self.image_path = file_name  # Save the path to the selected image
+            print(f"Selected image path: {self.image_path}")  # Optional: Print the selected path
+            self.send_image_to_server(self.image_path)  # Send the image to the server
+
+    def send_image_to_server(self, image_path):
+        global url
+        url = f"{url[:-1]}/find/FAF-232"  # Adjust your endpoint as needed
+        print(url)
+        files = {'file': open(image_path, 'rb')}  # Open the image file in binary mode
+
+        response = requests.post(url, files=files)
+
+        if response.status_code == 200:
+            print(f"Image uploaded successfully! - {response.text}")
+        else:
+            print(f"Failed to upload image: {response.status_code} - {response.text}")
+
