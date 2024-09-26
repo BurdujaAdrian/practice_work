@@ -12,7 +12,7 @@ import argparse
 model = InceptionResnetV1(pretrained='vggface2').eval()
 
 sr = cv2.dnn_superres.DnnSuperResImpl_create()
-sr.readModel("model-weights/ESPCN_x4.pb")
+sr.readModel("$env:PRACTICE_SERVER_DIR/server-app/face_recognition/model-weights/ESPCN_x4.pb")
 sr.setModel("espcn", 4)
 
 
@@ -107,7 +107,7 @@ def load_people_from_pocketbase(base_url, collection_name, token, group_list):
         person_id = person['id']
         person_name = person['name']
         embedding = None
-        url2 = f"../../database/pb_data/storage/4i53pyqjukl7lxi/{person_id}/{person['Photo']}"
+        url2 = f"$env:PRACTICE_SERVER_DIR/database/pb_data/storage/4i53pyqjukl7lxi/{person_id}/{person['Photo']}"
         image = cv2.imread(url2)
         if 'Embedding' in person and person['Embedding']:
             embedding = np.array(json.loads(person['Embedding']), dtype=np.float32)
@@ -194,8 +194,8 @@ if __name__ == "__main__":
 
     base_url = 'http://127.0.0.1:8090'
     collection_name = 'Students'
-    yolo_cfg = 'yolov3-face.cfg'
-    yolo_weights = 'model-weights/yolov3-wider_16000.weights'
+    yolo_cfg = '$env:PRACTICE_SERVER_DIR/server-app/face_recognition/model-weights/yolov3-face.cfg'
+    yolo_weights = '$env:PRACTICE_SERVER_DIR/server-app/face_recognition/model-weights/yolov3-wider_16000.weights'
     admin_email = 'admin@gmail.com'
     admin_password = '1234567890'
 
