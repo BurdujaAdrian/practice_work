@@ -29,7 +29,7 @@ class MyMainPage(QDialog, Ui_Dialog):
         # Fetch the student data
         response = requests.get(url[:-1] + "/api/collections/students/records?fields=id,name,Age,Group,Gender")
         response_data = response.json()
-        self.students ="" #response_data.get("items", [])
+        self.students =response_data.get("items", [])
 
         # Dictionary to store buttons
         self.student_buttons = {}
