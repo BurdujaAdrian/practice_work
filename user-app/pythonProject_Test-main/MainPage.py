@@ -2,13 +2,13 @@ from enum import global_str
 
 import requests
 from urllib3 import request
-
+import json
 from ui_mainpage import Ui_Dialog
 from PySide6.QtCore import QCoreApplication
 from PySide6.QtWidgets import QDialog, QPushButton, QRadioButton, QLabel, QWidget
 from PySide6.QtCore import QRect
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QPushButton, QWidget
+from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QPushButton, QWidget, QFileDialog
 from PySide6.QtCore import QCoreApplication
 url = ''
 
@@ -26,15 +26,13 @@ class MyMainPage(QDialog, Ui_Dialog):
         self.widget_3.setHidden(True)
         global url
         url = requests.get("https://raw.githubusercontent.com/burdujaadrian/practice_work/main/url.txt").text
-        print(url)
-        print(url[:-1]+"/api/collections/students/records?fields=id,name,Age,Group,Gender")
-
-        response = requests.get(url[:-1]+"/api/collections/students/records?fields=id,name,Age,Group,Gender")
-        print(response.text)
-
-        # Parse the response
+        # Fetch the student data
+        response = requests.get(url[:-1] + "/api/collections/students/records?fields=id,name,Age,Group,Gender")
         response_data = response.json()
-        self.students = response_data.get("items", [])  # Extract student items from response
+        self.students =response_data.get("items", [])
+
+        # Dictionary to store buttons
+        self.student_buttons = {}
 
         # Add student widgets
         index = 0
@@ -45,29 +43,28 @@ class MyMainPage(QDialog, Ui_Dialog):
         spacing = 20
 
         for student in self.students:
-            # Main student button formatting
+            # Create a button for each student
             button = QPushButton(parent=self.Students, text=f"{student['name']}")
             button.setStyleSheet(u"background-color: #8DB7F5;\n"
                                  "border-radius: 10px;\n"
                                  "font-size:15px;\n")
 
-            # Position the main button
+            # Position the button
             button.setGeometry(QRect(30 + (width + padding) * index, 30 + (height + spacing) * row, width, height))
 
             # Procent label inside the button
-            procent = QLabel(parent=button, text="10%")
-            procent.setStyleSheet("font-size: 12px; color: black;")
+            procent_label = QLabel(parent=button, text="0%")
+            procent_label.setStyleSheet("font-size: 12px; color: black;")
+            procent_width = 30
+            procent_height = 20
+            procent_x = (button.width() - procent_width) // 2
+            procent_y = button.height() - procent_height - 10
+            procent_label.setGeometry(procent_x, procent_y, procent_width, procent_height)
 
-            # Center the label horizontally and place it at the bottom
-            procent_width = 30  # Approximate width of the procent text
-            procent_height = 20  # Approximate height of the procent text
-            procent_x = (button.width() - procent_width) // 2  # Horizontal center
-            procent_y = button.height() - procent_height - 10  # Slightly above the bottom
+            # Store the button in the dictionary using the student's ID or name
+            self.student_buttons[student['name']] = {'button': button, 'label': procent_label}
 
-            # Position the procent label
-            procent.setGeometry(procent_x, procent_y, procent_width, procent_height)
-
-            # Connect the button click to the student-specific page
+            # Connect the button click to a function
             button.clicked.connect(lambda _, s=student: self.switch_to_page_with_present(s))
 
             index += 1
@@ -86,6 +83,8 @@ class MyMainPage(QDialog, Ui_Dialog):
         self.setting_1.clicked.connect(self.switch_to_setting_Page)
         self.setting_2.clicked.connect(self.switch_to_setting_Page)
         self.pushButton_4.clicked.connect(self.switch_to_class_with_students)
+        self._3.clicked.connect(self.switch_to_upload_Page)
+        self.pushButton_3.clicked.connect(self.open_image_dialog)
 
         # Back button
         self.pushButton_64.clicked.connect(self.switch_to_class_with_students)
@@ -97,10 +96,13 @@ class MyMainPage(QDialog, Ui_Dialog):
         self.stackedWidget.setCurrentIndex(0)
 
     def switch_to_classes_Page(self):
-        self.stackedWidget.setCurrentIndex(3)
+        self.stackedWidget.setCurrentIndex(4)
 
     def switch_to_setting_Page(self):
         self.stackedWidget.setCurrentIndex(1)
+
+    def switch_to_upload_Page(self):
+        self.stackedWidget.setCurrentIndex(3)
 
     def switch_to_class_with_students(self):
         self.stackedWidget.setCurrentIndex(2)
@@ -110,7 +112,7 @@ class MyMainPage(QDialog, Ui_Dialog):
         self.current_student_key = student['id']
 
         if student:
-            self.stackedWidget.setCurrentIndex(4)
+            self.stackedWidget.setCurrentIndex(5)
             # Update the buttons with student info
             self.pushButton_57.setText(QCoreApplication.translate("Dialog", student["name"], None))
             self.pushButton_58.setText(QCoreApplication.translate("Dialog", student["Age"], None))
@@ -150,3 +152,45 @@ class MyMainPage(QDialog, Ui_Dialog):
                 self.update_status_button(student["status"])
         else:
             print("No student selected for status change.")
+
+    def open_image_dialog(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.ReadOnly  # Open the dialog in read-only mode
+
+        file_name, _ = QFileDialog.getOpenFileName(
+            self,
+            "Select Image",
+            "",
+            "Images (*.png *.xpm *.jpg *.jpeg *.bmp);;All Files (*)",
+            options=options
+        )
+        if file_name:  # Check if a file was selected
+            self.image_path = file_name  # Save the path to the selected image
+            print(f"Selected image path: {self.image_path}")  # Optional: Print the selected path
+            self.send_image_to_server(self.image_path)  # Send the image to the server
+
+    def send_image_to_server(self, image_path):
+        global url
+        url = f"{url[:-1]}/find/FAF-232"  # Adjust your endpoint as needed
+        print(url)
+        files = {'file': open(image_path, 'rb')}  # Open the image file in binary mode
+
+        response = requests.post(url, files=files)
+
+        if response.status_code == 200:
+            print(f"Image uploaded successfully! - {response.text}")
+
+            # Assuming the response is a dictionary with student names as keys and percentages as values
+            json_text = response.text.replace("'", '"')
+            procent_data = json.loads(json_text)
+
+            # Update each button's label with the new percentage
+            for student_name, procent_value in procent_data.items():
+                if student_name in self.student_buttons:
+                    button_info = self.student_buttons[student_name]
+                    button_info['label'].setText(procent_value+"%")  # Update the label with the percentage
+                    self.stackedWidget.setCurrentIndex(2)
+        else:
+            print(f"Failed to upload image: {response.status_code} - {response.text}")
+
+
