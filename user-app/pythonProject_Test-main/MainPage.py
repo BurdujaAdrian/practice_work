@@ -25,12 +25,12 @@ class MyMainPage(QDialog, Ui_Dialog):
         # Hide widget initially
         self.widget_3.setHidden(True)
         global url
-        url = requests.get("https://raw.githubusercontent.com/burdujaadrian/practice_work/main/url.txt").text
-
-        # Fetch the student data
-        response = requests.get(url[:-1] + "/api/collections/students/records?fields=id,name,Age,Group,Gender")
-        response_data = response.json()
-        self.students = response_data.get("items", [])
+        # url = requests.get("https://raw.githubusercontent.com/burdujaadrian/practice_work/main/url.txt").text
+        #
+        # # Fetch the student data
+        # response = requests.get(url[:-1] + "/api/collections/students/records?fields=id,name,Age,Group,Gender")
+        # response_data = response.json()
+        self.students ="" #response_data.get("items", [])
 
         # Dictionary to store buttons
         self.student_buttons = {}
@@ -114,7 +114,7 @@ class MyMainPage(QDialog, Ui_Dialog):
 
         if student:
             self.stackedWidget.setCurrentIndex(5)
-            # Update the buttons with student info
+
             self.pushButton_57.setText(QCoreApplication.translate("Dialog", student["name"], None))
             self.pushButton_58.setText(QCoreApplication.translate("Dialog", student["Age"], None))
             self.pushButton_59.setText(QCoreApplication.translate("Dialog", student["Group"], None))
@@ -159,11 +159,11 @@ class MyMainPage(QDialog, Ui_Dialog):
         options |= QFileDialog.ReadOnly  # Open the dialog in read-only mode
 
         file_name, _ = QFileDialog.getOpenFileName(
-            self,  # The parent widget
-            "Select Image",  # Title of the dialog
-            "",  # Default directory (empty means current directory)
-            "Images (*.png *.xpm *.jpg *.jpeg *.bmp);;All Files (*)",  # Filters
-            options=options  # Options for the dialog
+            self,
+            "Select Image",
+            "",
+            "Images (*.png *.xpm *.jpg *.jpeg *.bmp);;All Files (*)",
+            options=options
         )
         if file_name:  # Check if a file was selected
             self.image_path = file_name  # Save the path to the selected image
@@ -189,9 +189,8 @@ class MyMainPage(QDialog, Ui_Dialog):
             for student_name, procent_value in procent_data.items():
                 if student_name in self.student_buttons:
                     button_info = self.student_buttons[student_name]
-                    button_info['label'].setText(procent_value+"%")  # Update the label with the percentage
+                    button_info['label'].setText(procent_value+"%")
                     self.stackedWidget.setCurrentIndex(2)
-
         else:
             print(f"Failed to upload image: {response.status_code} - {response.text}")
 
