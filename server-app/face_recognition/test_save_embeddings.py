@@ -64,7 +64,7 @@ def extract_face_embedding(face_image):
 
 
 # Load the image of the person (change 'person1.jpg' to your image file)
-image_path = 'Denis2jpg.jpg'
+image_path = 'Nichita.jpg'
 image = cv2.imread(image_path)
 
 if image is None:
@@ -76,7 +76,9 @@ else:
     if face_image is not None:
         # Extract and save the face embeddings
         embedding = extract_face_embedding(face_image)
+        print(embedding)
         np.save('embeddings/Denis_sr_log.npy', embedding)
+
         print(f"Embeddings saved to 'embeddings/person1_sr_log.npy'")
     else:
         print("No face detected in the image.")

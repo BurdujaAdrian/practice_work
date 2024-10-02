@@ -52,7 +52,7 @@ def extract_face_embedding(face_image, model):
 def main():
     # Load YOLOv7 model
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    yolov7_model = load_yolov7_model("model-weights/yolov7-face.pt").to(device)
+    yolov7_model = load_yolov7_model("model-weights/yolov3-wider_16000.weights").to(device)
 
     # Initialize FaceNet model
     facenet_model = InceptionResnetV1(pretrained='vggface2').eval()
@@ -73,6 +73,7 @@ def main():
 
         # Extract face embeddings
         embedding = extract_face_embedding(face_log, facenet_model)
+        print(embedding)
 
         # Save the embeddings to a file
         np.save('embeddings/person2_embedding.npy', embedding)

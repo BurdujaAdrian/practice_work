@@ -26,6 +26,7 @@ class MyMainPage(QDialog, Ui_Dialog):
         self.widget_3.setHidden(True)
         global url
         url = requests.get("https://raw.githubusercontent.com/burdujaadrian/practice_work/main/url.txt").text
+        print(url)
         # Fetch the student data
         response = requests.get(url[:-1] + "/api/collections/students/records?fields=id,name,Age,Group,Gender")
         response_data = response.json()
