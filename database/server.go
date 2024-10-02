@@ -13,6 +13,7 @@ import (
 )
 
 func main() {
+
 	app := pocketbase.New()
 
 	// serves static files from the provided public dir (if exists)
