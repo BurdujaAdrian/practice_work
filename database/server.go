@@ -13,6 +13,7 @@ import (
 )
 
 func main() {
+
 	app := pocketbase.New()
 
 	// serves static files from the provided public dir (if exists)
@@ -25,7 +26,11 @@ func main() {
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		// Register new "POST /upload" route for uploading a file
 		e.Router.POST("/find/:group", func(c echo.Context) error {
-			group := c.QueryParam("group")
+			group := c.PathParam("group")
+
+			if group == "" {
+				return c.String(http.StatusBadRequest, "group was not specified")
+			}
 			// Source: Retrieve file from the request
 			file, err := c.FormFile("file")
 			if err != nil {
@@ -50,18 +55,20 @@ func main() {
 			if _, err := dst.ReadFrom(src); err != nil {
 				return c.String(http.StatusInternalServerError, "Error saving the file")
 			}
-
+			print(group)
 			print(file.Filename)
 			cmd := exec.Command(
 				"python",
 				"../server-app/face_recognition/main.py",
-				"./uploads/"+file.Filename,
+				"uploads/"+file.Filename,
 				group,
 			)
+			print(group)
 
 			output, err := cmd.Output()
 			if err != nil {
-				return err
+				print(err)
+				return c.String(http.StatusInternalServerError, "error runing the python scrips")
 			}
 
 			return c.String(http.StatusOK, string(output))
