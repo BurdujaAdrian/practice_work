@@ -71,7 +71,29 @@ func main() {
 				return c.String(http.StatusInternalServerError, "error runing the python scrips")
 			}
 
-			return c.String(http.StatusOK, string(output))
+			// Get list of images from the 'recognised_faces' folder
+			recognisedFacesPath := "../server-app/recognised_faces/"
+			files, err := os.ReadDir(recognisedFacesPath)
+			if err != nil {
+				return c.String(http.StatusInternalServerError, "Error reading recognised faces folder")
+			}
+
+			var faceImages []string
+			for _, file := range files {
+				if !file.IsDir() {
+					// Optionally, read and encode image content in base64, or just send filenames
+					filePath := recognisedFacesPath + file.Name()
+					faceImages = append(faceImages, filePath)
+				}
+			}
+
+			// Create a response containing the script output and the list of recognised faces
+			response := map[string]interface{}{
+				"python_output":    string(output),
+				"recognised_faces": faceImages,
+			}
+
+			return c.JSON(http.StatusOK, response)
 		}, apis.ActivityLogger(app))
 
 		return nil
