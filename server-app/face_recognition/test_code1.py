@@ -1,101 +1,73 @@
 import cv2
 import numpy as np
+import time
 import matplotlib.pyplot as plt
 
-# Load the pre-trained model
-net = cv2.dnn.readNetFromCaffe('deploy.prototxt', 'res10_300x300_ssd_iter_140000.caffemodel')
+# YOLO face detection
+def load_yolo_model(config_path, weights_path):
+    net = cv2.dnn.readNetFromDarknet(config_path, weights_path)
+    return net
 
+def detect_faces_yolo(image, net, confidence_threshold=0.3, nms_threshold=0.0):
+    blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416), swapRB=True, crop=False)
+    net.setInput(blob)
+    layer_names = net.getLayerNames()
 
-# Sliding window function
-def sliding_window(image, step_size, window_size):
-    # Slide a window across the image
-    for y in range(0, image.shape[0], step_size):
-        for x in range(0, image.shape[1], step_size):
-            yield (x, y, image[y:y + window_size[1], x:x + window_size[0]])
+    # Handle both cases for getUnconnectedOutLayers()
+    unconnected_layers = net.getUnconnectedOutLayers()
 
+    if isinstance(unconnected_layers, np.ndarray):
+        output_layers = [layer_names[i - 1] for i in unconnected_layers.flatten()]
+    else:
+        output_layers = [layer_names[unconnected_layers - 1]]
 
-def detect_faces(image, net, confidence_threshold, window_size=(100, 100), step_size=90):
-    (h, w) = image.shape[:2]
-    faces = []
+    start_time = time.time()  # Start timing
+    layer_outputs = net.forward(output_layers)
+    detection_time = time.time() - start_time  # Calculate detection time
+    print(f"Face detection took: {detection_time:.2f} seconds")
 
-    # Slide a window over the image
-    for (x, y, window) in sliding_window(image, step_size, window_size):
-        if window.shape[0] != window_size[1] or window.shape[1] != window_size[0]:
-            continue
+    height, width = image.shape[:2]
+    boxes = []
+    confidences = []
 
-            # Prepare the window for the model
-        blob = cv2.dnn.blobFromImage(cv2.resize(window, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0))
-        net.setInput(blob)
-        detections = net.forward()
-
-        # Loop through the detections and adjust for window position
-        for i in range(detections.shape[2]):
-            confidence = detections[0, 0, i, 2]
+    for output in layer_outputs:
+        for detection in output:
+            scores = detection[5:]
+            class_id = np.argmax(scores)
+            confidence = scores[class_id]
             if confidence > confidence_threshold:
-                box = detections[0, 0, i, 3:7] * np.array(
-                    [window_size[0], window_size[1], window_size[0], window_size[1]])
-                (startX, startY, endX, endY) = box.astype("int")
+                box = detection[0:4] * np.array([width, height, width, height])
+                (centerX, centerY, w, h) = box.astype("int")
+                x = int(centerX - (w / 2))
+                y = int(centerY - (h / 2))
+                boxes.append([x, y, int(w), int(h)])
+                confidences.append(float(confidence))
 
-                # Adjust coordinates for the window's position in the original image
-                faces.append((x + startX, y + startY, x + endX, y + endY))
+    # Apply non-maximum suppression to remove overlapping boxes
+    indices = cv2.dnn.NMSBoxes(boxes, confidences, confidence_threshold, nms_threshold)
+    final_boxes = []
 
-    return faces
+    if len(indices) > 0:
+        if isinstance(indices[0], (list, np.ndarray)):
+            final_boxes = [boxes[i[0]] for i in indices]
+        else:
+            final_boxes = [boxes[i] for i in indices]
 
+    return final_boxes
 
-# Non-max suppression function remains unchanged
-def non_max_suppression(boxes, overlapThresh=0.1):
-    if len(boxes) == 0:
-        return []
+# Load the crowd image
+crowd_image = cv2.imread('test_group3.jpg')
+net = load_yolo_model("model-weights/yolov3-face.cfg", "model-weights/yolov3-wider_16000.weights")
 
-    boxes = np.array(boxes)
-    pick = []
+# Detect faces and measure time taken
+faces = detect_faces_yolo(crowd_image, net)
 
-    x1 = boxes[:, 0]
-    y1 = boxes[:, 1]
-    x2 = boxes[:, 2]
-    y2 = boxes[:, 3]
+# Draw bounding boxes around detected faces and display the final image
+for (x, y, w, h) in faces:
+    cv2.rectangle(crowd_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-    area = (x2 - x1 + 1) * (y2 - y1 + 1)
-    idxs = np.argsort(y2)
-
-    while len(idxs) > 0:
-        last = len(idxs) - 1
-        i = idxs[last]
-        pick.append(i)
-
-        xx1 = np.maximum(x1[i], x1[idxs[:last]])
-        yy1 = np.maximum(y1[i], y1[idxs[:last]])
-
-        xx2 = np.minimum(x2[i], x2[idxs[:last]])
-        yy2 = np.minimum(y2[i], y2[idxs[:last]])
-
-        w = np.maximum(0, xx2 - xx1 + 1)
-        h = np.maximum(0, yy2 - yy1 + 1)
-
-        overlap = (w * h) / area[idxs[:last]]
-        idxs = np.delete(idxs, np.concatenate(([last], np.where(overlap > overlapThresh)[0])))
-
-    return boxes[pick].astype("int")
-
-
-# Load your high-resolution image
-image = cv2.imread('test_group4.jpg')
-
-# Detect faces in the high-resolution image
-faces = detect_faces(image, net, confidence_threshold=0.5)
-
-# Apply non-max suppression to reduce overlapping face boxes
-faces_nms = non_max_suppression(faces)
-
-# Draw the final face detections on the image
-final_image = image.copy()
-for (startX, startY, endX, endY) in faces_nms:
-    cv2.rectangle(final_image, (startX, startY), (endX, endY), (0, 255, 0), 2)
-
-# Convert the image to RGB and display it
-image_rgb_nms = cv2.cvtColor(final_image, cv2.COLOR_BGR2RGB)
-plt.imshow(final_image)
+# Save and display the final image
+cv2.imwrite("output_faces/detected_faces.jpg", crowd_image)
+plt.imshow(cv2.cvtColor(crowd_image, cv2.COLOR_BGR2RGB))
 plt.axis('off')
 plt.show()
-
-

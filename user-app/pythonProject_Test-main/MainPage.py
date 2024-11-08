@@ -4,11 +4,9 @@ import requests
 from urllib3 import request
 import json
 from ui_mainpage import Ui_Dialog
-from PySide6.QtCore import QCoreApplication
-from PySide6.QtWidgets import QDialog, QPushButton, QRadioButton, QLabel, QWidget
 from PySide6.QtCore import QRect
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QPushButton, QWidget, QFileDialog
+from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QPushButton, QWidget, QFileDialog, QLabel
 from PySide6.QtCore import QCoreApplication
 url = ''
 
@@ -28,9 +26,9 @@ class MyMainPage(QDialog, Ui_Dialog):
         url = requests.get("https://raw.githubusercontent.com/burdujaadrian/practice_work/main/url.txt").text
         print(url)
         # Fetch the student data
-        response = requests.get(url[:-1] + "/api/collections/students/records?fields=id,name,Age,Group,Gender")
-        response_data = response.json()
-        self.students =response_data.get("items", [])
+        #response =requests.get(url[:-1] + "/api/collections/students/records?fields=id,name,Age,Group,Gender")
+        #response_data = response.json()
+        self.students ='' #response_data.get("items", [])
 
         # Dictionary to store buttons
         self.student_buttons = {}
