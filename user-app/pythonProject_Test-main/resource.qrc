@@ -1,0 +1,12 @@
+<RCC>
+  <qresource prefix="/">
+    <file>Images/Logo.png</file>
+    <file>Images/back 1.png</file>
+    <file>Images/back.png</file>
+    <file>Images/graduation-cap (1).png</file>
+    <file>Images/Group 91.png</file>
+    <file>Images/search-interface-symbol.png</file>
+    <file>Images/student_17584468.png</file>
+    <file>Images/training.png</file>
+  </qresource>
+</RCC>
