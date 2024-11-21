@@ -3,14 +3,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "server/api/index.go",
+      "src": "database/server.go",
       "use": "vercel-go@1.0.0"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "server/api/index.go"
+      "dest": "database/server.go"
     }
   ]
 }
