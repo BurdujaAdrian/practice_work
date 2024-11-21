@@ -123,11 +123,20 @@ def admin_login(base_url, admin_email, admin_password):
 
 def load_people_from_pocketbase(base_url, collection_name, token, group_list):
     try:
-        group_filter = " || ".join([f'Group="{group}"' for group in group_list])
-        url = f"{base_url}/api/collections/{collection_name}/records?filter={group_filter}"
+        print(group_list[0])
+        group_filter = " || ".join([f'Group="{Group}"' for Group in group_list]) 
+        url = f"{base_url}/api/collections/Groups/records?filter={group_filter}"
         headers = {"Authorization": f"Bearer {token}"}
         response = requests.get(url, headers=headers)
-        response.raise_for_status()
+        print(response)
+        data = response.json()["items"]
+        print(data)
+        for group in data:
+            group_id = group['id']
+            group_id_list.append(group_id)
+        group_filter = " || ".join([f'Group="{Group}"' for Group in group_id_list]) 
+        url = f"{base_url}/api/collections/{collection_name}/records?filter={group_filter}"
+        response = requests.get(url, headers=headers)
         data = response.json()["items"]
         people = []
         for person in data:
