@@ -1,16 +1,11 @@
 
 {
-  "version": 2,
-  "builds": [
+  "trailingSlash" : false,
+  "rewrites" : [
     {
-      "src": "database/server.go",
-      "use": "vercel-go@1.0.0"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "database/server.go"
+      "source" : "./database/(.*)"
+      "destination" : "./database/server.go"
+
     }
   ]
 }
