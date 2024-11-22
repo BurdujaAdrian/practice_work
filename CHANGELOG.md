@@ -4,7 +4,7 @@
 - Fixed the issue why the .png were not loaded in github when the 75 records were added to DB, it was not related to gitignore, but now it is fixed (https://github.com/BurdujaAdrian/practice_work/pull/15)
 - Changed main.py so that embedding of faces of records from DB are not calculatead each time, a checking procedure was added to check if it was previously computed and to use it instead ()
 - Solved the connection issue between backend and DB, it was due to a change of field names (https://github.com/BurdujaAdrian/practice_work/pull/12)
-- 
+- Worked on researching and trying to use a different host (ngrok)
 
 ## 0.3.3 (Nov 8, 2024) 
 
