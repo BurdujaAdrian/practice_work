@@ -1,3 +1,7 @@
+## 0.3.4 (Nov 22,2024)
+
+- Modified the [python script]{https://github.com/BurdujaAdrian/practice_work/blob/main/user-app/pythonProject_Test-main/MainPage.py} and [start_server.bat]{https://github.com/BurdujaAdrian/practice_work/blob/main/database/start_server.bat} to use the static url from ngrok.
+
 ## 0.3.3 (Nov 8, 2024) 
 
 - We added error handling to the face recognition program to avoid crashes[377a31e](https://github.com/BurdujaAdrian/practice_work/commit/377a31ea2a30695c200626a4da715e876625330e)
