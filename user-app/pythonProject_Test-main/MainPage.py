@@ -26,9 +26,9 @@ class MyMainPage(QDialog, Ui_Dialog):
         url = requests.get("https://raw.githubusercontent.com/burdujaadrian/practice_work/main/url.txt").text
         print(url)
         # Fetch the student data
-        #response =requests.get(url[:-1] + "/api/collections/students/records?fields=id,name,Age,Group,Gender")
-        #response_data = response.json()
-        self.students ='' #response_data.get("items", [])
+        response =requests.get(url[:-1] + "/api/collections/students/records?fields=id,Name,Group")
+        response_data = response.json()
+        self.students =response_data.get("items", [])
 
         # Dictionary to store buttons
         self.student_buttons = {}
@@ -43,7 +43,7 @@ class MyMainPage(QDialog, Ui_Dialog):
 
         for student in self.students:
             # Create a button for each student
-            button = QPushButton(parent=self.Students, text=f"{student['name']}")
+            button = QPushButton(parent=self.Students, text=f"{student['Name']}")
             button.setStyleSheet(u"background-color: #8DB7F5;\n"
                                  "border-radius: 10px;\n"
                                  "font-size:15px;\n")
@@ -60,8 +60,8 @@ class MyMainPage(QDialog, Ui_Dialog):
             procent_y = button.height() - procent_height - 10
             procent_label.setGeometry(procent_x, procent_y, procent_width, procent_height)
 
-            # Store the button in the dictionary using the student's ID or name
-            self.student_buttons[student['name']] = {'button': button, 'label': procent_label}
+            # Store the button in the dictionary using the student's ID or Name
+            self.student_buttons[student['Name']] = {'button': button, 'label': procent_label}
 
             # Connect the button click to a function
             button.clicked.connect(lambda _, s=student: self.switch_to_page_with_present(s))
@@ -113,10 +113,9 @@ class MyMainPage(QDialog, Ui_Dialog):
         if student:
             self.stackedWidget.setCurrentIndex(5)
             # Update the buttons with student info
-            self.pushButton_57.setText(QCoreApplication.translate("Dialog", student["name"], None))
-            self.pushButton_58.setText(QCoreApplication.translate("Dialog", student["Age"], None))
+            self.pushButton_57.setText(QCoreApplication.translate("Dialog", student["Name"], None))
             self.pushButton_59.setText(QCoreApplication.translate("Dialog", student["Group"], None))
-            self.pushButton_60.setText(QCoreApplication.translate("Dialog", student["Gender"], None))
+            #self.pushButton_60.setText(QCoreApplication.translate("Dialog", student["Gender"], None))
             self.pushButton_61.setText(QCoreApplication.translate("Dialog", student["id"], None))
 
             # Update the status button based on the student's current status
@@ -156,37 +155,37 @@ class MyMainPage(QDialog, Ui_Dialog):
         options = QFileDialog.Options()
         options |= QFileDialog.ReadOnly  # Open the dialog in read-only mode
 
-        file_name, _ = QFileDialog.getOpenFileName(
+        file_Name, _ = QFileDialog.getOpenFileName(
             self,
             "Select Image",
             "",
             "Images (*.png *.xpm *.jpg *.jpeg *.bmp);;All Files (*)",
             options=options
         )
-        if file_name:  # Check if a file was selected
-            self.image_path = file_name  # Save the path to the selected image
+        if file_Name:  # Check if a file was selected
+            self.image_path = file_Name  # Save the path to the selected image
             print(f"Selected image path: {self.image_path}")  # Optional: Print the selected path
             self.send_image_to_server(self.image_path)  # Send the image to the server
 
     def send_image_to_server(self, image_path):
         global url
-        url = f"{url[:-1]}/find/FAF-232"  # Adjust your endpoint as needed
-        print(url)
+        url_1 = f"{url[:-1]}/find/FAF-232"  # Adjust your endpoint as needed
+        print(url_1)
         files = {'file': open(image_path, 'rb')}  # Open the image file in binary mode
 
-        response = requests.post(url, files=files)
-
+        response = requests.post(url_1, files=files)
+        print(response)
         if response.status_code == 200:
             print(f"Image uploaded successfully! - {response.text}")
 
-            # Assuming the response is a dictionary with student names as keys and percentages as values
+            # Assuming the response is a dictionary with student Names as keys and percentages as values
             json_text = response.text.replace("'", '"')
-            procent_data = json.loads(json_text)
+            procent_data = json.loads(json_text)["python_output"]
 
             # Update each button's label with the new percentage
-            for student_name, procent_value in procent_data.items():
-                if student_name in self.student_buttons:
-                    button_info = self.student_buttons[student_name]
+            for student_Name, procent_value in procent_data.items():
+                if student_Name in self.student_buttons:
+                    button_info = self.student_buttons[student_Name]
                     button_info['label'].setText(procent_value+"%")  # Update the label with the percentage
                     self.stackedWidget.setCurrentIndex(2)
         else:
