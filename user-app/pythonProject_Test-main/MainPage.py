@@ -23,8 +23,9 @@ class MyMainPage(QDialog, Ui_Dialog):
         # Hide widget initially
         self.widget_3.setHidden(True)
         global url
-        url = requests.get("https://raw.githubusercontent.com/burdujaadrian/practice_work/main/url.txt").text
+        url = r'https://cuddly-falcon-solid.ngrok-free.app/'
         print(url)
+        
         # Fetch the student data
         #response =requests.get(url[:-1] + "/api/collections/students/records?fields=id,name,Age,Group,Gender")
         #response_data = response.json()
@@ -170,11 +171,11 @@ class MyMainPage(QDialog, Ui_Dialog):
 
     def send_image_to_server(self, image_path):
         global url
-        url = f"{url[:-1]}/find/FAF-232"  # Adjust your endpoint as needed
+        url2 = f"{url[:-1]}/find/FAF-232"  # Adjust your endpoint as needed
         print(url)
         files = {'file': open(image_path, 'rb')}  # Open the image file in binary mode
 
-        response = requests.post(url, files=files)
+        response = requests.post(url2, files=files)
 
         if response.status_code == 200:
             print(f"Image uploaded successfully! - {response.text}")
