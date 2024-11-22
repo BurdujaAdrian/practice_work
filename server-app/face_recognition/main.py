@@ -124,30 +124,52 @@ def admin_login(base_url, admin_email, admin_password):
 def load_people_from_pocketbase(base_url, collection_name, token, group_list):
     try:
         print(group_list[0])
-        group_filter = " || ".join([f'Group="{Group}"' for Group in group_list]) 
+        group_filter = " || ".join([f'Group_name="{Group}"' for Group in group_list])
         url = f"{base_url}/api/collections/Groups/records?filter={group_filter}"
         headers = {"Authorization": f"Bearer {token}"}
         response = requests.get(url, headers=headers)
         print(response)
-        data = response.json()["items"]
+        
+        if response.status_code != 200:
+            raise Exception(f"Failed to fetch groups: {response.text}")
+        
+        data = response.json().get("items", [])
         print(data)
+        
+        group_id_list = []
         for group in data:
-            group_id = group['id']
-            group_id_list.append(group_id)
+            group_id = group.get('id')
+            if group_id:
+                group_id_list.append(group_id)
+        
         group_filter = " || ".join([f'Group="{Group}"' for Group in group_id_list]) 
         url = f"{base_url}/api/collections/{collection_name}/records?filter={group_filter}"
         response = requests.get(url, headers=headers)
-        data = response.json()["items"]
+        
+        if response.status_code != 200:
+            raise Exception(f"Failed to fetch people: {response.text}")
+        
+        data = response.json().get("items", [])
         people = []
+        
         for person in data:
-            person_id = person['id']
-            person_name = person['name']
+            person_id = person.get('id')
+            person_name = person.get('name')
             embedding = None
-            url2 = f"pb_data/storage/4i53pyqjukl7lxi/{person_id}/{person['Photo']}"
-            image = cv2.imread(url2)
+            photo_url = f"{base_url}/pb_data/storage/4i53pyqjukl7lxi/{person_id}/{person.get('Photo')}"
+            image = None
+            try:
+                image = cv2.imread(photo_url)
+                if image is None:
+                    raise Exception(f"Failed to load image from {photo_url}")
+            except Exception as e:
+                print(f"Error loading image for {person_name}: {e}")
+            
             if 'Embedding' in person and person['Embedding']:
                 embedding = np.array(json.loads(person['Embedding']), dtype=np.float32)
+            
             people.append({'id': person_id, 'name': person_name, 'Embedding': embedding, 'Photo': image})
+        
         return people
     except Exception as e:
         print(f"Error loading people from Pocketbase: {e}")
