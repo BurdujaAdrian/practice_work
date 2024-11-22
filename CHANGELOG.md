@@ -2,6 +2,7 @@
 
 - Modified the [python script]{https://github.com/BurdujaAdrian/practice_work/blob/main/user-app/pythonProject_Test-main/MainPage.py} and [start_server.bat]{https://github.com/BurdujaAdrian/practice_work/blob/main/database/start_server.bat} to use the static url from ngrok.
 - Fixed the issue why the .png were not loaded in github when the 75 records were added to DB, it was not related to gitignore, but now it is fixed (https://github.com/BurdujaAdrian/practice_work/pull/15)
+- 2.	Changed main.py so that embedding of faces of records from DB are not calculatead each time, a checking procedure was added to check if it was previously computed and to use it instead ()
 
 ## 0.3.3 (Nov 8, 2024) 
 
