@@ -692,7 +692,7 @@ class Ui_Dialog(object):
         self.setting_2.setText(QCoreApplication.translate("Dialog", u"Setting", None))
         self._3.setText(QCoreApplication.translate("Dialog", u"Upload", None))
         self.label_5.setText("")
-        self.label.setText(QCoreApplication.translate("Dialog", u"Welcome Elene Bujor, attendance system is ready to operate.", None))
+        self.label.setText(QCoreApplication.translate("Dialog", u"Don't start something that you cannot finish!", None))
         self.pushButton_10.setText("")
         self.pushButton_11.setText("")
         self.label_7.setText(QCoreApplication.translate("Dialog", u"Search", None))
