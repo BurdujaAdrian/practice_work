@@ -55,8 +55,8 @@ func main() {
 			if _, err := dst.ReadFrom(src); err != nil {
 				return c.String(http.StatusInternalServerError, "Error saving the file")
 			}
-			print(group)
-			print(file.Filename)
+			print(group, "\n")
+			print(file.Filename, "\n\n")
 			cmd := exec.Command(
 				"python",
 				"../server-app/face_recognition/main.py",
