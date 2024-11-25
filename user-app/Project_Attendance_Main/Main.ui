@@ -1,0 +1,3035 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1041</width>
+    <height>810</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>Myanmar Khyay</family>
+    <pointsize>100</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Face Recognition</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color:&quot;#D9D9D9&quot;;
+font-family: Myanmar Khyay;</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <item row="0" column="2">
+    <widget class="QWidget" name="main_menu" native="true">
+     <property name="font">
+      <font>
+       <family>Myanmar Khyay</family>
+       <pointsize>15</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:&quot;#F5F5F5&quot;;</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_6">
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>20</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QWidget" name="widget_2" native="true">
+        <property name="maximumSize">
+         <size>
+          <width>700</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color:&quot;#F5F5F5&quot;;</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="maximumSize">
+            <size>
+             <width>900</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <pointsize>16</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">textSize:&quot;150dp&quot;;</string>
+           </property>
+           <property name="text">
+            <string>Welcome Bill Gates, attendance system is ready to operate.</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget_4" native="true">
+        <property name="styleSheet">
+         <string notr="true">background-color:&quot;#F5F5F5&quot;;
+
+QPushButton {
+    color: black;
+    height: 35px;
+    border: none;
+ 
+}
+
+
+</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QPushButton" name="pushButton_10">
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <kerning>true</kerning>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-top-left-radius: 2px;          
+border-bottom-left-radius: 2px;       
+border-top-right-radius: 2px;         
+border-bottom-right-radius: 2px;      </string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>Images/menu.png</normaloff>Images/menu.png</iconset>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="autoDefault">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_9">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_11">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+    color: black;
+    height: 35px;
+    border: none;
+ 
+}
+
+
+QPushButton:checked{
+background-color:&quot;#F5FAFE&quot;;
+color:&quot;#1F95EF&quot;;
+font-weight:bold;
+
+}
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>Images/search-interface-symbol.png</normaloff>Images/search-interface-symbol.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLineEdit" name="lineEdit">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>450</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>500</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="mouseTracking">
+              <bool>true</bool>
+             </property>
+             <property name="acceptDrops">
+              <bool>true</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">lineEdit-&gt;setStyleSheet(
+    &quot;QLineEdit {&quot;
+    &quot;    background-color: #D9D9D9;&quot;       // Background color (white in this case)
+    &quot;    border: 2px solid #935152;&quot;       // Border color
+    &quot;    border-top-left-radius: 20px;&quot;    // Top-left corner radius
+    &quot;    border-top-right-radius: 20px;&quot;   // Top-right corner radius
+    &quot;    border-bottom-left-radius: 20px;&quot; // Bottom-left corner radius
+    &quot;    border-bottom-right-radius: 20px;&quot;// Bottom-right corner radius
+    &quot;    padding: 5px;&quot;                    // Padding for inner text alignment
+    &quot;}&quot;
+);
+</string>
+             </property>
+             <property name="frame">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string>what are you looking for ?(in one click you can find any person)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_10">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>300</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QStackedWidget" name="stackedWidget">
+        <property name="styleSheet">
+         <string notr="true">background-color:&quot;#F5F5F5&quot;;</string>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="Page_Search">
+         <widget class="QLabel" name="label_7">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>10</y>
+            <width>391</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <family>Myanmar Khyay</family>
+            <pointsize>25</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Today lectures</string>
+          </property>
+         </widget>
+         <widget class="QWidget" name="widget_5" native="true">
+          <property name="geometry">
+           <rect>
+            <x>30</x>
+            <y>90</y>
+            <width>161</width>
+            <height>201</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #ffff;
+border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;      
+
+   </string>
+          </property>
+          <widget class="QLabel" name="label_20">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>151</width>
+             <height>201</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;   </string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resource.qrc">:/Curs/Images/Math1.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_9">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>60</y>
+             <width>111</width>
+             <height>71</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>10000</width>
+             <height>10000</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <pointsize>-1</pointsize>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	background-color: transparent;
+    color: white;
+    border: 1px solid #CCCCCC;
+	border-radius:20px;
+    padding: 10px;
+    font-size: 15px;
+    text-align: center; /* Center text */
+}</string>
+           </property>
+           <property name="text">
+            <string>Discrete  
+Mathematics</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="widget_6" native="true">
+          <property name="geometry">
+           <rect>
+            <x>230</x>
+            <y>90</y>
+            <width>161</width>
+            <height>201</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #ffff;
+border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;      
+
+   </string>
+          </property>
+          <widget class="QLabel" name="label_21">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>151</width>
+             <height>201</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;   </string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resource.qrc">:/Curs/Images/Math2.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_13">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>60</y>
+             <width>111</width>
+             <height>71</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>10000</width>
+             <height>10000</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <pointsize>-1</pointsize>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	background-color: transparent;
+    color: white;
+    border: 1px solid #CCCCCC;
+	border-radius:20px;
+    padding: 10px;
+    font-size: 15px;
+    text-align: center; /* Center text */
+}</string>
+           </property>
+           <property name="text">
+            <string>PSA</string>
+           </property>
+          </widget>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="Page_Setting">
+         <widget class="QLabel" name="label_8">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>10</y>
+            <width>361</width>
+            <height>81</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <family>Myanmar Khyay</family>
+            <pointsize>30</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Setting</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="Classe_Students">
+         <widget class="QWidget" name="Students" native="true">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>861</width>
+            <height>740</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color:&quot;#F5F5F5&quot;;</string>
+          </property>
+          <widget class="QWidget" name="widget_8" native="true">
+           <property name="geometry">
+            <rect>
+             <x>30</x>
+             <y>30</y>
+             <width>161</width>
+             <height>201</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+background-color: #8DB7F5;
+border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;      
+
+   </string>
+           </property>
+           <widget class="QPushButton" name="pushButton_6">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>120</y>
+              <width>141</width>
+              <height>50</height>
+             </rect>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>50</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>10000</width>
+              <height>10000</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Myanmar Khyay</family>
+              <pointsize>-1</pointsize>
+             </font>
+            </property>
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    color: black;
+    padding: 10px;
+    font-size: 13px;
+    text-align: center; /* Center text */
+}</string>
+            </property>
+            <property name="text">
+             <string>Emma Watson</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_3">
+            <property name="geometry">
+             <rect>
+              <x>30</x>
+              <y>30</y>
+              <width>101</width>
+              <height>81</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Myanmar Khyay</family>
+              <pointsize>5</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>Images/user1.png</normaloff>Images/user1.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>50</width>
+              <height>50</height>
+             </size>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_7">
+            <property name="geometry">
+             <rect>
+              <x>40</x>
+              <y>160</y>
+              <width>75</width>
+              <height>24</height>
+             </rect>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    color: black;
+    border: 1px solid #ff0000;
+    padding: 5px;
+    font-size: 13px;
+    text-align: center; /* Center text */
+}</string>
+            </property>
+            <property name="text">
+             <string>50%</string>
+            </property>
+           </widget>
+          </widget>
+          <widget class="QWidget" name="widget_18" native="true">
+           <property name="geometry">
+            <rect>
+             <x>220</x>
+             <y>10</y>
+             <width>171</width>
+             <height>251</height>
+            </rect>
+           </property>
+           <widget class="QLabel" name="label_42">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>20</y>
+              <width>151</width>
+              <height>201</height>
+             </rect>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color:#D9D9D9;
+border: 1px solid #ff0000;
+border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;   </string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="scaledContents">
+             <bool>true</bool>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_4">
+            <property name="geometry">
+             <rect>
+              <x>40</x>
+              <y>50</y>
+              <width>91</width>
+              <height>71</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Myanmar Khyay</family>
+              <pointsize>5</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: transparent;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>Images/user1.png</normaloff>Images/user1.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>50</width>
+              <height>50</height>
+             </size>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_21">
+            <property name="geometry">
+             <rect>
+              <x>30</x>
+              <y>120</y>
+              <width>111</width>
+              <height>50</height>
+             </rect>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>50</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>10000</width>
+              <height>10000</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Myanmar Khyay</family>
+              <pointsize>-1</pointsize>
+             </font>
+            </property>
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+background-color: transparent;
+    color: black;
+    padding: 10px;
+    font-size: 13px;
+    text-align: center; /* Center text */
+}</string>
+            </property>
+            <property name="text">
+             <string>Emma Watson</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_43">
+            <property name="geometry">
+             <rect>
+              <x>60</x>
+              <y>170</y>
+              <width>49</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: transparent;</string>
+            </property>
+            <property name="text">
+             <string>     0%</string>
+            </property>
+           </widget>
+          </widget>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="Page_Upload">
+         <widget class="QWidget" name="Upload_Part" native="true">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>971</width>
+            <height>751</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QWidget{
+background-color: &quot;#D9D9D9&quot;;
+}</string>
+          </property>
+          <widget class="QPushButton" name="pushButton_8">
+           <property name="geometry">
+            <rect>
+             <x>360</x>
+             <y>320</y>
+             <width>151</width>
+             <height>121</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-top-left-radius: 20px;          
+border-bottom-left-radius: 20px;       
+border-top-right-radius: 20px;         
+border-bottom-right-radius: 20px;      </string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>Images/1UploadPage.png</normaloff>Images/1UploadPage.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>150</width>
+             <height>150</height>
+            </size>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="Page_Upload2">
+         <widget class="QWidget" name="widget_26" native="true">
+          <property name="geometry">
+           <rect>
+            <x>200</x>
+            <y>30</y>
+            <width>421</width>
+            <height>221</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #E2DEDE;
+border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;      
+</string>
+          </property>
+          <widget class="QWidget" name="layoutWidget_4">
+           <property name="geometry">
+            <rect>
+             <x>50</x>
+             <y>30</y>
+             <width>143</width>
+             <height>171</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_12">
+            <item>
+             <widget class="QLabel" name="label_6">
+              <property name="font">
+               <font>
+                <family>Myanmar Khyay</family>
+                <pointsize>15</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Total students:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_32">
+              <property name="font">
+               <font>
+                <family>Myanmar Khyay</family>
+                <pointsize>15</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Not present: </string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_40">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Unrecognizable:      &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_34">
+              <property name="font">
+               <font>
+                <family>Myanmar Khyay</family>
+                <pointsize>15</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Present: </string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="layoutWidget_5">
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>30</y>
+             <width>129</width>
+             <height>171</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_13">
+            <item>
+             <widget class="QPushButton" name="pushButton_67">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Myanmar Khyay</family>
+                <pointsize>15</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>15</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_68">
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Myanmar Khyay</family>
+                <pointsize>15</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>6</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_41">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Myanmar Khyay</family>
+                <pointsize>15</pointsize>
+               </font>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::FocusPolicy::StrongFocus</enum>
+              </property>
+              <property name="text">
+               <string>         2</string>
+              </property>
+              <property name="scaledContents">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_69">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Myanmar Khyay</family>
+                <pointsize>15</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>9</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QLabel" name="label_37">
+           <property name="geometry">
+            <rect>
+             <x>160</x>
+             <y>10</y>
+             <width>101</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <pointsize>15</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Attendance:</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="widget_14" native="true">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>270</y>
+            <width>761</width>
+            <height>391</height>
+           </rect>
+          </property>
+          <widget class="QLabel" name="label_38">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>60</y>
+             <width>571</width>
+             <height>271</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap>:/Class_Picutre/Images/Class_Attendance.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_39">
+           <property name="geometry">
+            <rect>
+             <x>320</x>
+             <y>20</y>
+             <width>141</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <pointsize>15</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Picture of class:</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_5">
+           <property name="geometry">
+            <rect>
+             <x>314</x>
+             <y>343</y>
+             <width>121</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <pointsize>10</pointsize>
+             <italic>false</italic>
+             <bold>false</bold>
+             <underline>false</underline>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: #d9d9d9;
+border-top-left-radius: 20px;          
+border-bottom-left-radius: 20px;       
+border-top-right-radius: 20px;         
+border-bottom-right-radius: 20px;      
+
+ </string>
+           </property>
+           <property name="text">
+            <string>Back to class</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="Page_Classes">
+         <widget class="QWidget" name="widget_7" native="true">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>60</y>
+            <width>161</width>
+            <height>201</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #ffff;
+border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;      
+
+   </string>
+          </property>
+          <widget class="QLabel" name="label_22">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>151</width>
+             <height>201</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;   </string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resource.qrc">:/Curs/Images/Math1.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_14">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>60</y>
+             <width>111</width>
+             <height>71</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>10000</width>
+             <height>10000</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <pointsize>-1</pointsize>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	background-color: transparent;
+    color: white;
+    border: 1px solid #CCCCCC;
+	border-radius:20px;
+    padding: 10px;
+    font-size: 15px;
+    text-align: center; /* Center text */
+}</string>
+           </property>
+           <property name="text">
+            <string>Discrete  
+Mathematics</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="widget_9" native="true">
+          <property name="geometry">
+           <rect>
+            <x>200</x>
+            <y>60</y>
+            <width>161</width>
+            <height>201</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #ffff;
+border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;      
+
+   </string>
+          </property>
+          <widget class="QLabel" name="label_24">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>151</width>
+             <height>201</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;   </string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resource.qrc">:/Curs/Images/Math2.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_16">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>60</y>
+             <width>111</width>
+             <height>71</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>10000</width>
+             <height>10000</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <pointsize>-1</pointsize>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	background-color: transparent;
+    color: white;
+    border: 1px solid #CCCCCC;
+	border-radius:20px;
+    padding: 10px;
+    font-size: 15px;
+    text-align: center; /* Center text */
+}</string>
+           </property>
+           <property name="text">
+            <string>PSA</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QLabel" name="label_25">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>0</y>
+            <width>391</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <family>Myanmar Khyay</family>
+            <pointsize>20</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Today lectures</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_26">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>280</y>
+            <width>391</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <family>Myanmar Khyay</family>
+            <pointsize>20</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Tusday</string>
+          </property>
+         </widget>
+         <widget class="QWidget" name="widget_10" native="true">
+          <property name="geometry">
+           <rect>
+            <x>390</x>
+            <y>60</y>
+            <width>161</width>
+            <height>201</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #ffff;
+border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;      
+
+   </string>
+          </property>
+          <widget class="QLabel" name="label_27">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>151</width>
+             <height>201</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;   </string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resource.qrc">:/Curs/Images/Physics.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_17">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>60</y>
+             <width>111</width>
+             <height>71</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>10000</width>
+             <height>10000</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <pointsize>-1</pointsize>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	background-color: transparent;
+    color: white;
+    border: 1px solid #CCCCCC;
+	border-radius:20px;
+    padding: 10px;
+    font-size: 15px;
+    text-align: center; /* Center text */
+}</string>
+           </property>
+           <property name="text">
+            <string>Physics</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QLabel" name="label_28">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>570</y>
+            <width>391</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <family>Myanmar Khyay</family>
+            <pointsize>20</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Tusday</string>
+          </property>
+         </widget>
+         <widget class="QWidget" name="widget_11" native="true">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>340</y>
+            <width>161</width>
+            <height>201</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #ffff;
+border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;      
+
+   </string>
+          </property>
+          <widget class="QLabel" name="label_30">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>151</width>
+             <height>201</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;   </string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resource.qrc">:/Images/Eth.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_19">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>60</y>
+             <width>111</width>
+             <height>71</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>10000</width>
+             <height>10000</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <pointsize>-1</pointsize>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	background-color: transparent;
+    color: white;
+    border: 1px solid #CCCCCC;
+	border-radius:20px;
+    padding: 10px;
+    font-size: 15px;
+    text-align: center; /* Center text */
+}</string>
+           </property>
+           <property name="text">
+            <string>Ethics </string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="widget_12" native="true">
+          <property name="geometry">
+           <rect>
+            <x>200</x>
+            <y>340</y>
+            <width>161</width>
+            <height>201</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #ffff;
+border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;      
+
+   </string>
+          </property>
+          <widget class="QLabel" name="label_31">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>151</width>
+             <height>201</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;   </string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resource.qrc">:/Curs/Images/234.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_20">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>60</y>
+             <width>111</width>
+             <height>71</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>10000</width>
+             <height>10000</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <pointsize>-1</pointsize>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	background-color: transparent;
+    color: white;
+    border: 1px solid #CCCCCC;
+	border-radius:20px;
+    padding: 10px;
+    font-size: 15px;
+    text-align: center; /* Center text */
+}</string>
+           </property>
+           <property name="text">
+            <string>PBL</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="widget_15" native="true">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>640</y>
+            <width>161</width>
+            <height>201</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #ffff;
+border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;      
+
+   </string>
+          </property>
+          <widget class="QLabel" name="label_33">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>151</width>
+             <height>201</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;   </string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resource.qrc">:/Curs/Images/Math2.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_22">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>60</y>
+             <width>111</width>
+             <height>71</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>10000</width>
+             <height>10000</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <pointsize>-1</pointsize>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	background-color: transparent;
+    color: white;
+    border: 1px solid #CCCCCC;
+	border-radius:20px;
+    padding: 10px;
+    font-size: 15px;
+    text-align: center; /* Center text */
+}</string>
+           </property>
+           <property name="text">
+            <string>PSA</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="widget_16" native="true">
+          <property name="geometry">
+           <rect>
+            <x>200</x>
+            <y>640</y>
+            <width>161</width>
+            <height>201</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #ffff;
+border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;      
+
+   </string>
+          </property>
+          <widget class="QLabel" name="label_35">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>151</width>
+             <height>201</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;   </string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resource.qrc">:/Curs/Images/Math2.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_24">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>60</y>
+             <width>111</width>
+             <height>71</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>10000</width>
+             <height>10000</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <pointsize>-1</pointsize>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	background-color: transparent;
+    color: white;
+    border: 1px solid #CCCCCC;
+	border-radius:20px;
+    padding: 10px;
+    font-size: 15px;
+    text-align: center; /* Center text */
+}</string>
+           </property>
+           <property name="text">
+            <string>PSA</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="widget_17" native="true">
+          <property name="geometry">
+           <rect>
+            <x>380</x>
+            <y>640</y>
+            <width>161</width>
+            <height>201</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #ffff;
+border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;      
+
+   </string>
+          </property>
+          <widget class="QLabel" name="label_36">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>151</width>
+             <height>201</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;   </string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resource.qrc">:/Curs/Images/Math2.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_25">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>60</y>
+             <width>111</width>
+             <height>71</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>10000</width>
+             <height>10000</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <pointsize>-1</pointsize>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	background-color: transparent;
+    color: white;
+    border: 1px solid #CCCCCC;
+	border-radius:20px;
+    padding: 10px;
+    font-size: 15px;
+    text-align: center; /* Center text */
+}</string>
+           </property>
+           <property name="text">
+            <string>PSA</string>
+           </property>
+          </widget>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="Class_MD">
+         <widget class="QLabel" name="label_2">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>0</y>
+            <width>391</width>
+            <height>71</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <family>Myanmar Khyay</family>
+            <pointsize>20</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Class Discrete Mathematics</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="Student_Info">
+         <widget class="QWidget" name="widget_13" native="true">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>871</width>
+            <height>740</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:#F5F5F5;</string>
+          </property>
+          <widget class="QWidget" name="widget_24" native="true">
+           <property name="geometry">
+            <rect>
+             <x>200</x>
+             <y>390</y>
+             <width>431</width>
+             <height>221</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: #E2DEDE;
+border-top-left-radius: 10px;          
+border-bottom-left-radius: 10px;       
+border-top-right-radius: 10px;         
+border-bottom-right-radius: 10px;      
+</string>
+           </property>
+           <widget class="QWidget" name="layoutWidget">
+            <property name="geometry">
+             <rect>
+              <x>50</x>
+              <y>30</y>
+              <width>116</width>
+              <height>161</height>
+             </rect>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_8">
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="font">
+                <font>
+                 <family>Myanmar Khyay</family>
+                 <pointsize>15</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Name:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_13">
+               <property name="font">
+                <font>
+                 <family>Myanmar Khyay</family>
+                 <pointsize>15</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Group:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_16">
+               <property name="font">
+                <font>
+                 <family>Myanmar Khyay</family>
+                 <pointsize>15</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Student ID:</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="layoutWidget">
+            <property name="geometry">
+             <rect>
+              <x>250</x>
+              <y>30</y>
+              <width>129</width>
+              <height>161</height>
+             </rect>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_9">
+             <item>
+              <widget class="QPushButton" name="pushButton_57">
+               <property name="font">
+                <font>
+                 <family>Myanmar Khyay</family>
+                 <pointsize>15</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Emma Watson</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_58">
+               <property name="font">
+                <font>
+                 <family>Myanmar Khyay</family>
+                 <pointsize>15</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>17</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_61">
+               <property name="font">
+                <font>
+                 <family>Myanmar Khyay</family>
+                 <pointsize>15</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>35230</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QLabel" name="label_11">
+            <property name="geometry">
+             <rect>
+              <x>120</x>
+              <y>10</y>
+              <width>191</width>
+              <height>20</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Myanmar Khyay</family>
+              <pointsize>15</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Student Information:</string>
+            </property>
+           </widget>
+          </widget>
+          <widget class="QPushButton" name="pushButton_62">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>330</x>
+             <y>300</y>
+             <width>141</width>
+             <height>51</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: #108476;
+border-top-left-radius: 20px;          
+border-bottom-left-radius: 20px;       
+border-top-right-radius: 20px;         
+border-bottom-right-radius: 20px;      
+color: #ffffff;
+
+</string>
+           </property>
+           <property name="text">
+            <string>Present</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_64">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>20</y>
+             <width>75</width>
+             <height>24</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+             <pointsize>15</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+        display: inline-block;       /* Inline block layout */
+        border-radius: 12px;         /* Rounded corners */
+    }
+</string>
+           </property>
+           <property name="text">
+            <string>Back</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>Images/back.png</normaloff>Images/back.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>25</width>
+             <height>25</height>
+            </size>
+           </property>
+          </widget>
+          <widget class="QLabel" name="Original_Picture_ID">
+           <property name="geometry">
+            <rect>
+             <x>450</x>
+             <y>120</y>
+             <width>151</width>
+             <height>151</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+            </font>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resource.qrc">:/newPrefix/Images/Emma_Photo_2.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLabel" name="Class_Picture_ID">
+           <property name="geometry">
+            <rect>
+             <x>220</x>
+             <y>120</y>
+             <width>141</width>
+             <height>151</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>Myanmar Khyay</family>
+            </font>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resource.qrc">:/newPrefix/Images/Emma_Photo_1.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </widget>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QWidget" name="widget" native="true">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>50</width>
+       <height>820</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+    background-color: &quot;#FFFFFF&quot;;
+}
+
+QPushButton {
+    color: white;
+    height: 35px;
+    border: none;
+    
+}
+
+
+QPushButton:checked{
+background-color:&quot;#F5FAFE&quot;;
+color:&quot;#1F95EF&quot;;
+font-weight:bold;
+
+}</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>28</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>28</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="sizeIncrement">
+         <size>
+          <width>100</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>Images/Logo.png</normaloff>Images/Logo.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>45</width>
+          <height>45</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="search_1">
+          <property name="font">
+           <font>
+            <family>Myanmar Khyay</family>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>Images/search-interface-symbol.png</normaloff>Images/search-interface-symbol.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>30</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="autoExclusive">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="classes_1">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>Images/student_17584468.png</normaloff>Images/student_17584468.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>30</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="autoExclusive">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_5">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="setting_1">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>Images/settings.png</normaloff>Images/settings.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>25</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="autoExclusive">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_12">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_12">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>Images/1upload.png</normaloff>Images/1upload.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>25</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="autoExclusive">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>28</width>
+          <height>350</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>10</width>
+            <height>10</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="minimumSize">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap>Images/Group 91.png</pixmap>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>10</width>
+            <height>10</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_9">
+        <property name="orientation">
+         <enum>Qt::Orientation::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>15</width>
+          <height>10</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QWidget" name="widget_3" native="true">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>130</width>
+       <height>820</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+    background-color: &quot;#FFFFFF&quot;;
+}
+
+QPushButton {
+    color: black;
+    height: 35px;
+    border: none;
+    padding-left:10px;
+	border-top-left-radius:10px;
+	border-bottom-left-radius:10px;
+}
+
+
+QPushButton:checked{
+background-color:&quot;#F5FAFE&quot;;
+color:&quot;#1F95EF&quot;;
+font-weight:bold;
+
+}
+
+</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <spacer name="horizontalSpacer_5">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>28</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QPushButton" name="pushButton">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>70</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>120</width>
+            <height>70</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>Images/Logo.png</normaloff>Images/Logo.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>80</width>
+            <height>70</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_6">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="search_2">
+          <property name="font">
+           <font>
+            <family>Myanmar Khyay</family>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Search</string>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>Images/search-interface-symbol.png</normaloff>Images/search-interface-symbol.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>25</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="autoExclusive">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_7">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="classes_2">
+          <property name="font">
+           <font>
+            <family>Myanmar Khyay</family>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Classes</string>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>Images/student_17584468.png</normaloff>Images/student_17584468.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>25</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="autoExclusive">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_8">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="setting_2">
+          <property name="font">
+           <font>
+            <family>Myanmar Khyay</family>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Setting</string>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>Images/settings.png</normaloff>Images/settings.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>25</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="autoExclusive">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_11">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_upload">
+          <property name="font">
+           <font>
+            <family>Myanmar Khyay</family>
+            <pointsize>15</pointsize>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Upload</string>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>Images/1upload.png</normaloff>Images/1upload.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>25</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="autoExclusive">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Orientation::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>28</width>
+          <height>350</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <spacer name="horizontalSpacer_7">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>18</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_5">
+          <property name="minimumSize">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap>Images/Group 91.png</pixmap>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_8">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>18</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_10">
+        <property name="orientation">
+         <enum>Qt::Orientation::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>15</width>
+          <height>10</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>pushButton_10</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>widget_3</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>237</x>
+     <y>101</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>165</x>
+     <y>254</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_10</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>widget</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>237</x>
+     <y>101</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>49</x>
+     <y>351</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>setting_1</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>setting_2</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>48</x>
+     <y>344</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>184</x>
+     <y>348</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>classes_1</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>classes_2</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>48</x>
+     <y>264</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>184</x>
+     <y>273</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>search_1</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>search_2</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>28</x>
+     <y>172</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>184</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>search_2</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>search_1</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>184</x>
+     <y>198</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>48</x>
+     <y>183</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>classes_2</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>classes_1</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>184</x>
+     <y>273</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>48</x>
+     <y>264</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>setting_2</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>setting_1</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>164</x>
+     <y>344</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>48</x>
+     <y>344</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_12</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_upload</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>32</x>
+     <y>409</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>93</x>
+     <y>405</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_upload</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_12</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>85</x>
+     <y>415</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>37</x>
+     <y>417</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

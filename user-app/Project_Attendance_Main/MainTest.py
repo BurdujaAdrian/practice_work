@@ -1,4 +1,8 @@
-from ui_mainpage import Ui_Dialog
+"Now Main"
+
+
+import requests
+from ui_maintest import Ui_Dialog
 from PySide6.QtCore import QRect, QCoreApplication
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QPushButton, QFileDialog, QLabel
@@ -6,15 +10,42 @@ from PySide6.QtWidgets import QWidget
 import json
 from PySide6.QtCore import QTimer
 
-class MyMainPage(QDialog, Ui_Dialog):
+" To frame all the design UI from Qt line in this Python code "
+
+"TO DO"
+"1)Transfer UI to python code - done "
+"2)Analyse all parts from MainPage2 and put here to work - 80% done "
+"3)Finish "
+
+
+
+"Fix the error 20%"
+
+"Page Student"
+"-Make to work database for students"
+"-Button with students / Present-Absent"
+"-Make the picture to apper from database"
+
+"Upload page 1"
+"-Upload Button make to work from PC"
+
+"Upload page 2"
+"-Make the picture to apper on widget"
+"-Make the attendance data to change for DB"
+
+
+class MyMainPage2(QDialog, Ui_Dialog):
     def __init__(self):
         super().__init__()
 
         self.setupUi(self)
         self.setWindowTitle("Main Page")
 
+        # Set the initial page of the stackedWidget to index 0 (Now Main page)
+        self.stackedWidget.setCurrentIndex(0)
+
         # Hide widget initially
-        self.widget_3.setHidden(False)
+        self.widget_3.setHidden(True)
 
         # Simulate local student data (instead of fetching from a server)
         self.students = [
@@ -42,9 +73,17 @@ class MyMainPage(QDialog, Ui_Dialog):
         self.classes_2.clicked.connect(self.switch_to_classes_Page)
         self.setting_1.clicked.connect(self.switch_to_setting_Page)
         self.setting_2.clicked.connect(self.switch_to_setting_Page)
-        self.pushButton_4.clicked.connect(self.switch_to_class_with_students)
-        self._3.clicked.connect(self.switch_to_upload_Page)
-        self.pushButton_3.clicked.connect(self.open_image_dialog)
+        # Button upload
+        self.pushButton_12.clicked.connect(self.switch_to_upload_Page)
+        self.pushButton_upload.clicked.connect(self.switch_to_upload_Page)
+        self.pushButton_8.clicked.connect(self.switch_to_upload_Page2)
+
+        #Button back to class
+        self.pushButton_5.clicked.connect(self.switch_to_class_back)
+
+        # self.pushButton_4.clicked.connect(self.switch_to_class_with_students)
+        # self._3.clicked.connect(self.switch_to_upload_Page)
+        # self.pushButton_3.clicked.connect(self.open_image_dialog)
 
         # Back button
         self.pushButton_64.clicked.connect(self.switch_to_class_with_students)
@@ -53,7 +92,7 @@ class MyMainPage(QDialog, Ui_Dialog):
         self.pushButton_62.clicked.connect(self.toggle_status)
 
     def auto_refresh(self):
-        """Simulate periodic data refresh every 5 seconds."""
+        """Simulate periodic data refresh every 5 seconds for UI Design"""
         print("Auto-refreshing data...")
         # Example of dynamically changing student data
         for student in self.students:
@@ -113,21 +152,29 @@ class MyMainPage(QDialog, Ui_Dialog):
         self.stackedWidget.setCurrentIndex(0)
 
     def switch_to_classes_Page(self):
-        self.stackedWidget.setCurrentIndex(4)
+        self.stackedWidget.setCurrentIndex(5)
 
     def switch_to_setting_Page(self):
         self.stackedWidget.setCurrentIndex(1)
 
+    #Button with upload page
     def switch_to_upload_Page(self):
         self.stackedWidget.setCurrentIndex(3)
 
+    def switch_to_upload_Page2(self):
+        self.stackedWidget.setCurrentIndex(4)
+
     def switch_to_class_with_students(self):
+        self.stackedWidget.setCurrentIndex(2)
+
+    def switch_to_class_back(self):
         self.stackedWidget.setCurrentIndex(2)
 
     def switch_to_page_with_present(self, student):
         """Switch to the page with the selected student's details."""
         self.current_student_key = student['id']
 
+        #Page with students
         if student:
             self.stackedWidget.setCurrentIndex(5)
             # Update the buttons with student info
