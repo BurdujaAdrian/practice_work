@@ -14,7 +14,8 @@ CHANGELOG.md
 /server-app/Face-Recognition-From-Crowd-master/
 
 /database/pb_data/logs.db*
-
+/database/pb_data/data.db-shm
+/database/pb_data/data.db-wal
 *.pb
 
 *.cfg
