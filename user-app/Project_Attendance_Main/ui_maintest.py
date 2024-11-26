@@ -637,6 +637,12 @@ class Ui_Dialog(object):
         self.label_26.setObjectName(u"label_26")
         self.label_26.setGeometry(QRect(30, 10, 391, 41))
         self.label_26.setFont(font10)
+
+
+
+
+
+
         self.widget_10 = QWidget(self.widget_12)
         self.widget_10.setObjectName(u"widget_10")
         self.widget_10.setGeometry(QRect(10, 10, 841, 271))
@@ -700,6 +706,12 @@ class Ui_Dialog(object):
         self.label_25.setObjectName(u"label_25")
         self.label_25.setGeometry(QRect(20, 10, 391, 41))
         self.label_25.setFont(font10)
+
+
+
+
+
+
         self.widget_17 = QWidget(self.widget_12)
         self.widget_17.setObjectName(u"widget_17")
         self.widget_17.setGeometry(QRect(-1, 919, 851, 261))
@@ -1522,10 +1534,12 @@ class Ui_Dialog(object):
         self.label_17.setText(QCoreApplication.translate("Dialog", u" Time: 00:00AM/PM", None))
         self.label_26.setText(QCoreApplication.translate("Dialog", u"Tuesday", None))
         self.label_22.setText("")
-        self.pushButton_14.setText(QCoreApplication.translate("Dialog", u"Name  \n"
-"Class", None))
+
+        self.pushButton_14.setText(QCoreApplication.translate("Dialog", u"Name  \n""Class", None))
         self.label_9.setText(QCoreApplication.translate("Dialog", u"      Name Group", None))
         self.label_10.setText(QCoreApplication.translate("Dialog", u" Time: 00:00AM/PM", None))
+
+
         self.label_25.setText(QCoreApplication.translate("Dialog", u"Today lectures", None))
         self.label_29.setText(QCoreApplication.translate("Dialog", u"Thursday", None))
         self.label_30.setText("")

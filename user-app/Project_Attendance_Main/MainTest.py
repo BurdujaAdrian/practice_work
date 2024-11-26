@@ -1,9 +1,10 @@
 "Now Main"
-
+import datetime
+import random
 
 import requests
 from ui_maintest import Ui_Dialog
-from PySide6.QtCore import QRect, QCoreApplication
+from PySide6.QtCore import QRect, QCoreApplication, QSize
 from PySide6.QtGui import QFont, QPixmap
 from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QPushButton, QFileDialog, QLabel, QScrollArea, \
     QHBoxLayout
@@ -27,9 +28,6 @@ Student Page code part:
 -Make the local picture from backend to apper 
 
 
-Class Page code part:
--Add a scroll system to make all 90 students visible.
-
 Classes Page and Search code part:
 -Create a Python-based system to generate blocks like students for Classes.
 -Display the class name, group, and time on each block.
@@ -47,7 +45,7 @@ class MyMainPage2(QDialog, Ui_Dialog):
 
         self.setupUi(self)
         self.setWindowTitle("Main Page")
-        self.setFixedSize(1000, 700)
+        self.setFixedSize(1000, 800)
 
 
 
@@ -67,6 +65,9 @@ class MyMainPage2(QDialog, Ui_Dialog):
         self.widget_3.setHidden(True)
         global url
         global token
+        global uuid
+        global headers
+        global group_id
         url = r'https://cuddly-falcon-solid.ngrok-free.app/'
         print(url)
         #self.students = []
@@ -82,7 +83,6 @@ class MyMainPage2(QDialog, Ui_Dialog):
 
         # Initialize the current student key
         self.current_student_key = None
-
         # Connect buttons to functions
         self.search_1.clicked.connect(self.switch_to_classes_Page)
         self.search_2.clicked.connect(self.switch_to_classes_Page)
@@ -109,10 +109,22 @@ class MyMainPage2(QDialog, Ui_Dialog):
         # Connect the pushButton_62 click to toggle status
         self.pushButton_62.clicked.connect(self.toggle_status)
 
+    def generate_random_color_hex(self):
+        # Generate a random color using RGB values
+        r = random.randint(0, 255)
+        g = random.randint(0, 255)
+        b = random.randint(0, 255)
+
+        # Convert the RGB values to hexadecimal format
+        hex_color = f'#{r:02x}{g:02x}{b:02x}'
+
+        return hex_color
 
     def login(self):
         global url
         global token
+        global uuid
+        global group_id
         email = self.lineEdit_2.text()
         password = self.lineEdit_3.text()
         print(email)
@@ -123,6 +135,15 @@ class MyMainPage2(QDialog, Ui_Dialog):
         response = requests.post(admin_login_url, json = data)
         print(response)
         token = response.json()["token"]
+        headers = {"Authorization": f"Bearer {token}"}
+        print(email)
+        response_id = requests.get(url[:-1] + f"/api/collections/Teachers/records?filter=Email='{email}'",
+                                   headers=headers)
+        uuid = response_id.json()["items"][0]["id"]
+        print(uuid)
+        response_group = requests.get(url[:-1] + f"/api/collections/Groups/records?fields=Group_name,id", headers=headers)
+        group_id = response_group.json()
+        print(group_id)
         self.widget.setHidden(False)
         self.widget_2.setHidden(False)
         self.widget_4.setHidden(False)
@@ -130,7 +151,19 @@ class MyMainPage2(QDialog, Ui_Dialog):
         self.take_student_info()
         self.create_student_buttons()
         self.label.setText(f"Welcome {name[0].capitalize()}" + " " + f"{name[1].capitalize()}" + ", attendance system is ready to operate.")
+        self.create_classes_buttons_for_teacher()
         self.stackedWidget.setCurrentIndex(5)
+
+
+    def get_schedule_info(self):
+        global uuid
+        global url
+        global token
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.get(url[:-1] + f"/api/collections/Schedule/records?filter=Teacher_ID='{uuid}'",
+                                   headers=headers)
+        print(response.json()['items'])
+        return response.json()['items']
 
 
     def take_student_info(self):
@@ -229,6 +262,72 @@ class MyMainPage2(QDialog, Ui_Dialog):
         self.label_no_results.setText("No students found.")  # Assuming you have a label to show this message
         self.label_no_results.setVisible(True)  # Make the label visible
 
+    """ make this work"""
+
+    def create_classes_buttons_for_teacher(self):
+        global url
+
+        # Fetch the teacher data from the server
+
+        index = 0
+        row = 0
+        width = 151
+        height = 201
+        padding = 40
+        spacing = 20
+        today_index = datetime.datetime.today().weekday()
+
+        # Loop through each teacher and create a button with class details
+        class_info = self.get_schedule_info()
+        print(class_info)
+        for clas in class_info:
+            if datetime.datetime.today() == self.transform_day_to_index(clas["Day"]):
+                self.class_label = QPushButton(self.widget_10)
+                self.class_label.setObjectName(u"label_22")
+                self.class_label.setGeometry(QRect(10 + (width + padding) * index, 60 + (height + spacing) * row, width, height))
+                color = self.generate_random_color_hex()
+                self.class_label.setStyleSheet(u"border-top-left-radius: 10px;          \n"
+                                            "border-bottom-left-radius: 10px;       \n"
+                                            "border-top-right-radius: 10px;         \n"
+                                            "border-bottom-right-radius: 10px;   "
+                                            f"background-color: {color}")
+                #self.class_label.setPixmap(QPixmap(u":/Curs/Images/Math1.png"))
+
+                self.pushButton_14.setText(QCoreApplication.translate("Dialog", u"Name  \n""Class", None))
+                self.label_9.setText(QCoreApplication.translate("Dialog", u"      Name Group", None))
+                self.label_10.setText(QCoreApplication.translate("Dialog", u" Time: 00:00AM/PM", None))
+                index += 1
+                if index > 3:
+                    index = 0
+                    row += 1
+
+    def transform_day_to_index(self, day):
+        # Define the mapping of days to indices
+        day_to_index = {
+            "Mon": 0,
+            "Tue": 1,
+            "Wed": 2,
+            "Thu": 3,
+            "Fri": 4,
+            "Sat": 5,
+            "Sun": 6
+        }
+
+        # Return the corresponding index for the day
+        return day_to_index.get(day, "Invalid day")
+
+
+
+    def switch_to_teacher_page(self, teacher):
+        """Switch to the teacher's detail page."""
+        self.stackedWidget.setCurrentIndex(6)  # Assume teacher details are shown in index 6
+        self.label_teacher_name.setText(f"{teacher['Name']} {teacher['Surname']}")
+        self.label_teacher_class.setText(f"Class: {teacher['ClassName']}")
+        self.label_teacher_group.setText(f"Group: {teacher['GroupName']}")
+        self.label_teacher_time.setText(f"Time: {teacher['Time']}")
+
+
+
     def create_student_buttons(self):
         """Re-create student buttons with updated data."""
         index = 0
@@ -265,6 +364,8 @@ class MyMainPage2(QDialog, Ui_Dialog):
 
             # Connect the button click to a function to show student details
             button.clicked.connect(lambda _, s=student: self.switch_to_page_with_present(s))
+
+
 
             # Update index and row for button positioning
             index += 1
