@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import torch
 from PIL import Image
-from facenet_pytorch import InceptionResnetV1
+from facenet-pytorch import InceptionResnetV1
 from torchvision.transforms.functional import to_tensor
 from sklearn.metrics.pairwise import cosine_similarity
 import requests
