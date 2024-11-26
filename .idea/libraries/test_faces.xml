@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="test_faces">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/server-app/face_recognition/test_faces.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
