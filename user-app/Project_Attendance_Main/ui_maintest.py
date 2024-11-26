@@ -24,7 +24,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        Dialog.resize(1041, 810)
+        Dialog.resize(1041, 2167)
         font = QFont()
         font.setFamilies([u"Myanmar Khyay"])
         font.setPointSize(100)
@@ -156,7 +156,19 @@ class Ui_Dialog(object):
 
         self.horizontalLayout_6.addLayout(self.horizontalLayout_5)
 
-        self.horizontalSpacer_10 = QSpacerItem(300, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.pushButton_23 = QPushButton(self.widget_4)
+        self.pushButton_23.setObjectName(u"pushButton_23")
+        self.pushButton_23.setStyleSheet(u" border: 1px solid #CCCCCC;\n"
+"border-radius:20px;\n"
+"padding:5px;\n"
+"border-top-left-radius: 2px;          \n"
+"border-bottom-left-radius: 2px;       \n"
+"border-top-right-radius: 2px;         \n"
+"border-bottom-right-radius: 2px;   ")
+
+        self.horizontalLayout_6.addWidget(self.pushButton_23)
+
+        self.horizontalSpacer_10 = QSpacerItem(250, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_6.addItem(self.horizontalSpacer_10)
 
@@ -262,7 +274,7 @@ class Ui_Dialog(object):
         self.Classe_Students.setObjectName(u"Classe_Students")
         self.Students = QWidget(self.Classe_Students)
         self.Students.setObjectName(u"Students")
-        self.Students.setGeometry(QRect(0, 0, 861, 740))
+        self.Students.setGeometry(QRect(0, 0, 900, 751))
         self.Students.setStyleSheet(u"background-color:\"#F5F5F5\";")
         self.widget_8 = QWidget(self.Students)
         self.widget_8.setObjectName(u"widget_8")
@@ -489,7 +501,146 @@ class Ui_Dialog(object):
         self.stackedWidget.addWidget(self.Page_Upload2)
         self.Page_Classes = QWidget()
         self.Page_Classes.setObjectName(u"Page_Classes")
-        self.widget_7 = QWidget(self.Page_Classes)
+        self.widget_12 = QWidget(self.Page_Classes)
+        self.widget_12.setObjectName(u"widget_12")
+        self.widget_12.setGeometry(QRect(0, 0, 851, 2031))
+        self.widget_15 = QWidget(self.widget_12)
+        self.widget_15.setObjectName(u"widget_15")
+        self.widget_15.setGeometry(QRect(0, 600, 851, 281))
+        self.label_28 = QLabel(self.widget_15)
+        self.label_28.setObjectName(u"label_28")
+        self.label_28.setGeometry(QRect(20, 10, 391, 41))
+        font10 = QFont()
+        font10.setFamilies([u"Myanmar Khyay"])
+        font10.setPointSize(20)
+        self.label_28.setFont(font10)
+        self.widget_16 = QWidget(self.widget_15)
+        self.widget_16.setObjectName(u"widget_16")
+        self.widget_16.setGeometry(QRect(10, 60, 161, 201))
+        self.widget_16.setStyleSheet(u"background-color: #ffff;\n"
+"border-top-left-radius: 10px;          \n"
+"border-bottom-left-radius: 10px;       \n"
+"border-top-right-radius: 10px;         \n"
+"border-bottom-right-radius: 10px;      \n"
+"\n"
+"   ")
+        self.label_27 = QLabel(self.widget_16)
+        self.label_27.setObjectName(u"label_27")
+        self.label_27.setGeometry(QRect(0, 0, 151, 201))
+        self.label_27.setStyleSheet(u"border-top-left-radius: 10px;          \n"
+"border-bottom-left-radius: 10px;       \n"
+"border-top-right-radius: 10px;         \n"
+"border-bottom-right-radius: 10px;   ")
+        self.label_27.setPixmap(QPixmap(u":/Curs/Images/Math1.png"))
+        self.label_27.setScaledContents(True)
+        self.pushButton_17 = QPushButton(self.widget_16)
+        self.pushButton_17.setObjectName(u"pushButton_17")
+        self.pushButton_17.setGeometry(QRect(20, 20, 111, 71))
+        self.pushButton_17.setMinimumSize(QSize(50, 50))
+        self.pushButton_17.setMaximumSize(QSize(10000, 10000))
+        self.pushButton_17.setFont(font5)
+        self.pushButton_17.setAutoFillBackground(False)
+        self.pushButton_17.setStyleSheet(u"QPushButton {\n"
+"	background-color: transparent;\n"
+"    color: white;\n"
+"    border: 1px solid #CCCCCC;\n"
+"	border-radius:20px;\n"
+"    padding: 10px;\n"
+"    font-size: 15px;\n"
+"    text-align: center; /* Center text */\n"
+"}")
+        self.pushButton_17.setCheckable(True)
+        self.pushButton_17.setAutoExclusive(True)
+        self.label_18 = QLabel(self.widget_16)
+        self.label_18.setObjectName(u"label_18")
+        self.label_18.setGeometry(QRect(20, 100, 111, 31))
+        self.label_18.setStyleSheet(u"background-color: transparent;\n"
+"color: white;\n"
+"border-radius:20px;\n"
+"font-size: 12px;\n"
+"text-align: center; \n"
+"border-radius:20px;")
+        self.label_19 = QLabel(self.widget_16)
+        self.label_19.setObjectName(u"label_19")
+        self.label_19.setGeometry(QRect(20, 140, 111, 31))
+        font11 = QFont()
+        font11.setFamilies([u"Myanmar Khyay"])
+        font11.setBold(False)
+        font11.setItalic(False)
+        self.label_19.setFont(font11)
+        self.label_19.setStyleSheet(u"background-color: transparent;\n"
+"color: white;\n"
+"border-radius:20px;\n"
+"font-size: 12px;\n"
+"text-align: center; \n"
+"border-radius:20px;")
+        self.widget_9 = QWidget(self.widget_12)
+        self.widget_9.setObjectName(u"widget_9")
+        self.widget_9.setGeometry(QRect(0, 290, 851, 281))
+        self.widget_11 = QWidget(self.widget_9)
+        self.widget_11.setObjectName(u"widget_11")
+        self.widget_11.setGeometry(QRect(10, 60, 161, 201))
+        self.widget_11.setStyleSheet(u"background-color: #ffff;\n"
+"border-top-left-radius: 10px;          \n"
+"border-bottom-left-radius: 10px;       \n"
+"border-top-right-radius: 10px;         \n"
+"border-bottom-right-radius: 10px;      \n"
+"\n"
+"   ")
+        self.label_24 = QLabel(self.widget_11)
+        self.label_24.setObjectName(u"label_24")
+        self.label_24.setGeometry(QRect(0, 0, 151, 201))
+        self.label_24.setStyleSheet(u"border-top-left-radius: 10px;          \n"
+"border-bottom-left-radius: 10px;       \n"
+"border-top-right-radius: 10px;         \n"
+"border-bottom-right-radius: 10px;   ")
+        self.label_24.setPixmap(QPixmap(u":/Curs/Images/Math1.png"))
+        self.label_24.setScaledContents(True)
+        self.pushButton_16 = QPushButton(self.widget_11)
+        self.pushButton_16.setObjectName(u"pushButton_16")
+        self.pushButton_16.setGeometry(QRect(20, 20, 111, 71))
+        self.pushButton_16.setMinimumSize(QSize(50, 50))
+        self.pushButton_16.setMaximumSize(QSize(10000, 10000))
+        self.pushButton_16.setFont(font5)
+        self.pushButton_16.setAutoFillBackground(False)
+        self.pushButton_16.setStyleSheet(u"QPushButton {\n"
+"	background-color: transparent;\n"
+"    color: white;\n"
+"    border: 1px solid #CCCCCC;\n"
+"	border-radius:20px;\n"
+"    padding: 10px;\n"
+"    font-size: 15px;\n"
+"    text-align: center; /* Center text */\n"
+"}")
+        self.pushButton_16.setCheckable(True)
+        self.pushButton_16.setAutoExclusive(True)
+        self.label_15 = QLabel(self.widget_11)
+        self.label_15.setObjectName(u"label_15")
+        self.label_15.setGeometry(QRect(20, 100, 111, 31))
+        self.label_15.setStyleSheet(u"background-color: transparent;\n"
+"color: white;\n"
+"border-radius:20px;\n"
+"font-size: 12px;\n"
+"text-align: center; \n"
+"border-radius:20px;")
+        self.label_17 = QLabel(self.widget_11)
+        self.label_17.setObjectName(u"label_17")
+        self.label_17.setGeometry(QRect(20, 140, 111, 31))
+        self.label_17.setFont(font11)
+        self.label_17.setStyleSheet(u"background-color: transparent;\n"
+"color: white;\n"
+"border-radius:20px;\n"
+"font-size: 12px;\n"
+"text-align: center; \n"
+"border-radius:20px;")
+        self.label_26 = QLabel(self.widget_9)
+        self.label_26.setObjectName(u"label_26")
+        self.label_26.setGeometry(QRect(30, 10, 391, 41))
+        self.label_26.setFont(font10)
+        self.widget_10 = QWidget(self.widget_12)
+        self.widget_10.setObjectName(u"widget_10")
+        self.widget_10.setGeometry(QRect(10, 10, 841, 271))
+        self.widget_7 = QWidget(self.widget_10)
         self.widget_7.setObjectName(u"widget_7")
         self.widget_7.setGeometry(QRect(10, 60, 161, 201))
         self.widget_7.setStyleSheet(u"background-color: #ffff;\n"
@@ -510,7 +661,7 @@ class Ui_Dialog(object):
         self.label_22.setScaledContents(True)
         self.pushButton_14 = QPushButton(self.widget_7)
         self.pushButton_14.setObjectName(u"pushButton_14")
-        self.pushButton_14.setGeometry(QRect(20, 60, 111, 71))
+        self.pushButton_14.setGeometry(QRect(20, 20, 111, 71))
         self.pushButton_14.setMinimumSize(QSize(50, 50))
         self.pushButton_14.setMaximumSize(QSize(10000, 10000))
         self.pushButton_14.setFont(font5)
@@ -526,117 +677,121 @@ class Ui_Dialog(object):
 "}")
         self.pushButton_14.setCheckable(True)
         self.pushButton_14.setAutoExclusive(True)
-        self.widget_9 = QWidget(self.Page_Classes)
-        self.widget_9.setObjectName(u"widget_9")
-        self.widget_9.setGeometry(QRect(200, 60, 161, 201))
-        self.widget_9.setStyleSheet(u"background-color: #ffff;\n"
-"border-top-left-radius: 10px;          \n"
-"border-bottom-left-radius: 10px;       \n"
-"border-top-right-radius: 10px;         \n"
-"border-bottom-right-radius: 10px;      \n"
-"\n"
-"   ")
-        self.label_24 = QLabel(self.widget_9)
-        self.label_24.setObjectName(u"label_24")
-        self.label_24.setGeometry(QRect(0, 0, 151, 201))
-        self.label_24.setStyleSheet(u"border-top-left-radius: 10px;          \n"
-"border-bottom-left-radius: 10px;       \n"
-"border-top-right-radius: 10px;         \n"
-"border-bottom-right-radius: 10px;   ")
-        self.label_24.setPixmap(QPixmap(u":/Curs/Images/Math2.png"))
-        self.label_24.setScaledContents(True)
-        self.pushButton_16 = QPushButton(self.widget_9)
-        self.pushButton_16.setObjectName(u"pushButton_16")
-        self.pushButton_16.setGeometry(QRect(20, 60, 111, 71))
-        self.pushButton_16.setMinimumSize(QSize(50, 50))
-        self.pushButton_16.setMaximumSize(QSize(10000, 10000))
-        self.pushButton_16.setFont(font5)
-        self.pushButton_16.setAutoFillBackground(False)
-        self.pushButton_16.setStyleSheet(u"QPushButton {\n"
-"	background-color: transparent;\n"
-"    color: white;\n"
-"    border: 1px solid #CCCCCC;\n"
-"	border-radius:20px;\n"
-"    padding: 10px;\n"
-"    font-size: 15px;\n"
-"    text-align: center; /* Center text */\n"
-"}")
-        self.pushButton_16.setCheckable(True)
-        self.pushButton_16.setAutoExclusive(True)
-        self.label_25 = QLabel(self.Page_Classes)
+        self.label_9 = QLabel(self.widget_7)
+        self.label_9.setObjectName(u"label_9")
+        self.label_9.setGeometry(QRect(20, 100, 111, 31))
+        self.label_9.setStyleSheet(u"background-color: transparent;\n"
+"color: white;\n"
+"border-radius:20px;\n"
+"font-size: 12px;\n"
+"text-align: center; \n"
+"border-radius:20px;")
+        self.label_10 = QLabel(self.widget_7)
+        self.label_10.setObjectName(u"label_10")
+        self.label_10.setGeometry(QRect(20, 140, 111, 31))
+        self.label_10.setFont(font11)
+        self.label_10.setStyleSheet(u"background-color: transparent;\n"
+"color: white;\n"
+"border-radius:20px;\n"
+"font-size: 12px;\n"
+"text-align: center; \n"
+"border-radius:20px;")
+        self.label_25 = QLabel(self.widget_10)
         self.label_25.setObjectName(u"label_25")
-        self.label_25.setGeometry(QRect(10, 0, 391, 41))
-        font10 = QFont()
-        font10.setFamilies([u"Myanmar Khyay"])
-        font10.setPointSize(20)
+        self.label_25.setGeometry(QRect(20, 10, 391, 41))
         self.label_25.setFont(font10)
-        self.label_26 = QLabel(self.Page_Classes)
-        self.label_26.setObjectName(u"label_26")
-        self.label_26.setGeometry(QRect(10, 280, 391, 41))
-        self.label_26.setFont(font10)
-        self.widget_10 = QWidget(self.Page_Classes)
-        self.widget_10.setObjectName(u"widget_10")
-        self.widget_10.setGeometry(QRect(390, 60, 161, 201))
-        self.widget_10.setStyleSheet(u"background-color: #ffff;\n"
+        self.widget_17 = QWidget(self.widget_12)
+        self.widget_17.setObjectName(u"widget_17")
+        self.widget_17.setGeometry(QRect(-1, 919, 851, 261))
+        self.label_29 = QLabel(self.widget_17)
+        self.label_29.setObjectName(u"label_29")
+        self.label_29.setGeometry(QRect(20, 10, 391, 41))
+        self.label_29.setFont(font10)
+        self.widget_19 = QWidget(self.widget_17)
+        self.widget_19.setObjectName(u"widget_19")
+        self.widget_19.setGeometry(QRect(10, 50, 161, 201))
+        self.widget_19.setStyleSheet(u"background-color: #ffff;\n"
 "border-top-left-radius: 10px;          \n"
 "border-bottom-left-radius: 10px;       \n"
 "border-top-right-radius: 10px;         \n"
 "border-bottom-right-radius: 10px;      \n"
 "\n"
 "   ")
-        self.label_27 = QLabel(self.widget_10)
-        self.label_27.setObjectName(u"label_27")
-        self.label_27.setGeometry(QRect(0, 0, 151, 201))
-        self.label_27.setStyleSheet(u"border-top-left-radius: 10px;          \n"
-"border-bottom-left-radius: 10px;       \n"
-"border-top-right-radius: 10px;         \n"
-"border-bottom-right-radius: 10px;   ")
-        self.label_27.setPixmap(QPixmap(u":/Curs/Images/Physics.png"))
-        self.label_27.setScaledContents(True)
-        self.pushButton_17 = QPushButton(self.widget_10)
-        self.pushButton_17.setObjectName(u"pushButton_17")
-        self.pushButton_17.setGeometry(QRect(20, 60, 111, 71))
-        self.pushButton_17.setMinimumSize(QSize(50, 50))
-        self.pushButton_17.setMaximumSize(QSize(10000, 10000))
-        self.pushButton_17.setFont(font5)
-        self.pushButton_17.setAutoFillBackground(False)
-        self.pushButton_17.setStyleSheet(u"QPushButton {\n"
-"	background-color: transparent;\n"
-"    color: white;\n"
-"    border: 1px solid #CCCCCC;\n"
-"	border-radius:20px;\n"
-"    padding: 10px;\n"
-"    font-size: 15px;\n"
-"    text-align: center; /* Center text */\n"
-"}")
-        self.pushButton_17.setCheckable(True)
-        self.pushButton_17.setAutoExclusive(True)
-        self.label_28 = QLabel(self.Page_Classes)
-        self.label_28.setObjectName(u"label_28")
-        self.label_28.setGeometry(QRect(10, 570, 391, 41))
-        self.label_28.setFont(font10)
-        self.widget_11 = QWidget(self.Page_Classes)
-        self.widget_11.setObjectName(u"widget_11")
-        self.widget_11.setGeometry(QRect(10, 340, 161, 201))
-        self.widget_11.setStyleSheet(u"background-color: #ffff;\n"
-"border-top-left-radius: 10px;          \n"
-"border-bottom-left-radius: 10px;       \n"
-"border-top-right-radius: 10px;         \n"
-"border-bottom-right-radius: 10px;      \n"
-"\n"
-"   ")
-        self.label_30 = QLabel(self.widget_11)
+        self.label_30 = QLabel(self.widget_19)
         self.label_30.setObjectName(u"label_30")
         self.label_30.setGeometry(QRect(0, 0, 151, 201))
         self.label_30.setStyleSheet(u"border-top-left-radius: 10px;          \n"
 "border-bottom-left-radius: 10px;       \n"
 "border-top-right-radius: 10px;         \n"
 "border-bottom-right-radius: 10px;   ")
-        self.label_30.setPixmap(QPixmap(u":/Images/Eth.png"))
+        self.label_30.setPixmap(QPixmap(u":/Curs/Images/Math1.png"))
         self.label_30.setScaledContents(True)
-        self.pushButton_19 = QPushButton(self.widget_11)
+        self.pushButton_18 = QPushButton(self.widget_19)
+        self.pushButton_18.setObjectName(u"pushButton_18")
+        self.pushButton_18.setGeometry(QRect(20, 20, 111, 71))
+        self.pushButton_18.setMinimumSize(QSize(50, 50))
+        self.pushButton_18.setMaximumSize(QSize(10000, 10000))
+        self.pushButton_18.setFont(font5)
+        self.pushButton_18.setAutoFillBackground(False)
+        self.pushButton_18.setStyleSheet(u"QPushButton {\n"
+"	background-color: transparent;\n"
+"    color: white;\n"
+"    border: 1px solid #CCCCCC;\n"
+"	border-radius:20px;\n"
+"    padding: 10px;\n"
+"    font-size: 15px;\n"
+"    text-align: center; /* Center text */\n"
+"}")
+        self.pushButton_18.setCheckable(True)
+        self.pushButton_18.setAutoExclusive(True)
+        self.label_31 = QLabel(self.widget_19)
+        self.label_31.setObjectName(u"label_31")
+        self.label_31.setGeometry(QRect(20, 100, 111, 31))
+        self.label_31.setStyleSheet(u"background-color: transparent;\n"
+"color: white;\n"
+"border-radius:20px;\n"
+"font-size: 12px;\n"
+"text-align: center; \n"
+"border-radius:20px;")
+        self.label_33 = QLabel(self.widget_19)
+        self.label_33.setObjectName(u"label_33")
+        self.label_33.setGeometry(QRect(20, 140, 111, 31))
+        self.label_33.setFont(font11)
+        self.label_33.setStyleSheet(u"background-color: transparent;\n"
+"color: white;\n"
+"border-radius:20px;\n"
+"font-size: 12px;\n"
+"text-align: center; \n"
+"border-radius:20px;")
+        self.widget_20 = QWidget(self.widget_12)
+        self.widget_20.setObjectName(u"widget_20")
+        self.widget_20.setGeometry(QRect(0, 1210, 851, 261))
+        self.label_35 = QLabel(self.widget_20)
+        self.label_35.setObjectName(u"label_35")
+        self.label_35.setGeometry(QRect(20, 10, 391, 41))
+        self.label_35.setFont(font10)
+        self.widget_21 = QWidget(self.widget_20)
+        self.widget_21.setObjectName(u"widget_21")
+        self.widget_21.setGeometry(QRect(10, 50, 161, 201))
+        self.widget_21.setStyleSheet(u"background-color: #ffff;\n"
+"border-top-left-radius: 10px;          \n"
+"border-bottom-left-radius: 10px;       \n"
+"border-top-right-radius: 10px;         \n"
+"border-bottom-right-radius: 10px;      \n"
+"\n"
+"   ")
+        self.label_36 = QLabel(self.widget_21)
+        self.label_36.setObjectName(u"label_36")
+        self.label_36.setGeometry(QRect(0, 0, 151, 201))
+        self.label_36.setStyleSheet(u"border-top-left-radius: 10px;          \n"
+"border-bottom-left-radius: 10px;       \n"
+"border-top-right-radius: 10px;         \n"
+"border-bottom-right-radius: 10px;   ")
+        self.label_36.setPixmap(QPixmap(u":/Curs/Images/Math1.png"))
+        self.label_36.setScaledContents(True)
+        self.pushButton_19 = QPushButton(self.widget_21)
         self.pushButton_19.setObjectName(u"pushButton_19")
-        self.pushButton_19.setGeometry(QRect(20, 60, 111, 71))
+        self.pushButton_19.setGeometry(QRect(20, 20, 111, 71))
         self.pushButton_19.setMinimumSize(QSize(50, 50))
         self.pushButton_19.setMaximumSize(QSize(10000, 10000))
         self.pushButton_19.setFont(font5)
@@ -650,28 +805,56 @@ class Ui_Dialog(object):
 "    font-size: 15px;\n"
 "    text-align: center; /* Center text */\n"
 "}")
-        self.widget_12 = QWidget(self.Page_Classes)
-        self.widget_12.setObjectName(u"widget_12")
-        self.widget_12.setGeometry(QRect(200, 340, 161, 201))
-        self.widget_12.setStyleSheet(u"background-color: #ffff;\n"
+        self.pushButton_19.setCheckable(True)
+        self.pushButton_19.setAutoExclusive(True)
+        self.label_44 = QLabel(self.widget_21)
+        self.label_44.setObjectName(u"label_44")
+        self.label_44.setGeometry(QRect(20, 100, 111, 31))
+        self.label_44.setStyleSheet(u"background-color: transparent;\n"
+"color: white;\n"
+"border-radius:20px;\n"
+"font-size: 12px;\n"
+"text-align: center; \n"
+"border-radius:20px;")
+        self.label_45 = QLabel(self.widget_21)
+        self.label_45.setObjectName(u"label_45")
+        self.label_45.setGeometry(QRect(20, 140, 111, 31))
+        self.label_45.setFont(font11)
+        self.label_45.setStyleSheet(u"background-color: transparent;\n"
+"color: white;\n"
+"border-radius:20px;\n"
+"font-size: 12px;\n"
+"text-align: center; \n"
+"border-radius:20px;")
+        self.widget_22 = QWidget(self.widget_12)
+        self.widget_22.setObjectName(u"widget_22")
+        self.widget_22.setGeometry(QRect(0, 1480, 851, 261))
+        self.label_46 = QLabel(self.widget_22)
+        self.label_46.setObjectName(u"label_46")
+        self.label_46.setGeometry(QRect(20, 0, 391, 41))
+        self.label_46.setFont(font10)
+        self.widget_23 = QWidget(self.widget_22)
+        self.widget_23.setObjectName(u"widget_23")
+        self.widget_23.setGeometry(QRect(10, 50, 161, 201))
+        self.widget_23.setStyleSheet(u"background-color: #ffff;\n"
 "border-top-left-radius: 10px;          \n"
 "border-bottom-left-radius: 10px;       \n"
 "border-top-right-radius: 10px;         \n"
 "border-bottom-right-radius: 10px;      \n"
 "\n"
 "   ")
-        self.label_31 = QLabel(self.widget_12)
-        self.label_31.setObjectName(u"label_31")
-        self.label_31.setGeometry(QRect(0, 0, 151, 201))
-        self.label_31.setStyleSheet(u"border-top-left-radius: 10px;          \n"
+        self.label_47 = QLabel(self.widget_23)
+        self.label_47.setObjectName(u"label_47")
+        self.label_47.setGeometry(QRect(0, 0, 151, 201))
+        self.label_47.setStyleSheet(u"border-top-left-radius: 10px;          \n"
 "border-bottom-left-radius: 10px;       \n"
 "border-top-right-radius: 10px;         \n"
 "border-bottom-right-radius: 10px;   ")
-        self.label_31.setPixmap(QPixmap(u":/Curs/Images/234.png"))
-        self.label_31.setScaledContents(True)
-        self.pushButton_20 = QPushButton(self.widget_12)
+        self.label_47.setPixmap(QPixmap(u":/Curs/Images/Math1.png"))
+        self.label_47.setScaledContents(True)
+        self.pushButton_20 = QPushButton(self.widget_23)
         self.pushButton_20.setObjectName(u"pushButton_20")
-        self.pushButton_20.setGeometry(QRect(20, 60, 111, 71))
+        self.pushButton_20.setGeometry(QRect(20, 20, 111, 71))
         self.pushButton_20.setMinimumSize(QSize(50, 50))
         self.pushButton_20.setMaximumSize(QSize(10000, 10000))
         self.pushButton_20.setFont(font5)
@@ -685,28 +868,56 @@ class Ui_Dialog(object):
 "    font-size: 15px;\n"
 "    text-align: center; /* Center text */\n"
 "}")
-        self.widget_15 = QWidget(self.Page_Classes)
-        self.widget_15.setObjectName(u"widget_15")
-        self.widget_15.setGeometry(QRect(10, 640, 161, 201))
-        self.widget_15.setStyleSheet(u"background-color: #ffff;\n"
+        self.pushButton_20.setCheckable(True)
+        self.pushButton_20.setAutoExclusive(True)
+        self.label_48 = QLabel(self.widget_23)
+        self.label_48.setObjectName(u"label_48")
+        self.label_48.setGeometry(QRect(20, 100, 111, 31))
+        self.label_48.setStyleSheet(u"background-color: transparent;\n"
+"color: white;\n"
+"border-radius:20px;\n"
+"font-size: 12px;\n"
+"text-align: center; \n"
+"border-radius:20px;")
+        self.label_49 = QLabel(self.widget_23)
+        self.label_49.setObjectName(u"label_49")
+        self.label_49.setGeometry(QRect(20, 140, 111, 31))
+        self.label_49.setFont(font11)
+        self.label_49.setStyleSheet(u"background-color: transparent;\n"
+"color: white;\n"
+"border-radius:20px;\n"
+"font-size: 12px;\n"
+"text-align: center; \n"
+"border-radius:20px;")
+        self.widget_25 = QWidget(self.widget_12)
+        self.widget_25.setObjectName(u"widget_25")
+        self.widget_25.setGeometry(QRect(0, 1760, 851, 301))
+        self.label_50 = QLabel(self.widget_25)
+        self.label_50.setObjectName(u"label_50")
+        self.label_50.setGeometry(QRect(20, 0, 391, 41))
+        self.label_50.setFont(font10)
+        self.widget_27 = QWidget(self.widget_25)
+        self.widget_27.setObjectName(u"widget_27")
+        self.widget_27.setGeometry(QRect(10, 50, 161, 201))
+        self.widget_27.setStyleSheet(u"background-color: #ffff;\n"
 "border-top-left-radius: 10px;          \n"
 "border-bottom-left-radius: 10px;       \n"
 "border-top-right-radius: 10px;         \n"
 "border-bottom-right-radius: 10px;      \n"
 "\n"
 "   ")
-        self.label_33 = QLabel(self.widget_15)
-        self.label_33.setObjectName(u"label_33")
-        self.label_33.setGeometry(QRect(0, 0, 151, 201))
-        self.label_33.setStyleSheet(u"border-top-left-radius: 10px;          \n"
+        self.label_51 = QLabel(self.widget_27)
+        self.label_51.setObjectName(u"label_51")
+        self.label_51.setGeometry(QRect(0, 0, 151, 201))
+        self.label_51.setStyleSheet(u"border-top-left-radius: 10px;          \n"
 "border-bottom-left-radius: 10px;       \n"
 "border-top-right-radius: 10px;         \n"
 "border-bottom-right-radius: 10px;   ")
-        self.label_33.setPixmap(QPixmap(u":/Curs/Images/Math2.png"))
-        self.label_33.setScaledContents(True)
-        self.pushButton_22 = QPushButton(self.widget_15)
+        self.label_51.setPixmap(QPixmap(u":/Curs/Images/Math1.png"))
+        self.label_51.setScaledContents(True)
+        self.pushButton_22 = QPushButton(self.widget_27)
         self.pushButton_22.setObjectName(u"pushButton_22")
-        self.pushButton_22.setGeometry(QRect(20, 60, 111, 71))
+        self.pushButton_22.setGeometry(QRect(20, 20, 111, 71))
         self.pushButton_22.setMinimumSize(QSize(50, 50))
         self.pushButton_22.setMaximumSize(QSize(10000, 10000))
         self.pushButton_22.setFont(font5)
@@ -720,76 +931,27 @@ class Ui_Dialog(object):
 "    font-size: 15px;\n"
 "    text-align: center; /* Center text */\n"
 "}")
-        self.widget_16 = QWidget(self.Page_Classes)
-        self.widget_16.setObjectName(u"widget_16")
-        self.widget_16.setGeometry(QRect(200, 640, 161, 201))
-        self.widget_16.setStyleSheet(u"background-color: #ffff;\n"
-"border-top-left-radius: 10px;          \n"
-"border-bottom-left-radius: 10px;       \n"
-"border-top-right-radius: 10px;         \n"
-"border-bottom-right-radius: 10px;      \n"
-"\n"
-"   ")
-        self.label_35 = QLabel(self.widget_16)
-        self.label_35.setObjectName(u"label_35")
-        self.label_35.setGeometry(QRect(0, 0, 151, 201))
-        self.label_35.setStyleSheet(u"border-top-left-radius: 10px;          \n"
-"border-bottom-left-radius: 10px;       \n"
-"border-top-right-radius: 10px;         \n"
-"border-bottom-right-radius: 10px;   ")
-        self.label_35.setPixmap(QPixmap(u":/Curs/Images/Math2.png"))
-        self.label_35.setScaledContents(True)
-        self.pushButton_24 = QPushButton(self.widget_16)
-        self.pushButton_24.setObjectName(u"pushButton_24")
-        self.pushButton_24.setGeometry(QRect(20, 60, 111, 71))
-        self.pushButton_24.setMinimumSize(QSize(50, 50))
-        self.pushButton_24.setMaximumSize(QSize(10000, 10000))
-        self.pushButton_24.setFont(font5)
-        self.pushButton_24.setAutoFillBackground(False)
-        self.pushButton_24.setStyleSheet(u"QPushButton {\n"
-"	background-color: transparent;\n"
-"    color: white;\n"
-"    border: 1px solid #CCCCCC;\n"
-"	border-radius:20px;\n"
-"    padding: 10px;\n"
-"    font-size: 15px;\n"
-"    text-align: center; /* Center text */\n"
-"}")
-        self.widget_17 = QWidget(self.Page_Classes)
-        self.widget_17.setObjectName(u"widget_17")
-        self.widget_17.setGeometry(QRect(380, 640, 161, 201))
-        self.widget_17.setStyleSheet(u"background-color: #ffff;\n"
-"border-top-left-radius: 10px;          \n"
-"border-bottom-left-radius: 10px;       \n"
-"border-top-right-radius: 10px;         \n"
-"border-bottom-right-radius: 10px;      \n"
-"\n"
-"   ")
-        self.label_36 = QLabel(self.widget_17)
-        self.label_36.setObjectName(u"label_36")
-        self.label_36.setGeometry(QRect(0, 0, 151, 201))
-        self.label_36.setStyleSheet(u"border-top-left-radius: 10px;          \n"
-"border-bottom-left-radius: 10px;       \n"
-"border-top-right-radius: 10px;         \n"
-"border-bottom-right-radius: 10px;   ")
-        self.label_36.setPixmap(QPixmap(u":/Curs/Images/Math2.png"))
-        self.label_36.setScaledContents(True)
-        self.pushButton_25 = QPushButton(self.widget_17)
-        self.pushButton_25.setObjectName(u"pushButton_25")
-        self.pushButton_25.setGeometry(QRect(20, 60, 111, 71))
-        self.pushButton_25.setMinimumSize(QSize(50, 50))
-        self.pushButton_25.setMaximumSize(QSize(10000, 10000))
-        self.pushButton_25.setFont(font5)
-        self.pushButton_25.setAutoFillBackground(False)
-        self.pushButton_25.setStyleSheet(u"QPushButton {\n"
-"	background-color: transparent;\n"
-"    color: white;\n"
-"    border: 1px solid #CCCCCC;\n"
-"	border-radius:20px;\n"
-"    padding: 10px;\n"
-"    font-size: 15px;\n"
-"    text-align: center; /* Center text */\n"
-"}")
+        self.pushButton_22.setCheckable(True)
+        self.pushButton_22.setAutoExclusive(True)
+        self.label_52 = QLabel(self.widget_27)
+        self.label_52.setObjectName(u"label_52")
+        self.label_52.setGeometry(QRect(20, 100, 111, 31))
+        self.label_52.setStyleSheet(u"background-color: transparent;\n"
+"color: white;\n"
+"border-radius:20px;\n"
+"font-size: 12px;\n"
+"text-align: center; \n"
+"border-radius:20px;")
+        self.label_53 = QLabel(self.widget_27)
+        self.label_53.setObjectName(u"label_53")
+        self.label_53.setGeometry(QRect(20, 140, 111, 31))
+        self.label_53.setFont(font11)
+        self.label_53.setStyleSheet(u"background-color: transparent;\n"
+"color: white;\n"
+"border-radius:20px;\n"
+"font-size: 12px;\n"
+"text-align: center; \n"
+"border-radius:20px;")
         self.stackedWidget.addWidget(self.Page_Classes)
         self.Class_MD = QWidget()
         self.Class_MD.setObjectName(u"Class_MD")
@@ -839,7 +1001,7 @@ class Ui_Dialog(object):
 
         self.layoutWidget1 = QWidget(self.widget_24)
         self.layoutWidget1.setObjectName(u"layoutWidget1")
-        self.layoutWidget1.setGeometry(QRect(250, 30, 129, 161))
+        self.layoutWidget1.setGeometry(QRect(250, 30, 200, 161))
         self.verticalLayout_9 = QVBoxLayout(self.layoutWidget1)
         self.verticalLayout_9.setObjectName(u"verticalLayout_9")
         self.verticalLayout_9.setContentsMargins(0, 0, 0, 0)
@@ -869,10 +1031,10 @@ class Ui_Dialog(object):
         self.pushButton_62.setObjectName(u"pushButton_62")
         self.pushButton_62.setEnabled(True)
         self.pushButton_62.setGeometry(QRect(330, 300, 141, 51))
-        font11 = QFont()
-        font11.setFamilies([u"Myanmar Khyay"])
-        font11.setPointSize(12)
-        self.pushButton_62.setFont(font11)
+        font12 = QFont()
+        font12.setFamilies([u"Myanmar Khyay"])
+        font12.setPointSize(12)
+        self.pushButton_62.setFont(font12)
         self.pushButton_62.setStyleSheet(u"background-color: #108476;\n"
 "border-top-left-radius: 20px;          \n"
 "border-bottom-left-radius: 20px;       \n"
@@ -907,6 +1069,112 @@ class Ui_Dialog(object):
         self.Class_Picture_ID.setPixmap(QPixmap(u":/newPrefix/Images/Emma_Photo_1.png"))
         self.Class_Picture_ID.setScaledContents(True)
         self.stackedWidget.addWidget(self.Student_Info)
+        self.Page_Search_2 = QWidget()
+        self.Page_Search_2.setObjectName(u"Page_Search_2")
+        self.stackedWidget.addWidget(self.Page_Search_2)
+        self.Page_Registration = QWidget()
+        self.Page_Registration.setObjectName(u"Page_Registration")
+        self.widget_28 = QWidget(self.Page_Registration)
+        self.widget_28.setObjectName(u"widget_28")
+        self.widget_28.setGeometry(QRect(60, 50, 761, 601))
+        self.lineEdit_3 = QLineEdit(self.widget_28)
+        self.lineEdit_3.setObjectName(u"lineEdit_3")
+        self.lineEdit_3.setGeometry(QRect(190, 120, 221, 41))
+        self.lineEdit_3.setStyleSheet(u"QLineEdit {\n"
+"    border: 2px solid #ccc;            /* Light gray border */\n"
+"    border-radius: 5px;                /* Rounded corners */\n"
+"    padding: 10px;                     /* Padding inside the field */\n"
+"    font-size: 16px;                   /* Font size */\n"
+"    color: #333;                       /* Text color */\n"
+"    background-color: #f9f9f9;         /* Light gray background */\n"
+"    selection-background-color: #4CAF50; /* Background color for text selection */\n"
+"    selection-color: white;            /* Color of the selected text */\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 2px solid #4CAF50;         /* Green border when focused */\n"
+"    background-color: #ffffff;         /* White background when focused */\n"
+"}\n"
+"\n"
+"QLineEdit::placeholder {\n"
+"    color: #888;                       /* Placeholder text color */\n"
+"    font-style: italic;                /* Italic placeholder text */\n"
+"}\n"
+"\n"
+"QLineEdit:disabled {\n"
+"    background-color: #e0e0e0;         /* "
+                        "Disabled background */\n"
+"    color: #b0b0b0;                    /* Disabled text color */\n"
+"    border: 2px solid #d0d0d0;         /* Disabled border */\n"
+"}")
+        self.lineEdit_2 = QLineEdit(self.widget_28)
+        self.lineEdit_2.setObjectName(u"lineEdit_2")
+        self.lineEdit_2.setGeometry(QRect(190, 60, 221, 41))
+        self.lineEdit_2.setStyleSheet(u"QLineEdit {\n"
+"    border: 2px solid #ccc;            /* Light gray border */\n"
+"    border-radius: 5px;                /* Rounded corners */\n"
+"    padding: 10px;                     /* Padding inside the field */\n"
+"    font-size: 16px;                   /* Font size */\n"
+"    color: #333;                       /* Text color */\n"
+"    background-color: #f9f9f9;         /* Light gray background */\n"
+"    selection-background-color: #4CAF50; /* Background color for text selection */\n"
+"    selection-color: white;            /* Color of the selected text */\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 2px solid #4CAF50;         /* Green border when focused */\n"
+"    background-color: #ffffff;         /* White background when focused */\n"
+"}\n"
+"\n"
+"QLineEdit::placeholder {\n"
+"    color: #888;                       /* Placeholder text color */\n"
+"    font-style: italic;                /* Italic placeholder text */\n"
+"}\n"
+"\n"
+"QLineEdit:disabled {\n"
+"    background-color: #e0e0e0;         /* "
+                        "Disabled background */\n"
+"    color: #b0b0b0;                    /* Disabled text color */\n"
+"    border: 2px solid #d0d0d0;         /* Disabled border */\n"
+"}")
+        self.label_54 = QLabel(self.widget_28)
+        self.label_54.setObjectName(u"label_54")
+        self.label_54.setGeometry(QRect(180, 20, 231, 31))
+        self.label_54.setFont(font1)
+        self.pushButton_24 = QPushButton(self.widget_28)
+        self.pushButton_24.setObjectName(u"pushButton_24")
+        self.pushButton_24.setGeometry(QRect(240, 180, 101, 41))
+        font13 = QFont()
+        font13.setFamilies([u"Myanmar Khyay"])
+        font13.setBold(True)
+        self.pushButton_24.setFont(font13)
+        self.pushButton_24.setStyleSheet(u"QPushButton {\n"
+"    background-color: #4CAF50; /* Green background */\n"
+"    color: white;              /* White text */\n"
+"    border: 2px solid #4CAF50; /* Green border */\n"
+"    border-radius: 12px;       /* Rounded corners */\n"
+"    padding: 5px 10px;        /* Padding around the text */\n"
+"    font-size: 16px;           /* Font size */\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #45a049; /* Slightly darker green on hover */\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: #388e3c; /* Even darker green when clicked */\n"
+"    border-color: #388e3c;     /* Darker border on press */\n"
+"}\n"
+"\n"
+"QPushButton:disabled {\n"
+"    background-color: #c8e6c9; /* Lighter color when disabled */\n"
+"    color: #bdbdbd;             /* Gray text when disabled */\n"
+"    border-color: #bdbdbd;      /* Gray border when disabled */\n"
+"}\n"
+"")
+        self.pushButton_24.setCheckable(True)
+        self.pushButton_24.setAutoExclusive(True)
+        self.stackedWidget.addWidget(self.Page_Registration)
 
         self.verticalLayout_6.addWidget(self.stackedWidget)
 
@@ -1037,15 +1305,6 @@ class Ui_Dialog(object):
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer_3)
 
-        self.label_3 = QLabel(self.widget)
-        self.label_3.setObjectName(u"label_3")
-        self.label_3.setMinimumSize(QSize(20, 20))
-        self.label_3.setMaximumSize(QSize(20, 20))
-        self.label_3.setPixmap(QPixmap(u"Images/Group 91.png"))
-        self.label_3.setScaledContents(True)
-
-        self.horizontalLayout_2.addWidget(self.label_3)
-
         self.horizontalSpacer_4 = QSpacerItem(10, 10, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer_4)
@@ -1158,11 +1417,11 @@ class Ui_Dialog(object):
 
         self.pushButton_upload = QPushButton(self.widget_3)
         self.pushButton_upload.setObjectName(u"pushButton_upload")
-        font12 = QFont()
-        font12.setFamilies([u"Myanmar Khyay"])
-        font12.setPointSize(15)
-        font12.setBold(False)
-        self.pushButton_upload.setFont(font12)
+        font14 = QFont()
+        font14.setFamilies([u"Myanmar Khyay"])
+        font14.setPointSize(15)
+        font14.setBold(False)
+        self.pushButton_upload.setFont(font14)
         self.pushButton_upload.setIcon(icon8)
         self.pushButton_upload.setIconSize(QSize(25, 25))
         self.pushButton_upload.setCheckable(True)
@@ -1182,15 +1441,6 @@ class Ui_Dialog(object):
         self.horizontalSpacer_7 = QSpacerItem(18, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_4.addItem(self.horizontalSpacer_7)
-
-        self.label_5 = QLabel(self.widget_3)
-        self.label_5.setObjectName(u"label_5")
-        self.label_5.setMinimumSize(QSize(20, 20))
-        self.label_5.setMaximumSize(QSize(20, 20))
-        self.label_5.setPixmap(QPixmap(u"Images/Group 91.png"))
-        self.label_5.setScaledContents(True)
-
-        self.horizontalLayout_4.addWidget(self.label_5)
 
         self.horizontalSpacer_8 = QSpacerItem(18, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -1219,7 +1469,7 @@ class Ui_Dialog(object):
         self.pushButton_12.toggled.connect(self.pushButton_upload.setChecked)
         self.pushButton_upload.toggled.connect(self.pushButton_12.setChecked)
 
-        self.stackedWidget.setCurrentIndex(7)
+        self.stackedWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(Dialog)
@@ -1231,6 +1481,7 @@ class Ui_Dialog(object):
         self.pushButton_10.setText("")
         self.pushButton_11.setText("")
         self.lineEdit.setPlaceholderText(QCoreApplication.translate("Dialog", u"what are you looking for ?(in one click you can find any person)", None))
+        self.pushButton_23.setText(QCoreApplication.translate("Dialog", u"Find", None))
         self.label_7.setText(QCoreApplication.translate("Dialog", u"Today lectures", None))
         self.label_20.setText("")
         self.pushButton_9.setText(QCoreApplication.translate("Dialog", u"Discrete  \n"
@@ -1258,26 +1509,48 @@ class Ui_Dialog(object):
         self.label_38.setText("")
         self.label_39.setText(QCoreApplication.translate("Dialog", u"Picture of class:", None))
         self.pushButton_5.setText(QCoreApplication.translate("Dialog", u"Back to class", None))
-        self.label_22.setText("")
-        self.pushButton_14.setText(QCoreApplication.translate("Dialog", u"Discrete  \n"
-"Mathematics", None))
-        self.label_24.setText("")
-        self.pushButton_16.setText(QCoreApplication.translate("Dialog", u"PSA", None))
-        self.label_25.setText(QCoreApplication.translate("Dialog", u"Today lectures", None))
-        self.label_26.setText(QCoreApplication.translate("Dialog", u"Tusday", None))
+        self.label_28.setText(QCoreApplication.translate("Dialog", u"Wednesday", None))
         self.label_27.setText("")
-        self.pushButton_17.setText(QCoreApplication.translate("Dialog", u"Physics", None))
-        self.label_28.setText(QCoreApplication.translate("Dialog", u"Tusday", None))
+        self.pushButton_17.setText(QCoreApplication.translate("Dialog", u"Name  \n"
+"Class", None))
+        self.label_18.setText(QCoreApplication.translate("Dialog", u"      Name Group", None))
+        self.label_19.setText(QCoreApplication.translate("Dialog", u" Time: 00:00AM/PM", None))
+        self.label_24.setText("")
+        self.pushButton_16.setText(QCoreApplication.translate("Dialog", u"Name  \n"
+"Class", None))
+        self.label_15.setText(QCoreApplication.translate("Dialog", u"      Name Group", None))
+        self.label_17.setText(QCoreApplication.translate("Dialog", u" Time: 00:00AM/PM", None))
+        self.label_26.setText(QCoreApplication.translate("Dialog", u"Tuesday", None))
+        self.label_22.setText("")
+        self.pushButton_14.setText(QCoreApplication.translate("Dialog", u"Name  \n"
+"Class", None))
+        self.label_9.setText(QCoreApplication.translate("Dialog", u"      Name Group", None))
+        self.label_10.setText(QCoreApplication.translate("Dialog", u" Time: 00:00AM/PM", None))
+        self.label_25.setText(QCoreApplication.translate("Dialog", u"Today lectures", None))
+        self.label_29.setText(QCoreApplication.translate("Dialog", u"Thursday", None))
         self.label_30.setText("")
-        self.pushButton_19.setText(QCoreApplication.translate("Dialog", u"Ethics ", None))
-        self.label_31.setText("")
-        self.pushButton_20.setText(QCoreApplication.translate("Dialog", u"PBL", None))
-        self.label_33.setText("")
-        self.pushButton_22.setText(QCoreApplication.translate("Dialog", u"PSA", None))
-        self.label_35.setText("")
-        self.pushButton_24.setText(QCoreApplication.translate("Dialog", u"PSA", None))
+        self.pushButton_18.setText(QCoreApplication.translate("Dialog", u"Name  \n"
+"Class", None))
+        self.label_31.setText(QCoreApplication.translate("Dialog", u"      Name Group", None))
+        self.label_33.setText(QCoreApplication.translate("Dialog", u" Time: 00:00AM/PM", None))
+        self.label_35.setText(QCoreApplication.translate("Dialog", u"Friday", None))
         self.label_36.setText("")
-        self.pushButton_25.setText(QCoreApplication.translate("Dialog", u"PSA", None))
+        self.pushButton_19.setText(QCoreApplication.translate("Dialog", u"Name  \n"
+"Class", None))
+        self.label_44.setText(QCoreApplication.translate("Dialog", u"      Name Group", None))
+        self.label_45.setText(QCoreApplication.translate("Dialog", u" Time: 00:00AM/PM", None))
+        self.label_46.setText(QCoreApplication.translate("Dialog", u"Saturday", None))
+        self.label_47.setText("")
+        self.pushButton_20.setText(QCoreApplication.translate("Dialog", u"Name  \n"
+"Class", None))
+        self.label_48.setText(QCoreApplication.translate("Dialog", u"      Name Group", None))
+        self.label_49.setText(QCoreApplication.translate("Dialog", u" Time: 00:00AM/PM", None))
+        self.label_50.setText(QCoreApplication.translate("Dialog", u"Sunday", None))
+        self.label_51.setText("")
+        self.pushButton_22.setText(QCoreApplication.translate("Dialog", u"Name  \n"
+"Class", None))
+        self.label_52.setText(QCoreApplication.translate("Dialog", u"      Name Group", None))
+        self.label_53.setText(QCoreApplication.translate("Dialog", u" Time: 00:00AM/PM", None))
         self.label_2.setText(QCoreApplication.translate("Dialog", u"Class Discrete Mathematics", None))
         self.label_4.setText(QCoreApplication.translate("Dialog", u"Name:", None))
         self.label_13.setText(QCoreApplication.translate("Dialog", u"Group:", None))
@@ -1290,17 +1563,19 @@ class Ui_Dialog(object):
         self.pushButton_64.setText(QCoreApplication.translate("Dialog", u"Back", None))
         self.Original_Picture_ID.setText("")
         self.Class_Picture_ID.setText("")
+        self.lineEdit_3.setPlaceholderText(QCoreApplication.translate("Dialog", u"Password", None))
+        self.lineEdit_2.setPlaceholderText(QCoreApplication.translate("Dialog", u"Email", None))
+        self.label_54.setText(QCoreApplication.translate("Dialog", u"Sign-in with Coop-Mail", None))
+        self.pushButton_24.setText(QCoreApplication.translate("Dialog", u"Login", None))
         self.pushButton_2.setText("")
         self.search_1.setText("")
         self.classes_1.setText("")
         self.setting_1.setText("")
         self.pushButton_12.setText("")
-        self.label_3.setText("")
         self.pushButton.setText("")
         self.search_2.setText(QCoreApplication.translate("Dialog", u"Search", None))
         self.classes_2.setText(QCoreApplication.translate("Dialog", u"Classes", None))
         self.setting_2.setText(QCoreApplication.translate("Dialog", u"Setting", None))
         self.pushButton_upload.setText(QCoreApplication.translate("Dialog", u"Upload", None))
-        self.label_5.setText("")
     # retranslateUi
 
