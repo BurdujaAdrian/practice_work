@@ -25,7 +25,7 @@ class MyMainPage(QDialog, Ui_Dialog):
         # Hide widget initially
         self.widget_3.setHidden(True)
         global url
-        url = r'http://127.0.0.1:8090/'
+        url =r'https://cuddly-falcon-solid.ngrok-free.app/'
         print(url)
 
         # Fetch the student data
