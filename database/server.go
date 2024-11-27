@@ -2,6 +2,7 @@ package main
 
 import (
 	//	"encoding/json"
+	"encoding/base64"
 	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
@@ -59,6 +60,7 @@ func main() {
 			print(file.Filename, "\n\n")
 			cmd := exec.Command(
 				"python",
+				"-X dev",
 				"../server-app/face_recognition/main.py",
 				"uploads/"+file.Filename,
 				group,
@@ -71,19 +73,31 @@ func main() {
 				return c.String(http.StatusInternalServerError, "error runing the python scrips")
 			}
 
-			// Get list of images from the 'recognised_faces' folder
 			recognisedFacesPath := "../server-app/recognised_faces/"
 			files, err := os.ReadDir(recognisedFacesPath)
 			if err != nil {
 				return c.String(http.StatusInternalServerError, "Error reading recognised faces folder")
 			}
 
-			var faceImages []string
+			var faceImages []map[string]string
 			for _, file := range files {
 				if !file.IsDir() {
-					// Optionally, read and encode image content in base64, or just send filenames
 					filePath := recognisedFacesPath + file.Name()
-					faceImages = append(faceImages, filePath)
+
+					// Read the file content
+					imageData, err := os.ReadFile(filePath)
+					if err != nil {
+						return c.String(http.StatusInternalServerError, "Error reading image file: "+file.Name())
+					}
+
+					// Encode the file content in Base64
+					encodedImage := base64.StdEncoding.EncodeToString(imageData)
+
+					// Append the filename and the encoded image
+					faceImages = append(faceImages, map[string]string{
+						"filename": file.Name(),
+						"content":  encodedImage,
+					})
 				}
 			}
 
