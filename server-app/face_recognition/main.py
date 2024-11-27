@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import torch
 from PIL import Image
-from facenet-pytorch import InceptionResnetV1
+from facenet_pytorch import InceptionResnetV1
 from torchvision.transforms.functional import to_tensor
 from sklearn.metrics.pairwise import cosine_similarity
 import requests
@@ -141,7 +141,6 @@ def load_people_from_pocketbase(base_url, collection_name, token, group_list):
             surname = person.get('Surname', '').strip()
             name = person.get('Name', '').strip()
             person_name = f"{surname}_{name}" if surname and name else None
-            print(f"Processing Person ID: {person_id}, Full Name: {person_name}")  # Debugging
 
             photo_filename = person.get('Photo', '').translate(str.maketrans("ăîțș", "____"))
             photo_url = f"D:\\practice_work\\database\\pb_data\\storage\\4i53pyqjukl7lxi\\{person_id}\\{photo_filename}"
@@ -167,7 +166,6 @@ def save_embeddings_to_pocketbase(base_url, collection_name, person_id, embeddin
         url = f"{base_url}/api/collections/{collection_name}/records/{person_id}"
         data = {'Embedding': json.dumps(embedding.flatten().tolist())}  # Convert embedding to JSON string
         headers = {'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'}
-        print(f"Payload for person {person_id}: {data}")
         response = requests.patch(url, json=data, headers=headers)
         response.raise_for_status()
     except Exception as e:
@@ -223,20 +221,45 @@ def find_most_similar_face_for_person(image, net, people, similarity_threshold=0
 
 
 def save_faces_for_people(matches, output_dir):
-    print(f"Processing person: {matches}")
-    os.makedirs("../server-app/face_recognition/"+ output_dir, exist_ok=True)
+    def sanitize_filename(name):    
+        romanian_map = {
+            'ă': 'a',
+            'â': 'a',
+            'î': 'i',
+            'ș': 's',
+            'ț': 't',
+            'Ă': 'A',
+            'Â': 'A',
+            'Î': 'I',
+            'Ș': 'S',
+            'Ț': 'T',
+        }
+        for key, value in romanian_map.items():
+            name = name.replace(key, value)                         
+        return name
+
+    try:
+        os.makedirs(output_dir, exist_ok=True)
+        print(f"Directory created successfully: {output_dir}")
+    except Exception as e:
+        print(f"Error creating directory: {e}")
+
     for match in matches:
         person = match['match']['person']
         face_image = match['face_image']
         person_name = person['name']
+        sanitized_name = sanitize_filename(person_name)
+        face_image_path = os.path.join(output_dir, f"{sanitized_name}.png")
+        try:
+            cv2.imwrite(face_image_path, face_image)
+            print(f"Saved face image: {face_image_path}")
+        except Exception as e:
+            print(f"Error saving image for {person_name}: {e}")
 
-        # Save the cropped face as "<person_name>.png"
-        face_image_path = os.path.join("../server-app/face_recognition/"+ output_dir, f"{person_name}.png")
-        cv2.imwrite(face_image_path, face_image)
-        print(f"Saved face for {person_name} at {face_image_path}")
 
 
-def match_faces_in_crowd(base_url, collection_name, crowd_image_path, yolo_cfg, yolo_weights, admin_email, admin_password, group_list, output_dir):
+def match_faces_in_crowd(base_url, collection_name, crowd_image_path, yolo_cfg, yolo_weights, admin_email,
+                         admin_password, group_list, output_dir):
     try:
         token = admin_login(base_url, admin_email, admin_password)
         if not token:
@@ -251,7 +274,28 @@ def match_faces_in_crowd(base_url, collection_name, crowd_image_path, yolo_cfg, 
             print("Error: Crowd image could not be loaded.")
             return
         matches = find_most_similar_face_for_person(crowd_image, net, people)
+
         save_faces_for_people(matches, output_dir)
+
+        # Dictionary to store similarity scores
+        similarity_dict = {}
+
+        # Draw rectangles and populate the dictionary
+        for match in matches:
+            (x, y, w, h) = match['match']['box']
+            person_name = match['match']['person']['name']
+            similarity = match['match']['similarity'] * 100  # Convert to percentage
+            similarity_dict[person_name] = f'{similarity:.2f}%'
+            cv2.rectangle(crowd_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            cv2.putText(crowd_image, f'{person_name}: {similarity:.2f}%', (x, y - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+
+        # Save the image with drawn rectangles
+        output_image_path = os.path.join(output_dir, "output.jpg")
+        cv2.imwrite(output_image_path, crowd_image)
+
+        # Print the similarity dictionary
+        print(similarity_dict)
     except Exception as e:
         print(f"Error in matching faces in crowd: {e}")
 
@@ -261,7 +305,7 @@ if __name__ == "__main__":
         parser = argparse.ArgumentParser(description="Face recognition in crowd images with group filtering")
         parser.add_argument("crowd_image_path", help="Path to the crowd image")
         parser.add_argument("group_list", nargs='+', help="List of student groups to filter")
-        output_dir = 'recognised_faces'
+        output_dir = '../server-app/recognised_faces'
         args = parser.parse_args()
         base_url = 'http://127.0.0.1:8090'
         collection_name = 'Students'

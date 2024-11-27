@@ -68,7 +68,7 @@ class MyMainPage2(QDialog, Ui_Dialog):
         global uuid
         global headers
         global group_id
-        url = r'https://cuddly-falcon-solid.ngrok-free.app/'
+        url = r'http://127.0.0.1:8090/'
         print(url)
         #self.students = []
         # Simulate local student data (instead of fetching from a server)
@@ -142,7 +142,7 @@ class MyMainPage2(QDialog, Ui_Dialog):
         uuid = response_id.json()["items"][0]["id"]
         print(uuid)
         response_group = requests.get(url[:-1] + f"/api/collections/Groups/records?fields=Group_name,id", headers=headers)
-        group_id = response_group.json()
+        group_id = response_group.json().get("items")
         print(group_id)
         self.widget.setHidden(False)
         self.widget_2.setHidden(False)
@@ -154,6 +154,41 @@ class MyMainPage2(QDialog, Ui_Dialog):
         self.create_classes_buttons_for_teacher()
         self.stackedWidget.setCurrentIndex(5)
 
+    from PySide6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
+
+    def make_days_scrollable(self):
+        """
+        Wrap the parent widget (widget_12) in a QScrollArea and set up a scrollable layout for the day widgets.
+        """
+        # Create a QScrollArea
+        scroll_area = QScrollArea(self)
+        scroll_area.setObjectName("scroll_area_days")
+        scroll_area.setWidgetResizable(True)  # Ensure the scroll area resizes with its content
+
+        # Create a container widget to hold all day widgets
+        container_widget = QWidget()
+        container_widget.setObjectName("container_widget_days")
+        container_layout = QVBoxLayout(container_widget)
+        container_layout.setContentsMargins(0, 0, 0, 0)  # Remove margins for clean layout
+        container_layout.setSpacing(20)  # Add some spacing between days
+
+        # Add day widgets (widget_10, widget_9, etc.) to the container layout
+        container_layout.addWidget(self.widget_10)  # Monday
+        self.widget_10.setObjectName(u"widget_10")
+        self.widget_10.setGeometry(QRect(10, 10, 841, 271))
+        self.widget_7 = QWidget(self.widget_10)
+        container_layout.addWidget(self.widget_9)  # Tuesday
+        container_layout.addWidget(self.widget_15)  # Wednesday
+        container_layout.addWidget(self.widget_17)  # Thursday
+        # Set the container widget as the scroll area's widget
+        scroll_area.setWidget(container_widget)
+
+        # Replace widget_12's layout with the scroll area
+        parent_layout = self.widget_12.layout()  # Assuming widget_12 already has a layout
+        if parent_layout is None:
+            parent_layout = QVBoxLayout(self.widget_12)
+            self.widget_12.setLayout(parent_layout)
+        parent_layout.addWidget(scroll_area)
 
     def get_schedule_info(self):
         global uuid
@@ -237,6 +272,10 @@ class MyMainPage2(QDialog, Ui_Dialog):
         # Clear any existing student buttons or results
         self.clear_search_results()
 
+
+        #TODO Make it show only the students from the required group
+
+
         # Create buttons or other UI elements for each found student
         for student in students:
             # Create a button for each filtered student (adjust layout as needed)
@@ -267,39 +306,112 @@ class MyMainPage2(QDialog, Ui_Dialog):
     def create_classes_buttons_for_teacher(self):
         global url
 
-        # Fetch the teacher data from the server
+        # Widgets for each day of the week
+        self.widgets_for_days = {
+            "Mon": self.widget_10,
+            "Tue": self.widget_9,
+            "Wed": self.widget_15,
+            "Thu": self.widget_17,
+            "Fri": self.widget_17,
+        }
 
-        index = 0
-        row = 0
+        # Initialize child counters for each widget (day)
+        self.child_counters = {day: 0 for day in self.widgets_for_days}
+
+        # Button dimensions and spacing
         width = 151
         height = 201
         padding = 40
         spacing = 20
-        today_index = datetime.datetime.today().weekday()
 
-        # Loop through each teacher and create a button with class details
+        # Get schedule info from the server
         class_info = self.get_schedule_info()
         print(class_info)
-        for clas in class_info:
-            if datetime.datetime.today() == self.transform_day_to_index(clas["Day"]):
-                self.class_label = QPushButton(self.widget_10)
-                self.class_label.setObjectName(u"label_22")
-                self.class_label.setGeometry(QRect(10 + (width + padding) * index, 60 + (height + spacing) * row, width, height))
-                color = self.generate_random_color_hex()
-                self.class_label.setStyleSheet(u"border-top-left-radius: 10px;          \n"
-                                            "border-bottom-left-radius: 10px;       \n"
-                                            "border-top-right-radius: 10px;         \n"
-                                            "border-bottom-right-radius: 10px;   "
-                                            f"background-color: {color}")
-                #self.class_label.setPixmap(QPixmap(u":/Curs/Images/Math1.png"))
+        filtered_class = [clas for clas in class_info if clas["Week_type"] == "Even"]
 
-                self.pushButton_14.setText(QCoreApplication.translate("Dialog", u"Name  \n""Class", None))
-                self.label_9.setText(QCoreApplication.translate("Dialog", u"      Name Group", None))
-                self.label_10.setText(QCoreApplication.translate("Dialog", u" Time: 00:00AM/PM", None))
-                index += 1
-                if index > 3:
-                    index = 0
-                    row += 1
+        # Loop through each class and create a button in the appropriate widget
+        for clas in filtered_class:
+            # Determine the day of the week for the class
+            day_widget = self.widgets_for_days.get(clas["Day"], None)
+            Group_Name = self.transform_group_id(clas["Group_ID"])
+            if not day_widget:
+                print(f"Invalid day: {clas['Day']}")
+                continue
+
+            # Calculate the position based on the current child count for the day
+            current_child_count = self.child_counters[clas["Day"]]
+            row = current_child_count // 4
+            index = current_child_count % 4
+
+            # Create the QPushButton for the class
+            self.class_label = QPushButton(day_widget)
+            self.class_label.setObjectName(u"label_22")
+            self.class_label.setGeometry(
+                QRect(10 + (width + padding) * index, 60 + (height + spacing) * row, width, height)
+            )
+            color = self.generate_random_color_hex()
+            self.class_label.setStyleSheet(
+                u"border-top-left-radius: 10px;          \n"
+                "border-bottom-left-radius: 10px;       \n"
+                "border-top-right-radius: 10px;         \n"
+                "border-bottom-right-radius: 10px;   "
+                f"background-color: {color}"
+            )
+
+            # Add details to the class button
+            self.pushButton_14 = QPushButton(self.class_label)
+            self.pushButton_14.setObjectName(u"pushButton_14")
+            self.pushButton_14.setGeometry(QRect(20, 20, 111, 71))
+            self.pushButton_14.setMinimumSize(QSize(50, 50))
+            self.pushButton_14.setMaximumSize(QSize(10000, 10000))
+            self.pushButton_14.setAutoFillBackground(False)
+            self.pushButton_14.setStyleSheet(
+                u"QPushButton {\n"
+                "	background-color: transparent;\n"
+                "    color: white;\n"
+                "    border: 1px solid #CCCCCC;\n"
+                "	border-radius:20px;\n"
+                "    padding: 10px;\n"
+                "    font-size: 15px;\n"
+                "    text-align: center; /* Center text */\n"
+                "}"
+            )
+            self.pushButton_14.setText(f"{clas['Subject']}" + "\n" + clas['Lesson_type'])
+            self.pushButton_14.setProperty("group", Group_Name)
+            self.pushButton_14.setCheckable(True)
+            self.pushButton_14.setAutoExclusive(True)
+            self.pushButton_14.clicked.connect(self.handle_pushbutton_14_click)
+
+            self.label_9 = QLabel(self.class_label)
+            self.label_9.setObjectName(u"label_9")
+            self.label_9.setGeometry(QRect(20, 100, 111, 31))
+            self.label_9.setStyleSheet(
+                u"background-color: transparent;\n"
+                "color: white;\n"
+                "border-radius:20px;\n"
+                "font-size: 12px;\n"
+                "text-align: center; \n"
+                "border-radius:20px;"
+            )
+            self.label_9.setText(QCoreApplication.translate("Dialog", f"{Group_Name}", None))
+
+
+            self.label_10 = QLabel(self.class_label)
+            self.label_10.setObjectName(u"label_10")
+            self.label_10.setGeometry(QRect(20, 140, 111, 31))
+            self.label_10.setStyleSheet(
+                u"background-color: transparent;\n"
+                "color: white;\n"
+                "border-radius:20px;\n"
+                "font-size: 12px;\n"
+                "text-align: center; \n"
+                "border-radius:20px;"
+            )
+            Group_Time = self.transform_period(clas["Period"])
+            self.label_10.setText(QCoreApplication.translate("Dialog", f" Time: {Group_Time}", None))
+
+            # Increment the child counter for the current day
+            self.child_counters[clas["Day"]] += 1
 
     def transform_day_to_index(self, day):
         # Define the mapping of days to indices
@@ -316,7 +428,31 @@ class MyMainPage2(QDialog, Ui_Dialog):
         # Return the corresponding index for the day
         return day_to_index.get(day, "Invalid day")
 
+    def transform_period(self,clas_period):
+        period_to_time = {
+            1: "8:00",
+            2: "9:45",
+            3: "11:30",
+            4: "13:30",
+            5: "15:15",
+            6: "17:00",
+            7: "18:45",
+        }
+        return period_to_time.get(clas_period)
 
+    def transform_group_id(self, clas_group_id):
+        global group_id
+        Id_to_group ={}
+        for id in group_id:
+            Id_to_group[id["id"]] = id["Group_name"]
+        return Id_to_group.get(clas_group_id)
+
+    def handle_pushbutton_14_click(self):
+        sender = self.sender()
+        if sender:
+            group = sender.property("group")
+            print(f"Group Name: {group}")
+            self.switch_to_upload_Page(group)
 
     def switch_to_teacher_page(self, teacher):
         """Switch to the teacher's detail page."""
@@ -383,8 +519,9 @@ class MyMainPage2(QDialog, Ui_Dialog):
         self.stackedWidget.setCurrentIndex(1)
 
     #Button with upload page
-    def switch_to_upload_Page(self):
+    def switch_to_upload_Page(self, group):
         self.stackedWidget.setCurrentIndex(3)
+        self.open_image_dialog(group)
 
     def switch_to_upload_Page2(self):
         self.stackedWidget.setCurrentIndex(4)
@@ -450,7 +587,7 @@ class MyMainPage2(QDialog, Ui_Dialog):
         else:
             print("No student selected for status change.")
 
-    def open_image_dialog(self):
+    def open_image_dialog(self, group):
         options = QFileDialog.Options()
         options |= QFileDialog.ReadOnly  # Open the dialog in read-only mode
 
@@ -464,10 +601,10 @@ class MyMainPage2(QDialog, Ui_Dialog):
         if file_Name:  # Check if a file was selected
             self.image_path = file_Name  # Save the path to the selected image
             print(f"Selected image path: {self.image_path}")  # Optional: Print the selected path
-            self.send_image_to_server(self.image_path)  # Send the image to the server
+            self.send_image_to_server(self.image_path, group)  # Send the image to the server
 
 
-    def send_image_to_server(self, image_path):
+    def send_image_to_server(self, image_path, group):
         # Since we are no longer using a server, simulate the result
         print(f"Simulating image processing for {image_path}")
 
@@ -479,18 +616,32 @@ class MyMainPage2(QDialog, Ui_Dialog):
             self.label_38.setPixmap(pixmap)  # Assuming label_38 is a QLabel in your UI
 
         # Simulate some dummy result data for students
-        simulated_result = {
-            "John Doe": "95",
-            "Jane Smith": "80",
-            "Alice Brown": "70",
-            "Bob White": "60"
-        }
+        global url
+        url_1 = f"{url}find/{group}"  # Adjust your endpoint as needed
+        print(url_1)
+        files = {'file': open(image_path, 'rb')}  # Open the image file in binary mode
+
+        response = requests.post(url_1, files=files)
+        print(response)
+        if response.status_code == 200:
+            print(f"Image uploaded successfully! - {response.text}")
+
+            # Assuming the response is a dictionary with student Names as keys and percentages as values
+            json_response = response.json().get("python_output")
+            json_text = json_response.replace("'", '"')
+            print(json_text)
+            procent_data ={}# json.loads(json_text)["python_output"]
+
+            # Update each button's label with the new percentage
+            for student_Name, procent_value in procent_data.items():
+                if student_Name in self.student_buttons:
+                    button_info = self.student_buttons[student_Name]
+                    button_info['label'].setText(procent_value + "%")  # Update the label with the percentage
+                    self.stackedWidget.setCurrentIndex(2)
+        else:
+            print(f"Failed to upload image: {response.status_code} - {response.text}")
 
         # Update each button's label with the new percentage
-        for student_Name, procent_value in simulated_result.items():
-            if student_Name in self.student_buttons:
-                button_info = self.student_buttons[student_Name]
-                button_info['label'].setText(procent_value + "%")  # Update the label with the percentage
 
         # Switch to the next screen or view (index 2)
         self.stackedWidget.setCurrentIndex(4)
