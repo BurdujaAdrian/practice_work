@@ -7,7 +7,7 @@ from ui_maintest import Ui_Dialog
 from PySide6.QtCore import QRect, QCoreApplication, QSize
 from PySide6.QtGui import QFont, QPixmap
 from PySide6.QtWidgets import QApplication,QMainWindow, QDialog, QVBoxLayout, QPushButton, QFileDialog, QLabel, QScrollArea, \
-    QHBoxLayout
+    QHBoxLayout, QSizePolicy
 from PySide6.QtWidgets import QWidget
 import json
 from PySide6.QtCore import QTimer
@@ -47,11 +47,28 @@ class MyMainPage2(QMainWindow, Ui_Dialog):
         self.setWindowTitle("Main Page")
         # self.setFixedSize(1000, 800)
     
-        self.central_widget = QWidget()
-        self.setCentralWidget(self.central_widget)
+        self.scroll_area = QScrollArea(self)
+        self.scroll_area.setWidgetResizable(True)  # Ensure the scrollable area adapts to content size
 
-        layout = QVBoxLayout(self.central_widget)
-        layout.addWidget(self.stackedWidget)
+        self.container_widget = QWidget()
+        self.container_widget.setMinimumWidth(400)
+        self.container_widget.setMinimumHeight(1000)
+        self.container_layout = QVBoxLayout(self.container_widget)
+        self.container_layout.setContentsMargins(0, 0, 0, 0)  # Optional: remove margins
+        self.container_layout.setSpacing(10)
+
+        self.container_layout.addWidget(self.widget_10)
+        self.container_layout.addWidget(self.widget_9)
+        self.container_layout.addWidget(self.widget_15)
+        self.container_layout.addWidget(self.widget_17)
+        self.container_layout.addWidget(self.widget_17)
+
+        # Set the stacked widget as the scrollable content
+        # self.stackedWidget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.scroll_area.setWidget(self.container_widget)
+
+        # Set the scroll area as the central widget
+        self.setCentralWidget(self.scroll_area)
 
         # Set the initial page of the stackedWidget to index 0 (Now Main page)
         self.stackedWidget.setCurrentIndex(9)
@@ -110,6 +127,15 @@ class MyMainPage2(QMainWindow, Ui_Dialog):
         # Connect the pushButton_62 click to toggle status
         self.pushButton_62.clicked.connect(self.toggle_status)
 
+        # self.add_test_widgets()
+
+    def add_test_widgets(self):
+        """Add extra widgets to test scrolling functionality."""
+        for i in range(50):  # Add 20 labels dynamically to exceed the window height
+            label = QLabel(f"Test Label {i+1}")
+            self.container_layout.addWidget(label)
+    
+
     def generate_random_color_hex(self):
         # Generate a random color using RGB values
         r = random.randint(0, 255)
@@ -157,33 +183,33 @@ class MyMainPage2(QMainWindow, Ui_Dialog):
 
     from PySide6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 
-    def make_days_scrollable(self):
-        """Wrap the parent widget (widget_12) in a QScrollArea and set up a scrollable layout for the day widgets."""
+    # def make_days_scrollable(self):
+    #     """Wrap the parent widget (widget_12) in a QScrollArea and set up a scrollable layout for the day widgets."""
         
-        # Create a QScrollArea
-        scroll_area = QScrollArea(self)
-        scroll_area.setObjectName("scroll_area_days")
-        scroll_area.setWidgetResizable(True)  # Ensure the scroll area resizes with its content
+    #     # Create a QScrollArea
+    #     scroll_area = QScrollArea(self)
+    #     scroll_area.setObjectName("scroll_area_days")
+    #     scroll_area.setWidgetResizable(True)  # Ensure the scroll area resizes with its content
         
-        # Create a container widget to hold all day widgets
-        container_widget = QWidget()
-        container_widget.setObjectName("container_widget_days")
+    #     # Create a container widget to hold all day widgets
+    #     container_widget = QWidget()
+    #     container_widget.setObjectName("container_widget_days")
         
-        # Set up the layout for the container widget
-        container_layout = QVBoxLayout(container_widget)
-        container_layout.setContentsMargins(0, 0, 0, 0)  # Remove margins for clean layout
-        container_layout.setSpacing(20)  # Add some spacing between days
+    #     # Set up the layout for the container widget
+    #     container_layout = QVBoxLayout(container_widget)
+    #     container_layout.setContentsMargins(0, 0, 0, 0)  # Remove margins for clean layout
+    #     container_layout.setSpacing(20)  # Add some spacing between days
         
-        # Add day widgets (widget_10, widget_9, etc.) to the container layout
-        container_layout.addWidget(self.widget_10)  # Monday
-        self.widget_10.setObjectName("widget_10")
+    #     # Add day widgets (widget_10, widget_9, etc.) to the container layout
+    #     container_layout.addWidget(self.widget_10)  # Monday
+    #     self.widget_10.setObjectName("widget_10")
         
-        container_layout.addWidget(self.widget_9)  # Tuesday
-        container_layout.addWidget(self.widget_15)  # Wednesday
-        container_layout.addWidget(self.widget_17)  # Thursday
+    #     container_layout.addWidget(self.widget_9)  # Tuesday
+    #     container_layout.addWidget(self.widget_15)  # Wednesday
+    #     container_layout.addWidget(self.widget_17)  # Thursday
         
-        # Set the container widget as the scroll area's widget
-        scroll_area.setWidget(container_widget)
+    #     # Set the container widget as the scroll area's widget
+    #     scroll_area.setWidget(container_widget)
         
         # # Replace widget_12's layout with the scroll area
         # parent_layout = self.widget_12.layout()
