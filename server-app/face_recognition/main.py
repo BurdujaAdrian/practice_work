@@ -196,7 +196,7 @@ def generate_and_save_embeddings(base_url, collection_name, people, net, token):
 def find_most_similar_face_for_person(image, net, people, similarity_threshold=0.3):
     try:
         faces = detect_faces_yolo(image, net)
-        if not faces:
+        if faces is None or len(faces) == 0:
             return []
         person_matches = []
         for person in people:
@@ -221,7 +221,7 @@ def find_most_similar_face_for_person(image, net, people, similarity_threshold=0
 
 
 def save_faces_for_people(matches, output_dir):
-    def sanitize_filename(name):    
+    def sanitize_filename(name):
         romanian_map = {
             'ă': 'a',
             'â': 'a',
@@ -235,12 +235,11 @@ def save_faces_for_people(matches, output_dir):
             'Ț': 'T',
         }
         for key, value in romanian_map.items():
-            name = name.replace(key, value)                         
+            name = name.replace(key, value)
         return name
 
     try:
         os.makedirs(output_dir, exist_ok=True)
-        print(f"Directory created successfully: {output_dir}")
     except Exception as e:
         print(f"Error creating directory: {e}")
 
@@ -252,14 +251,12 @@ def save_faces_for_people(matches, output_dir):
         face_image_path = os.path.join(output_dir, f"{sanitized_name}.png")
         try:
             cv2.imwrite(face_image_path, face_image)
-            print(f"Saved face image: {face_image_path}")
         except Exception as e:
             print(f"Error saving image for {person_name}: {e}")
 
 
 
-def match_faces_in_crowd(base_url, collection_name, crowd_image_path, yolo_cfg, yolo_weights, admin_email,
-                         admin_password, group_list, output_dir):
+def match_faces_in_crowd(base_url, collection_name, crowd_image_path, yolo_cfg, yolo_weights, admin_email, admin_password, group_list, output_dir):
     try:
         token = admin_login(base_url, admin_email, admin_password)
         if not token:
@@ -271,31 +268,9 @@ def match_faces_in_crowd(base_url, collection_name, crowd_image_path, yolo_cfg, 
         generate_and_save_embeddings(base_url, collection_name, people, net, token)
         crowd_image = cv2.imread(crowd_image_path)
         if crowd_image is None:
-            print("Error: Crowd image could not be loaded.")
             return
         matches = find_most_similar_face_for_person(crowd_image, net, people)
-
         save_faces_for_people(matches, output_dir)
-
-        # Dictionary to store similarity scores
-        similarity_dict = {}
-
-        # Draw rectangles and populate the dictionary
-        for match in matches:
-            (x, y, w, h) = match['match']['box']
-            person_name = match['match']['person']['name']
-            similarity = match['match']['similarity'] * 100  # Convert to percentage
-            similarity_dict[person_name] = f'{similarity:.2f}%'
-            cv2.rectangle(crowd_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            cv2.putText(crowd_image, f'{person_name}: {similarity:.2f}%', (x, y - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
-
-        # Save the image with drawn rectangles
-        output_image_path = os.path.join(output_dir, "output.jpg")
-        cv2.imwrite(output_image_path, crowd_image)
-
-        # Print the similarity dictionary
-        print(similarity_dict)
     except Exception as e:
         print(f"Error in matching faces in crowd: {e}")
 
