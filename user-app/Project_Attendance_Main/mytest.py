@@ -1,6 +1,6 @@
 '''
 this is a working example, need to add widgets here in this format
-problem: adding QMainWindow attribute breaks the widgetss
+problem: adding QMainWindow attribute breaks the widgets
 '''
 
 import sys
@@ -31,10 +31,9 @@ class CustomWidget(QWidget):
 
 
 
-class MainWindow(QMainWindow, QDialog, Ui_Dialog):
+class MainWindow(QMainWindow, Ui_Dialog):
     def __init__(self):
         super().__init__()
-        self.setupUi(self)
 
         
         self.initUI()

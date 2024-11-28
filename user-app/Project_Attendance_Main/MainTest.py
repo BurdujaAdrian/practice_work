@@ -6,7 +6,7 @@ import requests
 from ui_maintest import Ui_Dialog
 from PySide6.QtCore import QRect, QCoreApplication, QSize
 from PySide6.QtGui import QFont, QPixmap
-from PySide6.QtWidgets import QApplication, QMainWindow, QDialog, QVBoxLayout, QPushButton, QFileDialog, QLabel, QScrollArea, \
+from PySide6.QtWidgets import QApplication,QMainWindow, QDialog, QVBoxLayout, QPushButton, QFileDialog, QLabel, QScrollArea, \
     QHBoxLayout
 from PySide6.QtWidgets import QWidget
 import json
@@ -33,10 +33,13 @@ Classes Page and Search code part:
 -Display the class name, group, and time on each block.
 -Add a scroll system to view the entire week's schedule (create a widget for each day).
 
+
 '''
 
 
-class MyMainPage2(QMainWindow, QDialog, Ui_Dialog):
+
+
+class MyMainPage2(QMainWindow, Ui_Dialog):
     def __init__(self):
         super().__init__()
 
@@ -44,6 +47,11 @@ class MyMainPage2(QMainWindow, QDialog, Ui_Dialog):
         self.setWindowTitle("Main Page")
         # self.setFixedSize(1000, 800)
     
+        self.central_widget = QWidget()
+        self.setCentralWidget(self.central_widget)
+
+        layout = QVBoxLayout(self.central_widget)
+        layout.addWidget(self.stackedWidget)
 
         # Set the initial page of the stackedWidget to index 0 (Now Main page)
         self.stackedWidget.setCurrentIndex(9)
@@ -176,17 +184,18 @@ class MyMainPage2(QMainWindow, QDialog, Ui_Dialog):
         
         # Set the container widget as the scroll area's widget
         scroll_area.setWidget(container_widget)
-        self.setCentralWidget(scroll_area)
+        
+        # # Replace widget_12's layout with the scroll area
+        # parent_layout = self.widget_12.layout()
+        
+        # if parent_layout is None:
+        #     parent_layout = QVBoxLayout(self.widget_12)
+        #     self.widget_12.setLayout(parent_layout)
+        
+        # # Add the scroll area to widget_12
+        # parent_layout.addWidget(scroll_area)
 
         
-        # Replace widget_12's layout with the scroll area
-        parent_layout = self.widget_12.layout()
-        print(self.widget_12.layout())
-        
-        # Add the scroll area to widget_12
-        parent_layout.addWidget(scroll_area)
-
-
         
 
     def get_schedule_info(self):
@@ -246,7 +255,7 @@ class MyMainPage2(QMainWindow, QDialog, Ui_Dialog):
     # def create_search_button(self):
     #     "Make to find the specific student by name "
     #     "The search bar is : lineEdit"
-    #     "The name of button is Find : pusFhButton_23"
+    #     "The name of button is Find : pushButton_23"
     #     "Page name: Search_Page_2 - index 8"
     def create_search_button(self):
         """Create a button to search for a specific student by name or surname."""
