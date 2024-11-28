@@ -131,8 +131,8 @@ class MyMainPage2(QDialog, Ui_Dialog):
         print(password)
         admin_login_url = f"{url[:-1]}/api/collections/Teacher_account/auth-with-password"
         data = {"identity": email, "password": password}
-        print(data);
-        response = requests.post(admin_login_url, json = data)
+        print(data)
+        response = requests.post(admin_login_url, json=data)
         print(response)
         token = response.json()["token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -141,7 +141,8 @@ class MyMainPage2(QDialog, Ui_Dialog):
                                    headers=headers)
         uuid = response_id.json()["items"][0]["id"]
         print(uuid)
-        response_group = requests.get(url[:-1] + f"/api/collections/Groups/records?fields=Group_name,id", headers=headers)
+        response_group = requests.get(url[:-1] + f"/api/collections/Groups/records?fields=Group_name,id",
+                                      headers=headers)
         group_id = response_group.json().get("items")
         print(group_id)
         self.widget.setHidden(False)
@@ -149,8 +150,10 @@ class MyMainPage2(QDialog, Ui_Dialog):
         self.widget_4.setHidden(False)
         name = email.split("@")[0].split(".")
         self.take_student_info()
-        self.create_student_buttons()
-        self.label.setText(f"Welcome {name[0].capitalize()}" + " " + f"{name[1].capitalize()}" + ", attendance system is ready to operate.")
+        self.clear_student_buttons()  # Clear buttons before creating new ones
+        self.create_student_buttons(group=None)  # Show all students initially
+        self.label.setText(
+            f"Welcome {name[0].capitalize()}" + " " + f"{name[1].capitalize()}" + ", attendance system is ready to operate.")
         self.create_classes_buttons_for_teacher()
         self.stackedWidget.setCurrentIndex(5)
 
@@ -218,6 +221,7 @@ class MyMainPage2(QDialog, Ui_Dialog):
             # Collect students from the current page
             students = response_data.get("items", [])
             all_students.extend(students)
+            print(all_students)
 
             # If there are no more students, break the loop
             if len(students) < limit:
@@ -462,10 +466,11 @@ class MyMainPage2(QDialog, Ui_Dialog):
         self.label_teacher_group.setText(f"Group: {teacher['GroupName']}")
         self.label_teacher_time.setText(f"Time: {teacher['Time']}")
 
+    def create_student_buttons(self, group):
+        """Re-create student buttons for the selected group."""
+        # Clear existing buttons to prevent overlap
+        self.clear_student_buttons()
 
-
-    def create_student_buttons(self):
-        """Re-create student buttons with updated data."""
         index = 0
         row = 0
         width = 161
@@ -473,7 +478,10 @@ class MyMainPage2(QDialog, Ui_Dialog):
         padding = 40
         spacing = 20
 
-        for student in self.students:
+        # Filter students by group
+        filtered_students = [student for student in self.students if self.transform_group_id(student["Group"]) == group]
+
+        for student in filtered_students:
             # Combine Name and Surname for the button text
             student_name = f"{student['Name']} {student['Surname']}"
 
@@ -501,8 +509,6 @@ class MyMainPage2(QDialog, Ui_Dialog):
             # Connect the button click to a function to show student details
             button.clicked.connect(lambda _, s=student: self.switch_to_page_with_present(s))
 
-
-
             # Update index and row for button positioning
             index += 1
             if index > 3:
@@ -521,10 +527,18 @@ class MyMainPage2(QDialog, Ui_Dialog):
     #Button with upload page
     def switch_to_upload_Page(self, group):
         self.stackedWidget.setCurrentIndex(3)
+        self.clear_student_buttons()  # Ensure the page is blank before adding new buttons
         self.open_image_dialog(group)
+        self.create_student_buttons(group)  # Filter and show students from the selected group
 
     def switch_to_upload_Page2(self):
         self.stackedWidget.setCurrentIndex(4)
+
+    def clear_student_buttons(self):
+        """Clear all existing student buttons to prevent overlap."""
+        for button_info in self.student_buttons.values():
+            button_info['button'].deleteLater()  # Remove the button from the UI
+        self.student_buttons.clear()  # Clear the dictionary
 
     def switch_to_class_with_students(self):
         self.stackedWidget.setCurrentIndex(2)
@@ -603,45 +617,30 @@ class MyMainPage2(QDialog, Ui_Dialog):
             print(f"Selected image path: {self.image_path}")  # Optional: Print the selected path
             self.send_image_to_server(self.image_path, group)  # Send the image to the server
 
-
     def send_image_to_server(self, image_path, group):
-        # Since we are no longer using a server, simulate the result
         print(f"Simulating image processing for {image_path}")
 
-        # Display the image on label_38
         pixmap = QPixmap(image_path)
         if pixmap.isNull():
             print("Failed to load image.")
         else:
-            self.label_38.setPixmap(pixmap)  # Assuming label_38 is a QLabel in your UI
+            self.label_38.setPixmap(pixmap)
 
-        # Simulate some dummy result data for students
         global url
         url_1 = f"{url}find/{group}"  # Adjust your endpoint as needed
         print(url_1)
-        files = {'file': open(image_path, 'rb')}  # Open the image file in binary mode
+        files = {'file': open(image_path, 'rb')}
 
         response = requests.post(url_1, files=files)
         print(response)
         if response.status_code == 200:
-            print(f"Image uploaded successfully! - {response.text}")
-
-            # Assuming the response is a dictionary with student Names as keys and percentages as values
+            print(f"Image uploaded successfully!")
             json_response = response.json().get("python_output")
             json_text = json_response.replace("'", '"')
             print(json_text)
-            procent_data ={}# json.loads(json_text)["python_output"]
-
-            # Update each button's label with the new percentage
-            for student_Name, procent_value in procent_data.items():
-                if student_Name in self.student_buttons:
-                    button_info = self.student_buttons[student_Name]
-                    button_info['label'].setText(procent_value + "%")  # Update the label with the percentage
-                    self.stackedWidget.setCurrentIndex(2)
+            self.create_student_buttons(group)  # Filter students after image upload
+            self.stackedWidget.setCurrentIndex(2)
         else:
             print(f"Failed to upload image: {response.status_code} - {response.text}")
 
-        # Update each button's label with the new percentage
-
-        # Switch to the next screen or view (index 2)
-        self.stackedWidget.setCurrentIndex(4)
+        self.switch_to_upload_Page2()
