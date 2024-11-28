@@ -125,11 +125,7 @@ class MyMainPage2( QDialog, Ui_Dialog):
         admin_login_url = f"{url[:-1]}/api/collections/Teacher_account/auth-with-password"
         data = {"identity": email, "password": password}
         print(data)
-<<<<<<< HEAD
-        response = requests.post(admin_login_url, json=data)
-=======
         response = requests.post(admin_login_url, json = data)
->>>>>>> 6c0cbf609da75424cc97a911945e448fdef118ce
         print(response)
         token = response.json()["token"]
         headers = {"Authorization": f"Bearer {token}"}
