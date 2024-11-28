@@ -6,7 +6,7 @@ import requests
 from ui_maintest import Ui_Dialog
 from PySide6.QtCore import QRect, QCoreApplication, QSize
 from PySide6.QtGui import QFont, QPixmap
-from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QPushButton, QFileDialog, QLabel, QScrollArea, \
+from PySide6.QtWidgets import QApplication, QMainWindow, QDialog, QVBoxLayout, QPushButton, QFileDialog, QLabel, QScrollArea, \
     QHBoxLayout
 from PySide6.QtWidgets import QWidget
 import json
@@ -33,24 +33,17 @@ Classes Page and Search code part:
 -Display the class name, group, and time on each block.
 -Add a scroll system to view the entire week's schedule (create a widget for each day).
 
-
 '''
 
 
-
-
-class MyMainPage2(QDialog, Ui_Dialog):
+class MyMainPage2( QDialog, Ui_Dialog):
     def __init__(self):
         super().__init__()
 
         self.setupUi(self)
         self.setWindowTitle("Main Page")
-        self.setFixedSize(1000, 800)
-
-
-
-
-
+        # self.setFixedSize(1000, 800)
+    
 
         # Set the initial page of the stackedWidget to index 0 (Now Main page)
         self.stackedWidget.setCurrentIndex(9)
@@ -132,7 +125,11 @@ class MyMainPage2(QDialog, Ui_Dialog):
         admin_login_url = f"{url[:-1]}/api/collections/Teacher_account/auth-with-password"
         data = {"identity": email, "password": password}
         print(data)
+<<<<<<< HEAD
         response = requests.post(admin_login_url, json=data)
+=======
+        response = requests.post(admin_login_url, json = data)
+>>>>>>> 6c0cbf609da75424cc97a911945e448fdef118ce
         print(response)
         token = response.json()["token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -160,38 +157,42 @@ class MyMainPage2(QDialog, Ui_Dialog):
     from PySide6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 
     def make_days_scrollable(self):
-        """
-        Wrap the parent widget (widget_12) in a QScrollArea and set up a scrollable layout for the day widgets.
-        """
+        """Wrap the parent widget (widget_12) in a QScrollArea and set up a scrollable layout for the day widgets."""
+        
         # Create a QScrollArea
         scroll_area = QScrollArea(self)
         scroll_area.setObjectName("scroll_area_days")
         scroll_area.setWidgetResizable(True)  # Ensure the scroll area resizes with its content
-
+        
         # Create a container widget to hold all day widgets
         container_widget = QWidget()
         container_widget.setObjectName("container_widget_days")
+        
+        # Set up the layout for the container widget
         container_layout = QVBoxLayout(container_widget)
         container_layout.setContentsMargins(0, 0, 0, 0)  # Remove margins for clean layout
         container_layout.setSpacing(20)  # Add some spacing between days
-
+        
         # Add day widgets (widget_10, widget_9, etc.) to the container layout
         container_layout.addWidget(self.widget_10)  # Monday
-        self.widget_10.setObjectName(u"widget_10")
-        self.widget_10.setGeometry(QRect(10, 10, 841, 271))
-        self.widget_7 = QWidget(self.widget_10)
+        self.widget_10.setObjectName("widget_10")
+        
         container_layout.addWidget(self.widget_9)  # Tuesday
         container_layout.addWidget(self.widget_15)  # Wednesday
         container_layout.addWidget(self.widget_17)  # Thursday
+        
         # Set the container widget as the scroll area's widget
         scroll_area.setWidget(container_widget)
-
+        
         # Replace widget_12's layout with the scroll area
-        parent_layout = self.widget_12.layout()  # Assuming widget_12 already has a layout
-        if parent_layout is None:
-            parent_layout = QVBoxLayout(self.widget_12)
-            self.widget_12.setLayout(parent_layout)
+        parent_layout = self.widget_12.layout()
+        print(self.widget_12.layout())
+        
+        # Add the scroll area to widget_12
         parent_layout.addWidget(scroll_area)
+
+
+        
 
     def get_schedule_info(self):
         global uuid
@@ -251,7 +252,7 @@ class MyMainPage2(QDialog, Ui_Dialog):
     # def create_search_button(self):
     #     "Make to find the specific student by name "
     #     "The search bar is : lineEdit"
-    #     "The name of button is Find : pushButton_23"
+    #     "The name of button is Find : pusFhButton_23"
     #     "Page name: Search_Page_2 - index 8"
     def create_search_button(self):
         """Create a button to search for a specific student by name or surname."""
