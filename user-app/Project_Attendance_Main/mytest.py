@@ -1,31 +1,35 @@
+'''
+this is a working example, need to add widgets here in this format
+problem: adding QMainWindow attribute breaks the widgetss
+'''
+
 import sys
 from PySide6.QtGui import QPixmap, QImage, QPalette
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QScrollArea, QWidget, QLineEdit, QPushButton, QDialog
 from ui_maintest import Ui_Dialog
 
-# class CustomWidget(QWidget):
-#     def __init__(self):
-#         super().__init__()
-#         self.initUI()
+class CustomWidget(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
 
-#     def initUI(self):
-#         # Create a vertical layout for the custom widget
-#         layout = QVBoxLayout(self)
+    def initUI(self):
+        # Create a vertical layout for the custom widget
+        layout = QVBoxLayout(self)
         
-#         # Create a label and set some text
-#         label = QLabel("This is a custom widget!", self)
-#         layout.addWidget(label)
+        # Create a label and set some text
+        label = QLabel("This is a custom widget!", self)
+        layout.addWidget(label)
         
-#         # Create a text input field (QLineEdit)
-#         lineEdit = QLineEdit(self)
-#         layout.addWidget(lineEdit)
+        # Create a text input field (QLineEdit)
+        lineEdit = QLineEdit(self)
+        layout.addWidget(lineEdit)
         
-#         # Create a button
-#         button = QPushButton("Click Me", self)
-#         layout.addWidget(button)
+        # Create a button
+        button = QPushButton("Click Me", self)
+        layout.addWidget(button)
 
-#         # Optionally, you can set a background color for this widget
-#         # self.set
+
 
 class MainWindow(QMainWindow, QDialog, Ui_Dialog):
     def __init__(self):
@@ -43,12 +47,12 @@ class MainWindow(QMainWindow, QDialog, Ui_Dialog):
         self.vbox = QVBoxLayout(self.mywidget)
 
         for _ in range(20):
-            # custom_widget = CustomWidget()  # Instantiate the custom widget
-            # self.vbox.addWidget(custom_widget)
-            self.vbox.addWidget(self.widget_10)
-            self.vbox.addWidget(self.widget_9)
-            self.vbox.addWidget(self.widget_15)
-            self.vbox.addWidget(self.widget_17)
+            custom_widget = CustomWidget()  # Instantiate the custom widget
+            self.vbox.addWidget(custom_widget)
+            # self.vbox.addWidget(self.widget_10)
+            # self.vbox.addWidget(self.widget_9)
+            # self.vbox.addWidget(self.widget_15)
+            # self.vbox.addWidget(self.widget_17)
 
         # Create a scroll area to make the images and custom widget scrollable
         scrollArea = QScrollArea()

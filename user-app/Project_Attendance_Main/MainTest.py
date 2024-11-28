@@ -36,7 +36,7 @@ Classes Page and Search code part:
 '''
 
 
-class MyMainPage2( QDialog, Ui_Dialog):
+class MyMainPage2(QMainWindow, QDialog, Ui_Dialog):
     def __init__(self):
         super().__init__()
 
@@ -176,6 +176,8 @@ class MyMainPage2( QDialog, Ui_Dialog):
         
         # Set the container widget as the scroll area's widget
         scroll_area.setWidget(container_widget)
+        self.setCentralWidget(scroll_area)
+
         
         # Replace widget_12's layout with the scroll area
         parent_layout = self.widget_12.layout()
