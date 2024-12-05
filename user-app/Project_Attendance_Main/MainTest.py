@@ -626,18 +626,41 @@ class MyMainPage2(QDialog, Ui_Dialog):
         if response.status_code == 200:
             print(f"Image uploaded successfully! - {response.text}")
 
-            # Assuming the response is a dictionary with student Names as keys and percentages as values
-            json_response = response.json().get("python_output")
-            json_text = json_response.replace("'", '"')
-            print(json_text)
-            procent_data ={}# json.loads(json_text)["python_output"]
+            try:
+                # Extract backend response
+                json_response = response.json().get("python_output")
 
-            # Update each button's label with the new percentage
-            for student_Name, procent_value in procent_data.items():
-                if student_Name in self.student_buttons:
-                    button_info = self.student_buttons[student_Name]
-                    button_info['label'].setText(procent_value + "%")  # Update the label with the percentage
-                    self.stackedWidget.setCurrentIndex(2)
+                if not json_response:
+                    raise ValueError("The server response 'python_output' is missing or empty.")
+                json_text = json_response.replace("'", '"')
+                # Parse JSON string into a Python dictionary
+                procent_data = json.loads(json_text)
+
+                # Iterate over the students and update the corresponding procent_label
+                for student in self.students:
+                    # Combine Name and Surname to match the backend response format
+                    full_name_key = f"{student['Surname']}_{student['Name']}"  # Matches backend key format
+
+                    # Check if the student exists in the backend response
+                    if full_name_key in procent_data:
+                        procent_value = procent_data[full_name_key]  # Get percentage value
+
+                        # Retrieve the button and label from the student_buttons dictionary
+                        student_name = f"{student['Name']} {student['Surname']}"
+                        if student_name in self.student_buttons:
+                            procent_label = self.student_buttons[student_name]['label']
+                            procent_label.setText(procent_value)  # Update the label with the percentage
+
+                        # Optionally, update the UI to show the student page
+                        self.stackedWidget.setCurrentIndex(2)
+
+            except json.JSONDecodeError as e:
+                print(f"JSON decoding error: {e}")
+            except ValueError as ve:
+                print(f"Value error: {ve}")
+            except Exception as ex:
+                print(f"Unexpected error: {ex}")
+
         else:
             print(f"Failed to upload image: {response.status_code} - {response.text}")
 
