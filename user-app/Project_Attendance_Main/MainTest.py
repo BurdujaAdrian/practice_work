@@ -125,11 +125,7 @@ class MyMainPage2( QDialog, Ui_Dialog):
         admin_login_url = f"{url[:-1]}/api/collections/Teacher_account/auth-with-password"
         data = {"identity": email, "password": password}
         print(data)
-<<<<<<< HEAD
-        response = requests.post(admin_login_url, json=data)
-=======
         response = requests.post(admin_login_url, json = data)
->>>>>>> 6c0cbf609da75424cc97a911945e448fdef118ce
         print(response)
         token = response.json()["token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -644,11 +640,4 @@ class MyMainPage2( QDialog, Ui_Dialog):
         else:
             print(f"Failed to upload image: {response.status_code} - {response.text}")
 
-<<<<<<< HEAD
-        # Update each button's label with the new percentage
-
-        # Switch to the next screen or view (index 2)
-        self.stackedWidget.setCurrentIndex(4)
-=======
         self.switch_to_upload_Page2()
->>>>>>> 61e48da71af4073bb39fddcc5bb7c91b05da9a8f
