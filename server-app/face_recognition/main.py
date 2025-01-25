@@ -106,7 +106,7 @@ def detect_faces_yolo(image, net, confidence_threshold=0.3, nms_threshold=0.0):
                 final_boxes = [boxes[i] for i in indices]
         return final_boxes
     except Exception as e:
-        print(f"Error detecting faces with YOLO: {e}")
+        #print(f"Error detecting faces with YOLO: {e}")
         return []
 
 
