@@ -72,7 +72,7 @@ def load_yolo_model(config_path, weights_path):
         return None
 
 
-def detect_faces_yolo(image, net, confidence_threshold=0.3, nms_threshold=0.0):
+def detect_faces_yolo(image, net, confidence_threshold=0.8, nms_threshold=0.0):
     try:
         blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416), swapRB=True, crop=False)
         net.setInput(blob)

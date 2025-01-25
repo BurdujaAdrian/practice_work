@@ -1,7 +1,7 @@
 "Now Main"
 import datetime
 import random
-
+import base64
 import requests
 from ui_maintest1 import Ui_Dialog
 from PySide6.QtCore import QRect, QCoreApplication, QSize
@@ -68,10 +68,11 @@ class MyMainPage2(QDialog, Ui_Dialog):
         global uuid
         global headers
         global group_id
+        self.image_cache = {}
         url = r'http://127.0.0.1:8090/'
         print(url)
         #self.students = []
-        # Simulate local student data (instead of fetching from a server)
+        # Simulate local  student data (instead of fetching from a server)
 
         self.Original_Picture_ID.picture()
 
@@ -545,17 +546,28 @@ class MyMainPage2(QDialog, Ui_Dialog):
             self.pushButton_57.setText(QCoreApplication.translate("Dialog", student["Name"] + " " +student["Surname"] , None))
             self.pushButton_58.setText(QCoreApplication.translate("Dialog", student["Group"], None))
             self.pushButton_61.setText(QCoreApplication.translate("Dialog", student["id"], None))
+            if student['id'] in self.image_cache:
+                image_data = self.image_cache[student['id']]
+                pixmap = QPixmap()
+                pixmap.loadFromData(image_data)
+
+                if pixmap.isNull():
+                    print("Failed to load cached image.")
+                else:
+                    self.Class_Picture_ID.setPixmap(pixmap)
+            else:
+                self.Class_Picture_ID.setPixmap(QPixmap(u":/newPrefix/Images/Emma_Photo_1.png"))
             response = requests.get(url[:-1]+"/api/files/4i53pyqjukl7lxi/" + f"{student['id']}/"+f"{student['Photo']}")
             image_data = response.content
             pixmap = QPixmap()
             pixmap.loadFromData(image_data)
+
             if pixmap.isNull():
                 print("Failed to load image.")
             else:
                 self.Original_Picture_ID.setPixmap(pixmap)  # Assuming label_38 is a QLabel in your UI
 
-            # Update the status button based on the student's current status
-            self.update_status_button(student.get("status", "absent"))
+
 
             self.label_6.setText(QCoreApplication.translate("Dialog", u"Classes", None))
         else:
@@ -603,7 +615,18 @@ class MyMainPage2(QDialog, Ui_Dialog):
             print(f"Selected image path: {self.image_path}")  # Optional: Print the selected path
             self.send_image_to_server(self.image_path, group)  # Send the image to the server
 
+    def decode_and_cache_image(self, student, image):
+        if student['id'] in self.image_cache:
+            # Return the cached image if it's already decoded
+            return
 
+        # If not cached, fetch and decode the image
+        base64_image = image # Assuming this function retrieves the base64 image data
+        image_data = base64.b64decode(base64_image)
+
+        # Cache the decoded image
+        self.image_cache[student['id']] = image_data
+        return
     def send_image_to_server(self, image_path, group):
         # Since we are no longer using a server, simulate the result
         print(f"Simulating image processing for {image_path}")
@@ -625,7 +648,15 @@ class MyMainPage2(QDialog, Ui_Dialog):
         print(response)
         if response.status_code == 200:
             print(f"Image uploaded successfully! - {response.text}")
-
+            photo_response = response.json().get("recognised_faces")
+            for student in self.students:
+                student_filename = f"{student['Surname']}_{student['Name']}.png"
+                print(student_filename)
+                for face in photo_response:
+                    if face['filename'] == student_filename:
+                        base64_image = face['content']
+                        self.decode_and_cache_image(student,base64_image)
+            print(self.image_cache)
             try:
                 # Extract backend response
                 json_response = response.json().get("python_output")
@@ -634,7 +665,7 @@ class MyMainPage2(QDialog, Ui_Dialog):
                     raise ValueError("The server response 'python_output' is missing or empty.")
                 json_text = json_response.replace("'", '"')
                 # Parse JSON string into a Python dictionary
-                procent_data = json.loads(json_text)
+                self.procent_data = json.loads(json_text)
 
                 # Iterate over the students and update the corresponding procent_label
                 for student in self.students:
@@ -642,8 +673,8 @@ class MyMainPage2(QDialog, Ui_Dialog):
                     full_name_key = f"{student['Surname']}_{student['Name']}"  # Matches backend key format
 
                     # Check if the student exists in the backend response
-                    if full_name_key in procent_data:
-                        procent_value = procent_data[full_name_key]  # Get percentage value
+                    if full_name_key in self.procent_data:
+                        procent_value = self.procent_data[full_name_key]  # Get percentage value
 
                         # Retrieve the button and label from the student_buttons dictionary
                         student_name = f"{student['Name']} {student['Surname']}"
