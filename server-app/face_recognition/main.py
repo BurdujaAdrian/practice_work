@@ -9,6 +9,7 @@ import requests
 import json
 import argparse
 import os
+from concurrent.futures import ThreadPoolExecutor
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -105,8 +106,107 @@ def detect_faces_yolo(image, net, confidence_threshold=0.3, nms_threshold=0.0):
                 final_boxes = [boxes[i] for i in indices]
         return final_boxes
     except Exception as e:
-        print(f"Error detecting faces with YOLO: {e}")
+        #print(f"Error detecting faces with YOLO: {e}")
         return []
+
+
+def save_embeddings_to_pocketbase(base_url, collection_name, person_id, embedding, token):
+    try:
+        url = f"{base_url}/api/collections/{collection_name}/records/{person_id}"
+        data = {'Embedding': json.dumps(embedding.flatten().tolist())}  # Convert embedding to JSON string
+        headers = {'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'}
+        response = requests.patch(url, json=data, headers=headers)
+        response.raise_for_status()
+    except Exception as e:
+        print(f"Error saving embedding to PocketBase for person ID {person_id}: {e}")
+
+
+def generate_and_save_embeddings(base_url, collection_name, people, net, token):
+    with ThreadPoolExecutor() as executor:
+        futures = []
+        for person in people:
+            if person['Embedding'] is not None:
+                continue
+            image = person["Photo"]
+            if image is None:
+                continue
+            futures.append(executor.submit(process_person_for_embedding, person, image, base_url, collection_name, net, token))
+        for future in futures:
+            future.result()
+
+
+def process_person_for_embedding(person, image, base_url, collection_name, net, token):
+    faces = detect_faces_yolo(image, net)
+    if not faces:
+        return
+    (x, y, w, h) = faces[0]
+    cropped_face = image[y:y + h, x:x + w]
+    embedding = extract_face_embedding(cropped_face)
+    if embedding is not None:
+        save_embeddings_to_pocketbase(base_url, collection_name, person['id'], embedding, token)
+        person['Embedding'] = embedding  # Update local copy
+
+
+def find_most_similar_face_for_person(image, net, people, similarity_threshold=0.3):
+    try:
+        faces = detect_faces_yolo(image, net)
+        if not faces:
+            return []
+        person_matches = []
+        for person in people:
+            best_similarity, best_match, best_face = -1, None, None
+            for (x, y, w, h) in faces:
+                face_image = image[y:y + h, x:x + w]
+                embedding = extract_face_embedding(face_image)
+                if embedding is not None:
+                    person_embedding = np.array(person['Embedding']) if person['Embedding'] else None
+                    if person_embedding is not None:
+                        similarity = cosine_similarity(embedding, person_embedding.reshape(1, -1))[0][0]
+                        if similarity > best_similarity and similarity > similarity_threshold:
+                            best_similarity = similarity
+                            best_match = {'person': person, 'box': (x, y, w, h), 'similarity': similarity}
+                            best_face = face_image
+            if best_match and best_face is not None:
+                person_matches.append({'match': best_match, 'face_image': best_face})
+        return person_matches
+    except Exception as e:
+        print(f"Error finding most similar face: {e}")
+        return []
+
+
+def save_faces_for_people(matches, output_dir):
+    def sanitize_filename(name):
+        romanian_map = {
+            'ă': 'a',
+            'â': 'a',
+            'î': 'i',
+            'ș': 's',
+            'ț': 't',
+            'Ă': 'A',
+            'Â': 'A',
+            'Î': 'I',
+            'Ș': 'S',
+            'Ț': 'T',
+        }
+        for key, value in romanian_map.items():
+            name = name.replace(key, value)
+        return name
+
+    try:
+        os.makedirs(output_dir, exist_ok=True)
+    except Exception as e:
+        print(f"Error creating directory: {e}")
+
+    for match in matches:
+        person = match['match']['person']
+        face_image = match['face_image']
+        person_name = person['name']
+        sanitized_name = sanitize_filename(person_name)
+        face_image_path = os.path.join(output_dir, f"{sanitized_name}.png")
+        try:
+            cv2.imwrite(face_image_path, face_image)
+        except Exception as e:
+            print(f"Error saving image for {person_name}: {e}")
 
 
 def admin_login(base_url, admin_email, admin_password):
@@ -161,103 +261,6 @@ def load_people_from_pocketbase(base_url, collection_name, token, group_list):
         return []
 
 
-def save_embeddings_to_pocketbase(base_url, collection_name, person_id, embedding, token):
-    try:
-        url = f"{base_url}/api/collections/{collection_name}/records/{person_id}"
-        data = {'Embedding': json.dumps(embedding.flatten().tolist())}  # Convert embedding to JSON string
-        headers = {'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'}
-        response = requests.patch(url, json=data, headers=headers)
-        response.raise_for_status()
-    except Exception as e:
-        print(f"Error saving embedding to PocketBase for person ID {person_id}: {e}")
-
-
-
-
-def generate_and_save_embeddings(base_url, collection_name, people, net, token):
-    for person in people:
-        if person['Embedding'] is not None:
-            continue
-        image = person["Photo"]
-        if image is None:
-            continue
-        faces = detect_faces_yolo(image, net)
-        if not faces:
-            continue
-        (x, y, w, h) = faces[0]
-        cropped_face = image[y:y + h, x:x + w]
-        embedding = extract_face_embedding(cropped_face)
-        if embedding is not None:
-            save_embeddings_to_pocketbase(base_url, collection_name, person['id'], embedding, token)
-            person['Embedding'] = embedding  # Update local copy
-
-
-
-def find_most_similar_face_for_person(image, net, people, similarity_threshold=0.3):
-    try:
-        faces = detect_faces_yolo(image, net)
-        if not faces:
-            return []
-        person_matches = []
-        for person in people:
-            best_similarity, best_match, best_face = -1, None, None
-            for (x, y, w, h) in faces:
-                face_image = image[y:y + h, x:x + w]
-                embedding = extract_face_embedding(face_image)
-                if embedding is not None:
-                    person_embedding = np.array(person['Embedding']) if person['Embedding'] else None
-                    if person_embedding is not None:
-                        similarity = cosine_similarity(embedding, person_embedding.reshape(1, -1))[0][0]
-                        if similarity > best_similarity and similarity > similarity_threshold:
-                            best_similarity = similarity
-                            best_match = {'person': person, 'box': (x, y, w, h), 'similarity': similarity}
-                            best_face = face_image
-            if best_match and best_face is not None:
-                person_matches.append({'match': best_match, 'face_image': best_face})
-        return person_matches
-    except Exception as e:
-        print(f"Error finding most similar face: {e}")
-        return []
-
-
-def save_faces_for_people(matches, output_dir):
-    def sanitize_filename(name):    
-        romanian_map = {
-            'ă': 'a',
-            'â': 'a',
-            'î': 'i',
-            'ș': 's',
-            'ț': 't',
-            'Ă': 'A',
-            'Â': 'A',
-            'Î': 'I',
-            'Ș': 'S',
-            'Ț': 'T',
-        }
-        for key, value in romanian_map.items():
-            name = name.replace(key, value)                         
-        return name
-
-    try:
-        os.makedirs(output_dir, exist_ok=True)
-        print(f"Directory created successfully: {output_dir}")
-    except Exception as e:
-        print(f"Error creating directory: {e}")
-
-    for match in matches:
-        person = match['match']['person']
-        face_image = match['face_image']
-        person_name = person['name']
-        sanitized_name = sanitize_filename(person_name)
-        face_image_path = os.path.join(output_dir, f"{sanitized_name}.png")
-        try:
-            cv2.imwrite(face_image_path, face_image)
-            print(f"Saved face image: {face_image_path}")
-        except Exception as e:
-            print(f"Error saving image for {person_name}: {e}")
-
-
-
 def match_faces_in_crowd(base_url, collection_name, crowd_image_path, yolo_cfg, yolo_weights, admin_email,
                          admin_password, group_list, output_dir):
     try:
@@ -280,21 +283,18 @@ def match_faces_in_crowd(base_url, collection_name, crowd_image_path, yolo_cfg, 
         # Dictionary to store similarity scores
         similarity_dict = {}
 
-        # Draw rectangles and populate the dictionary
         for match in matches:
             (x, y, w, h) = match['match']['box']
             person_name = match['match']['person']['name']
-            similarity = match['match']['similarity'] * 100  # Convert to percentage
+            similarity = match['match']['similarity'] * 100
             similarity_dict[person_name] = f'{similarity:.2f}%'
             cv2.rectangle(crowd_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
             cv2.putText(crowd_image, f'{person_name}: {similarity:.2f}%', (x, y - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
-        # Save the image with drawn rectangles
         output_image_path = os.path.join(output_dir, "output.jpg")
         cv2.imwrite(output_image_path, crowd_image)
 
-        # Print the similarity dictionary
         print(similarity_dict)
     except Exception as e:
         print(f"Error in matching faces in crowd: {e}")

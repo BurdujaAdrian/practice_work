@@ -3,7 +3,7 @@ import datetime
 import random
 
 import requests
-from ui_maintest import Ui_Dialog
+from ui_maintest1 import Ui_Dialog
 from PySide6.QtCore import QRect, QCoreApplication, QSize
 from PySide6.QtGui import QFont, QPixmap
 from PySide6.QtWidgets import QApplication, QMainWindow, QDialog, QVBoxLayout, QPushButton, QFileDialog, QLabel, QScrollArea, \
@@ -638,6 +638,6 @@ class MyMainPage2( QDialog, Ui_Dialog):
             self.create_student_buttons(group)  # Filter students after image upload
             self.stackedWidget.setCurrentIndex(2)
         else:
-            print(f"Failed to upload image: {response.status_code} - {response.text}")
+            print(f"Failed to upload image: {response.status_code}")
 
         self.switch_to_upload_Page2()
