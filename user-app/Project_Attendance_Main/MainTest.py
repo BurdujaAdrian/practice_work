@@ -1,12 +1,12 @@
 "Now Main"
 import datetime
 import random
-
+import base64
 import requests
 from ui_maintest1 import Ui_Dialog
 from PySide6.QtCore import QRect, QCoreApplication, QSize
 from PySide6.QtGui import QFont, QPixmap
-from PySide6.QtWidgets import QApplication, QMainWindow, QDialog, QVBoxLayout, QPushButton, QFileDialog, QLabel, QScrollArea, \
+from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QPushButton, QFileDialog, QLabel, QScrollArea, \
     QHBoxLayout
 from PySide6.QtWidgets import QWidget
 import json
@@ -33,17 +33,24 @@ Classes Page and Search code part:
 -Display the class name, group, and time on each block.
 -Add a scroll system to view the entire week's schedule (create a widget for each day).
 
+
 '''
 
 
-class MyMainPage2( QDialog, Ui_Dialog):
+
+
+class MyMainPage2(QDialog, Ui_Dialog):
     def __init__(self):
         super().__init__()
 
         self.setupUi(self)
         self.setWindowTitle("Main Page")
-        # self.setFixedSize(1000, 800)
-    
+        self.setFixedSize(1000, 800)
+
+
+
+
+
 
         # Set the initial page of the stackedWidget to index 0 (Now Main page)
         self.stackedWidget.setCurrentIndex(9)
@@ -61,10 +68,11 @@ class MyMainPage2( QDialog, Ui_Dialog):
         global uuid
         global headers
         global group_id
+        self.image_cache = {}
         url = r'http://127.0.0.1:8090/'
         print(url)
         #self.students = []
-        # Simulate local student data (instead of fetching from a server)
+        # Simulate local  student data (instead of fetching from a server)
 
         self.Original_Picture_ID.picture()
 
@@ -124,7 +132,7 @@ class MyMainPage2( QDialog, Ui_Dialog):
         print(password)
         admin_login_url = f"{url[:-1]}/api/collections/Teacher_account/auth-with-password"
         data = {"identity": email, "password": password}
-        print(data)
+        print(data);
         response = requests.post(admin_login_url, json = data)
         print(response)
         token = response.json()["token"]
@@ -134,8 +142,7 @@ class MyMainPage2( QDialog, Ui_Dialog):
                                    headers=headers)
         uuid = response_id.json()["items"][0]["id"]
         print(uuid)
-        response_group = requests.get(url[:-1] + f"/api/collections/Groups/records?fields=Group_name,id",
-                                      headers=headers)
+        response_group = requests.get(url[:-1] + f"/api/collections/Groups/records?fields=Group_name,id", headers=headers)
         group_id = response_group.json().get("items")
         print(group_id)
         self.widget.setHidden(False)
@@ -143,52 +150,46 @@ class MyMainPage2( QDialog, Ui_Dialog):
         self.widget_4.setHidden(False)
         name = email.split("@")[0].split(".")
         self.take_student_info()
-        self.clear_student_buttons()  # Clear buttons before creating new ones
-        self.create_student_buttons(group=None)  # Show all students initially
-        self.label.setText(
-            f"Welcome {name[0].capitalize()}" + " " + f"{name[1].capitalize()}" + ", attendance system is ready to operate.")
+        self.create_student_buttons()
+        self.label.setText(f"Welcome {name[0].capitalize()}" + " " + f"{name[1].capitalize()}" + ", attendance system is ready to operate.")
         self.create_classes_buttons_for_teacher()
         self.stackedWidget.setCurrentIndex(5)
 
     from PySide6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 
     def make_days_scrollable(self):
-        """Wrap the parent widget (widget_12) in a QScrollArea and set up a scrollable layout for the day widgets."""
-        
+        """
+        Wrap the parent widget (widget_12) in a QScrollArea and set up a scrollable layout for the day widgets.
+        """
         # Create a QScrollArea
         scroll_area = QScrollArea(self)
         scroll_area.setObjectName("scroll_area_days")
         scroll_area.setWidgetResizable(True)  # Ensure the scroll area resizes with its content
-        
+
         # Create a container widget to hold all day widgets
         container_widget = QWidget()
         container_widget.setObjectName("container_widget_days")
-        
-        # Set up the layout for the container widget
         container_layout = QVBoxLayout(container_widget)
         container_layout.setContentsMargins(0, 0, 0, 0)  # Remove margins for clean layout
         container_layout.setSpacing(20)  # Add some spacing between days
-        
+
         # Add day widgets (widget_10, widget_9, etc.) to the container layout
         container_layout.addWidget(self.widget_10)  # Monday
-        self.widget_10.setObjectName("widget_10")
-        
+        self.widget_10.setObjectName(u"widget_10")
+        self.widget_10.setGeometry(QRect(10, 10, 841, 271))
+        self.widget_7 = QWidget(self.widget_10)
         container_layout.addWidget(self.widget_9)  # Tuesday
         container_layout.addWidget(self.widget_15)  # Wednesday
         container_layout.addWidget(self.widget_17)  # Thursday
-        
         # Set the container widget as the scroll area's widget
         scroll_area.setWidget(container_widget)
-        
+
         # Replace widget_12's layout with the scroll area
-        parent_layout = self.widget_12.layout()
-        print(self.widget_12.layout())
-        
-        # Add the scroll area to widget_12
+        parent_layout = self.widget_12.layout()  # Assuming widget_12 already has a layout
+        if parent_layout is None:
+            parent_layout = QVBoxLayout(self.widget_12)
+            self.widget_12.setLayout(parent_layout)
         parent_layout.addWidget(scroll_area)
-
-
-        
 
     def get_schedule_info(self):
         global uuid
@@ -218,7 +219,6 @@ class MyMainPage2( QDialog, Ui_Dialog):
             # Collect students from the current page
             students = response_data.get("items", [])
             all_students.extend(students)
-            print(all_students)
 
             # If there are no more students, break the loop
             if len(students) < limit:
@@ -248,7 +248,7 @@ class MyMainPage2( QDialog, Ui_Dialog):
     # def create_search_button(self):
     #     "Make to find the specific student by name "
     #     "The search bar is : lineEdit"
-    #     "The name of button is Find : pusFhButton_23"
+    #     "The name of button is Find : pushButton_23"
     #     "Page name: Search_Page_2 - index 8"
     def create_search_button(self):
         """Create a button to search for a specific student by name or surname."""
@@ -463,11 +463,10 @@ class MyMainPage2( QDialog, Ui_Dialog):
         self.label_teacher_group.setText(f"Group: {teacher['GroupName']}")
         self.label_teacher_time.setText(f"Time: {teacher['Time']}")
 
-    def create_student_buttons(self, group):
-        """Re-create student buttons for the selected group."""
-        # Clear existing buttons to prevent overlap
-        self.clear_student_buttons()
 
+
+    def create_student_buttons(self):
+        """Re-create student buttons with updated data."""
         index = 0
         row = 0
         width = 161
@@ -475,10 +474,7 @@ class MyMainPage2( QDialog, Ui_Dialog):
         padding = 40
         spacing = 20
 
-        # Filter students by group
-        filtered_students = [student for student in self.students if self.transform_group_id(student["Group"]) == group]
-
-        for student in filtered_students:
+        for student in self.students:
             # Combine Name and Surname for the button text
             student_name = f"{student['Name']} {student['Surname']}"
 
@@ -506,6 +502,8 @@ class MyMainPage2( QDialog, Ui_Dialog):
             # Connect the button click to a function to show student details
             button.clicked.connect(lambda _, s=student: self.switch_to_page_with_present(s))
 
+
+
             # Update index and row for button positioning
             index += 1
             if index > 3:
@@ -524,18 +522,10 @@ class MyMainPage2( QDialog, Ui_Dialog):
     #Button with upload page
     def switch_to_upload_Page(self, group):
         self.stackedWidget.setCurrentIndex(3)
-        self.clear_student_buttons()  # Ensure the page is blank before adding new buttons
         self.open_image_dialog(group)
-        self.create_student_buttons(group)  # Filter and show students from the selected group
 
     def switch_to_upload_Page2(self):
         self.stackedWidget.setCurrentIndex(4)
-
-    def clear_student_buttons(self):
-        """Clear all existing student buttons to prevent overlap."""
-        for button_info in self.student_buttons.values():
-            button_info['button'].deleteLater()  # Remove the button from the UI
-        self.student_buttons.clear()  # Clear the dictionary
 
     def switch_to_class_with_students(self):
         self.stackedWidget.setCurrentIndex(2)
@@ -556,17 +546,28 @@ class MyMainPage2( QDialog, Ui_Dialog):
             self.pushButton_57.setText(QCoreApplication.translate("Dialog", student["Name"] + " " +student["Surname"] , None))
             self.pushButton_58.setText(QCoreApplication.translate("Dialog", student["Group"], None))
             self.pushButton_61.setText(QCoreApplication.translate("Dialog", student["id"], None))
+            if student['id'] in self.image_cache:
+                image_data = self.image_cache[student['id']]
+                pixmap = QPixmap()
+                pixmap.loadFromData(image_data)
+
+                if pixmap.isNull():
+                    print("Failed to load cached image.")
+                else:
+                    self.Class_Picture_ID.setPixmap(pixmap)
+            else:
+                self.Class_Picture_ID.setPixmap(QPixmap(u":/newPrefix/Images/Emma_Photo_1.png"))
             response = requests.get(url[:-1]+"/api/files/4i53pyqjukl7lxi/" + f"{student['id']}/"+f"{student['Photo']}")
             image_data = response.content
             pixmap = QPixmap()
             pixmap.loadFromData(image_data)
+
             if pixmap.isNull():
                 print("Failed to load image.")
             else:
                 self.Original_Picture_ID.setPixmap(pixmap)  # Assuming label_38 is a QLabel in your UI
 
-            # Update the status button based on the student's current status
-            self.update_status_button(student.get("status", "absent"))
+
 
             self.label_6.setText(QCoreApplication.translate("Dialog", u"Classes", None))
         else:
@@ -614,30 +615,87 @@ class MyMainPage2( QDialog, Ui_Dialog):
             print(f"Selected image path: {self.image_path}")  # Optional: Print the selected path
             self.send_image_to_server(self.image_path, group)  # Send the image to the server
 
+    def decode_and_cache_image(self, student, image):
+        if student['id'] in self.image_cache:
+            # Return the cached image if it's already decoded
+            return
+
+        # If not cached, fetch and decode the image
+        base64_image = image # Assuming this function retrieves the base64 image data
+        image_data = base64.b64decode(base64_image)
+
+        # Cache the decoded image
+        self.image_cache[student['id']] = image_data
+        return
     def send_image_to_server(self, image_path, group):
+        # Since we are no longer using a server, simulate the result
         print(f"Simulating image processing for {image_path}")
 
+        # Display the image on label_38
         pixmap = QPixmap(image_path)
         if pixmap.isNull():
             print("Failed to load image.")
         else:
-            self.label_38.setPixmap(pixmap)
+            self.label_38.setPixmap(pixmap)  # Assuming label_38 is a QLabel in your UI
 
+        # Simulate some dummy result data for students
         global url
         url_1 = f"{url}find/{group}"  # Adjust your endpoint as needed
         print(url_1)
-        files = {'file': open(image_path, 'rb')}
+        files = {'file': open(image_path, 'rb')}  # Open the image file in binary mode
 
         response = requests.post(url_1, files=files)
         print(response)
         if response.status_code == 200:
-            print(f"Image uploaded successfully!")
-            json_response = response.json().get("python_output")
-            json_text = json_response.replace("'", '"')
-            print(json_text)
-            self.create_student_buttons(group)  # Filter students after image upload
-            self.stackedWidget.setCurrentIndex(2)
+            print(f"Image uploaded successfully! - {response.text}")
+            photo_response = response.json().get("recognised_faces")
+            for student in self.students:
+                student_filename = f"{student['Surname']}_{student['Name']}.png"
+                print(student_filename)
+                for face in photo_response:
+                    if face['filename'] == student_filename:
+                        base64_image = face['content']
+                        self.decode_and_cache_image(student,base64_image)
+            print(self.image_cache)
+            try:
+                # Extract backend response
+                json_response = response.json().get("python_output")
+
+                if not json_response:
+                    raise ValueError("The server response 'python_output' is missing or empty.")
+                json_text = json_response.replace("'", '"')
+                # Parse JSON string into a Python dictionary
+                self.procent_data = json.loads(json_text)
+
+                # Iterate over the students and update the corresponding procent_label
+                for student in self.students:
+                    # Combine Name and Surname to match the backend response format
+                    full_name_key = f"{student['Surname']}_{student['Name']}"  # Matches backend key format
+
+                    # Check if the student exists in the backend response
+                    if full_name_key in self.procent_data:
+                        procent_value = self.procent_data[full_name_key]  # Get percentage value
+
+                        # Retrieve the button and label from the student_buttons dictionary
+                        student_name = f"{student['Name']} {student['Surname']}"
+                        if student_name in self.student_buttons:
+                            procent_label = self.student_buttons[student_name]['label']
+                            procent_label.setText(procent_value)  # Update the label with the percentage
+
+                        # Optionally, update the UI to show the student page
+                        self.stackedWidget.setCurrentIndex(2)
+
+            except json.JSONDecodeError as e:
+                print(f"JSON decoding error: {e}")
+            except ValueError as ve:
+                print(f"Value error: {ve}")
+            except Exception as ex:
+                print(f"Unexpected error: {ex}")
+
         else:
             print(f"Failed to upload image: {response.status_code}")
 
-        self.switch_to_upload_Page2()
+        # Update each button's label with the new percentage
+
+        # Switch to the next screen or view (index 2)
+        self.stackedWidget.setCurrentIndex(4)
