@@ -3,7 +3,7 @@ import datetime
 import random
 
 import requests
-from ui_maintest import Ui_Dialog
+from ui_maintest1 import Ui_Dialog
 from PySide6.QtCore import QRect, QCoreApplication, QSize
 from PySide6.QtGui import QFont, QPixmap
 from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QPushButton, QFileDialog, QLabel, QScrollArea, \
@@ -662,7 +662,7 @@ class MyMainPage2(QDialog, Ui_Dialog):
                 print(f"Unexpected error: {ex}")
 
         else:
-            print(f"Failed to upload image: {response.status_code} - {response.text}")
+            print(f"Failed to upload image: {response.status_code}")
 
         # Update each button's label with the new percentage
 
