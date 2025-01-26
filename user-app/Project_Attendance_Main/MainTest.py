@@ -150,7 +150,6 @@ class MyMainPage2(QDialog, Ui_Dialog):
         self.widget_4.setHidden(False)
         name = email.split("@")[0].split(".")
         self.take_student_info()
-        self.create_student_buttons()
         self.label.setText(f"Welcome {name[0].capitalize()}" + " " + f"{name[1].capitalize()}" + ", attendance system is ready to operate.")
         self.create_classes_buttons_for_teacher()
         self.stackedWidget.setCurrentIndex(5)
@@ -463,28 +462,28 @@ class MyMainPage2(QDialog, Ui_Dialog):
         self.label_teacher_group.setText(f"Group: {teacher['GroupName']}")
         self.label_teacher_time.setText(f"Time: {teacher['Time']}")
 
-
-
-    def create_student_buttons(self):
-        """Re-create student buttons with updated data."""
+    def create_student_buttons(self, group_names=None):
+        global group_id
         index = 0
         row = 0
         width = 161
         height = 201
         padding = 40
         spacing = 20
+        print(self.students)
+        if group_names:
+            filtered_students = [student for student in self.students if self.transform_group_id(student['Group']) in group_names]
+        else:
+            filtered_students = self.students
 
-        for student in self.students:
-            # Combine Name and Surname for the button text
+        for student in filtered_students:
             student_name = f"{student['Name']} {student['Surname']}"
 
-            # Create a button for each student with both Name and Surname
             button = QPushButton(parent=self.Students, text=student_name)
             button.setStyleSheet(u"background-color: #8DB7F5;\n"
                                  "border-radius: 10px;\n"
                                  "font-size:15px;\n")
 
-            # Position the button
             button.setGeometry(QRect(30 + (width + padding) * index, 30 + (height + spacing) * row, width, height))
 
             # Percentage label inside the button
@@ -501,8 +500,6 @@ class MyMainPage2(QDialog, Ui_Dialog):
 
             # Connect the button click to a function to show student details
             button.clicked.connect(lambda _, s=student: self.switch_to_page_with_present(s))
-
-
 
             # Update index and row for button positioning
             index += 1
@@ -566,7 +563,12 @@ class MyMainPage2(QDialog, Ui_Dialog):
                 print("Failed to load image.")
             else:
                 self.Original_Picture_ID.setPixmap(pixmap)  # Assuming label_38 is a QLabel in your UI
-
+            student_presence = self.procent_data.get(student['Surname'] + "_" + student['Name'], '0%')
+            percentage_value = float(student_presence.replace('%', ''))
+            if percentage_value > 50:
+                self.update_status_button(student.get("status", "present"))
+            else:
+                self.update_status_button(student.get("status", "absent"))
 
 
             self.label_6.setText(QCoreApplication.translate("Dialog", u"Classes", None))
@@ -640,6 +642,7 @@ class MyMainPage2(QDialog, Ui_Dialog):
 
         # Simulate some dummy result data for students
         global url
+        self.create_student_buttons(group)
         url_1 = f"{url}find/{group}"  # Adjust your endpoint as needed
         print(url_1)
         files = {'file': open(image_path, 'rb')}  # Open the image file in binary mode
@@ -656,7 +659,6 @@ class MyMainPage2(QDialog, Ui_Dialog):
                     if face['filename'] == student_filename:
                         base64_image = face['content']
                         self.decode_and_cache_image(student,base64_image)
-            print(self.image_cache)
             try:
                 # Extract backend response
                 json_response = response.json().get("python_output")
